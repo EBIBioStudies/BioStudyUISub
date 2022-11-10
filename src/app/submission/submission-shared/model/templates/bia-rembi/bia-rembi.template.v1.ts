@@ -262,7 +262,7 @@ export const biaRembiTemplateV1 = {
         name: 'Biosample',
         fieldTypes: [
           {
-            name: 'Title',
+            name: 'Biosample section name',
             display: 'required',
             valueType: {
               name: 'text'
@@ -411,7 +411,7 @@ export const biaRembiTemplateV1 = {
         displayAnnotations: false,
         fieldTypes: [
           {
-            name: 'Title',
+            name: 'Specimen section name',
             display: 'required',
             valueType: {
               name: 'text'
@@ -464,7 +464,7 @@ export const biaRembiTemplateV1 = {
         name: 'Image acquisition',
         fieldTypes: [
           {
-            name: 'Title',
+            name: 'Image acquisition section name',
             display: 'required',
             valueType: {
               name: 'text'
@@ -608,7 +608,7 @@ export const biaRembiTemplateV1 = {
         display: 'desirable',
         fieldTypes: [
           {
-            name: 'Title',
+            name: 'Image correlation section name',
             display: 'required',
             valueType: {
               name: 'text'
@@ -663,7 +663,7 @@ export const biaRembiTemplateV1 = {
         display: 'desirable',
         fieldTypes: [
           {
-            name: 'Title',
+            name: 'Image analysis section name',
             display: 'required',
             valueType: {
               name: 'text'
@@ -741,7 +741,7 @@ export const biaRembiTemplateV1 = {
             columnTypes: [
               {
                 dependency: {
-                  field_name: 'Title',
+                  field_name: 'Biosample section name',
                   section_type: 'Biosample',
                   type: 'section'
                 },
@@ -756,7 +756,7 @@ export const biaRembiTemplateV1 = {
               },
               {
                 dependency: {
-                  field_name: 'Title',
+                  field_name: 'Specimen section name',
                   section_type: 'Specimen',
                   type: 'section'
                 },
@@ -771,7 +771,7 @@ export const biaRembiTemplateV1 = {
               },
               {
                 dependency: {
-                  field_name: 'Title',
+                  field_name: 'Image acquisition section name',
                   section_type: 'Image acquisition',
                   type: 'section'
                 },
@@ -786,7 +786,7 @@ export const biaRembiTemplateV1 = {
               },
               {
                 dependency: {
-                  field_name: 'Title',
+                  field_name: 'Image correlation section name',
                   section_type: 'Image correlation',
                   type: 'section'
                 },
@@ -801,7 +801,7 @@ export const biaRembiTemplateV1 = {
               },
               {
                 dependency: {
-                  field_name: 'Title',
+                  field_name: 'Image analysis section name',
                   section_type: 'Image analysis',
                   type: 'section'
                 },
