@@ -8,7 +8,7 @@
 
     <div class="modal-body">
         <div *ngIf=contents.description class="description">{{ contents.description }}</div>
-        <div *ngIf=contents.description_html class="description" [innerHTML]="contents.description_html"></div>
+        <div *ngIf=contents.descriptionHtml class="description" [innerHTML]="contents.descriptionHtml"></div>
 
         <div *ngIf=contents.examples class="examples">
             <h5>Examples:</h5>
@@ -16,10 +16,10 @@
                 <li *ngFor="let example of contents.examples">{{example}}</li>
             </ul>
         </div>
-        <div *ngIf=contents.examples_html class="examples">
+        <div *ngIf=contents.examplesHtml class="examples">
             <h5>Examples:</h5>
             <ul>
-                <li *ngFor="let example of contents.examples_html" [innerHTML]="example"></li>
+                <li *ngFor="let example of contents.examplesHtml" [innerHTML]="example"></li>
             </ul>
         </div>
     </div>

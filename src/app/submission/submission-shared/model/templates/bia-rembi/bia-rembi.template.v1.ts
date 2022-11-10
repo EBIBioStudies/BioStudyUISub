@@ -100,7 +100,7 @@ export const biaRembiTemplateV1 = {
         },
         helpContextual: {
           description: 'The license under which the data are available.',
-          examples_html: [
+          examplesHtml: [
             'Full text for the <a href="https://creativecommons.org/share-your-work/public-domain/cc0/" target="_blank" >CC0</a> license',
             'Full text for the <a href="https://creativecommons.org/licenses/by/4.0/legalcode" target="_blank">CC BY 4.0</a> license'
           ]

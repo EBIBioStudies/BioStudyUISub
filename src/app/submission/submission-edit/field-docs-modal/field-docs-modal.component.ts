@@ -4,9 +4,9 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 export class DocItem {
   fieldName?: string;
   description?: string;
-  description_html?: string;
+  descriptionHtml?: string;
   examples?: Array<string>;
-  examples_html?: Array<string>;
+  examplesHtml?: Array<string>;
 }
 
 @Component({
