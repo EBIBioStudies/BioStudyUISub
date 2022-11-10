@@ -1,5 +1,5 @@
 export const biaRembiTemplateV1 = {
-  name: 'BioImages.v1',
+  name: 'BioImages-REMBI.v1',
   title: 'BioImages-REMBI',
   description: 'BioImage Archive Study',
   sectionType: {
