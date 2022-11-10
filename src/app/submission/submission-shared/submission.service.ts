@@ -39,7 +39,6 @@ export interface SubmissionListParams {
 }
 
 export const preferredSourceMap = {
-  USER_SPACE: 'USER_SPACE',
   SUBMISSION: 'SUBMISSION'
 };
 
@@ -135,9 +134,7 @@ export class SubmissionService {
 
   private preferredSources(onlyMetadataUpdate): HttpParams {
     if (onlyMetadataUpdate) {
-      return new HttpParams()
-        .append('preferredSources', preferredSourceMap.SUBMISSION)
-        .append('preferredSources', preferredSourceMap.USER_SPACE);
+      return new HttpParams().append('preferredSources', preferredSourceMap.SUBMISSION);
     }
 
     return new HttpParams();
