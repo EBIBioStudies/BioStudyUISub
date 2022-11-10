@@ -35,11 +35,11 @@
       <button *ngIf="!readonly && !sectionForm.isRootSection"
               [disabled]="isSaving"
               class="btn btn-primary btn-sm"
-              tooltip="Back to overview"
+              tooltip="Back"
               placement="bottom"
               container="body"
-              (click)="submEditService.switchSection(sectionForm.findRoot())">
-        <i class="fa fa-arrow-up"></i> Back to overview
+              (click)="submEditService.switchSection(sectionForm.parent)">
+        <i class="fa fa-arrow-left"></i> Back
       </button>
     </ng-container>
     <button *ngIf="!readonly && !isTemp && isRevised"
