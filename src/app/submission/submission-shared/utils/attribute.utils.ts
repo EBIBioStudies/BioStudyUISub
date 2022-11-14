@@ -56,7 +56,7 @@ export function fieldsAsAttributes(fields: Field[], isSanitise: boolean): PtAttr
 
   fields.forEach((field) => {
     if (field.valueType.isRich()) {
-      const fieldValue: string = field.value || '';
+      const fieldValue: string = String(field.value) || ''; // rich multivalued not allowed (yet)
       const [richValue] = fieldValue.split('@');
 
       attributes.push(
