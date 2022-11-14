@@ -77,7 +77,6 @@ export class PageTabToSubmissionService {
       'Image acquisition',
       'Image correlation',
       'Image analysis',
-      'Funding',
       'MINSEQE Score',
       'MIAME Score'
     ].map((el) => el.toLowerCase());
