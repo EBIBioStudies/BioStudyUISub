@@ -105,6 +105,17 @@ export const biaRembiTemplateV1 = {
             'Full text for the <a href="https://creativecommons.org/licenses/by/4.0/legalcode" target="_blank">CC BY 4.0</a> license'
           ]
         }
+      },
+      {
+        name: 'Funding statement',
+        icon: '',
+        valueType: {
+          name: 'largetext'
+        },
+        display: 'desirable',
+        helpContextual: {
+          description: 'A description of how the data generation was funded.'
+        }
       }
     ],
     tableTypes: [
@@ -253,6 +264,39 @@ export const biaRembiTemplateV1 = {
         ],
         display: 'desirable',
         helpContextual: {}
+      },
+      {
+        name: 'Funding',
+        icon: '',
+        description: 'List of individual grants funding data acquisition.',
+        uniqueCols: true,
+        rowAsSection: true,
+        columnTypes: [
+          {
+            name: 'Agency',
+            icon: '',
+            valueType: {
+              name: 'text'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'The funding body provididing support.'
+            }
+          },
+          {
+            name: 'grant_id',
+            icon: '',
+            valueType: {
+              name: 'text'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'The identifier for the grant.'
+            }
+          }
+        ],
+        display: 'desirable',
+        helpContextual: {}
       }
     ],
     sectionTypes: [
@@ -262,7 +306,7 @@ export const biaRembiTemplateV1 = {
         name: 'Biosample',
         fieldTypes: [
           {
-            name: 'Biosample section name',
+            name: 'Title',
             display: 'required',
             valueType: {
               name: 'text'
@@ -411,7 +455,7 @@ export const biaRembiTemplateV1 = {
         displayAnnotations: false,
         fieldTypes: [
           {
-            name: 'Specimen section name',
+            name: 'Title',
             display: 'required',
             valueType: {
               name: 'text'
@@ -464,7 +508,7 @@ export const biaRembiTemplateV1 = {
         name: 'Image acquisition',
         fieldTypes: [
           {
-            name: 'Image acquisition section name',
+            name: 'Title',
             display: 'required',
             valueType: {
               name: 'text'
@@ -608,7 +652,7 @@ export const biaRembiTemplateV1 = {
         display: 'desirable',
         fieldTypes: [
           {
-            name: 'Image correlation section name',
+            name: 'Title',
             display: 'required',
             valueType: {
               name: 'text'
@@ -663,7 +707,7 @@ export const biaRembiTemplateV1 = {
         display: 'desirable',
         fieldTypes: [
           {
-            name: 'Image analysis section name',
+            name: 'Title',
             display: 'required',
             valueType: {
               name: 'text'
@@ -818,61 +862,6 @@ export const biaRembiTemplateV1 = {
           }
         ],
         display: 'required',
-        helpContextual: {}
-      },
-      {
-        name: 'Funding',
-        displayAnnotations: false,
-        tableGroups: [],
-        fieldTypes: [
-          {
-            name: 'Funding statement',
-            icon: '',
-            valueType: {
-              name: 'largetext'
-            },
-            display: 'desirable',
-            helpContextual: {
-              description: 'A description of how the data generation was funded.'
-            }
-          }
-        ],
-        tableTypes: [
-          {
-            name: 'Grant references',
-            icon: '',
-            description: 'List of individual grants funding data acquisition.',
-            uniqueCols: true,
-            rowAsSection: true,
-            columnTypes: [
-              {
-                name: 'Agency',
-                icon: '',
-                valueType: {
-                  name: 'largetext'
-                },
-                display: 'desirable',
-                helpContextual: {
-                  description: 'The funding body provididing support.'
-                }
-              },
-              {
-                name: 'grant_id',
-                icon: '',
-                valueType: {
-                  name: 'largetext'
-                },
-                display: 'desirable',
-                helpContextual: {
-                  description: 'The identifier for the grant.'
-                }
-              }
-            ],
-            display: 'desirable',
-            helpContextual: {}
-          }
-        ],
-        display: 'desirable',
         helpContextual: {}
       }
     ]
