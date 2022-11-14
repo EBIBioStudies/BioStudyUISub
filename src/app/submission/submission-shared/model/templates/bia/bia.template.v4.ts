@@ -1,6 +1,6 @@
-export const biaRembiTemplateV1 = {
-  name: 'BioImages-REMBI.v1',
-  title: 'BioImages-REMBI',
+export const biaTemplateV4 = {
+  name: 'BioImages.v4',
+  title: 'BioImages',
   description: 'BioImage Archive Study',
   sectionType: {
     display: 'required',
@@ -110,7 +110,8 @@ export const biaRembiTemplateV1 = {
         name: 'Funding statement',
         icon: '',
         valueType: {
-          name: 'largetext'
+          name: 'largetext',
+          placeholder: 'Grant identifiers can be added in the "Fundings" section below'
         },
         display: 'desirable',
         helpContextual: {
@@ -127,13 +128,23 @@ export const biaRembiTemplateV1 = {
         rowAsSection: true,
         columnTypes: [
           {
-            name: 'ORCID',
+            name: 'Name',
             valueType: {
-              name: 'orcid'
+              name: 'text'
             },
             display: 'desirable',
             helpContextual: {
-              description: 'Author ORCID ID.'
+              description: 'The full name of the author.'
+            }
+          },
+          {
+            name: 'E-mail',
+            valueType: {
+              name: 'text'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'Author e-mail address.'
             }
           },
           {
@@ -165,6 +176,16 @@ export const biaRembiTemplateV1 = {
             helpContextual: {
               description: 'Author role in the study.'
             }
+          },
+          {
+            name: 'ORCID',
+            valueType: {
+              name: 'orcid'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'Author ORCID ID.'
+            }
           }
         ],
         display: 'required',
@@ -178,6 +199,16 @@ export const biaRembiTemplateV1 = {
         rowAsSection: true,
         allowCustomCols: true,
         columnTypes: [
+          {
+            name: 'Pubmed ID',
+            valueType: {
+              name: 'pubmedid'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'PubMed identifier for the publication.'
+            }
+          },
           {
             name: 'Title',
             valueType: {
@@ -210,23 +241,13 @@ export const biaRembiTemplateV1 = {
             }
           },
           {
-            name: 'Publication year',
+            name: 'Year',
             valueType: {
               name: 'text'
             },
             display: 'desirable',
             helpContextual: {
               description: 'Year of publication.'
-            }
-          },
-          {
-            name: 'Pubmed ID',
-            valueType: {
-              name: 'pubmedid'
-            },
-            display: 'desirable',
-            helpContextual: {
-              description: 'PubMed identifier for the publication.'
             }
           }
         ],

@@ -1,6 +1,4 @@
 import { readonlyTemplate } from './readonly.template';
-import * as bia from './bia';
-import * as bia_rembi from './bia-rembi';
 import { bioRamanTemplate } from './bioRaman.template';
 import { defaultTemplate } from './default.template';
 import { emptyTemplate } from './empty.template';
@@ -8,6 +6,7 @@ import { euToxRiskTemplate } from './eutoxrisk.template';
 import { hecatosTemplate } from './hecatos.template';
 import { arrayExpressTemplate } from './arrayexpress.template';
 import { proteinDesignsTemplate } from './proteindesigns.template';
+import * as bia from './bia';
 
 export const DEFAULT_TEMPLATE_NAME = 'Default';
 export const EMPTY_TEMPLATE_NAME = 'Empty';
@@ -21,7 +20,7 @@ const SUBMISSION_TEMPLATES = [
   bia.biaTemplateV1,
   bia.biaTemplateV2,
   bia.biaTemplateV3,
-  bia_rembi.biaRembiTemplateV1,
+  bia.biaTemplateV4,
   bioRamanTemplate,
   readonlyTemplate,
   proteinDesignsTemplate
