@@ -39,7 +39,7 @@ export const biaRembiTemplateV1 = {
       },
       {
         name: 'ReleaseDate',
-        title: 'Submission publication date',
+        title: 'Release Date',
         icon: 'fa-calendar-alt',
         display: 'required',
         valueType: {
@@ -785,7 +785,7 @@ export const biaRembiTemplateV1 = {
             columnTypes: [
               {
                 dependency: {
-                  field_name: 'Biosample section name',
+                  field_name: 'Title',
                   section_type: 'Biosample',
                   type: 'section'
                 },
@@ -800,7 +800,7 @@ export const biaRembiTemplateV1 = {
               },
               {
                 dependency: {
-                  field_name: 'Specimen section name',
+                  field_name: 'Title',
                   section_type: 'Specimen',
                   type: 'section'
                 },
@@ -815,7 +815,7 @@ export const biaRembiTemplateV1 = {
               },
               {
                 dependency: {
-                  field_name: 'Image acquisition section name',
+                  field_name: 'Title',
                   section_type: 'Image acquisition',
                   type: 'section'
                 },
@@ -830,7 +830,7 @@ export const biaRembiTemplateV1 = {
               },
               {
                 dependency: {
-                  field_name: 'Image correlation section name',
+                  field_name: 'Title',
                   section_type: 'Image correlation',
                   type: 'section'
                 },
@@ -845,7 +845,7 @@ export const biaRembiTemplateV1 = {
               },
               {
                 dependency: {
-                  field_name: 'Image analysis section name',
+                  field_name: 'Title',
                   section_type: 'Image analysis',
                   type: 'section'
                 },
