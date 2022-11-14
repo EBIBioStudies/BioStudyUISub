@@ -399,7 +399,7 @@ export class SubmEditService {
             dependencySections.map((dependencySection) =>
               dependencySection.fields.findAllByTypeName(dependency.field_name).map((field) => {
                 if (field.value) {
-                  rawValues.push(field.value);
+                  rawValues.push(String(field.value));
                 }
               })
             );
