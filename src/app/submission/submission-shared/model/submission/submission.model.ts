@@ -419,11 +419,11 @@ export class Field {
     return this.type.displayType.isReadonly;
   }
 
-  get value(): string {
-    return this.attributeData?.value ? String(this.attributeData?.value) : '';
+  get value(): string | string[] {
+    return this.attributeData?.value ? this.attributeData?.value : '';
   }
 
-  set value(v: string) {
+  set value(v: string | string[]) {
     if (this.attributeData && this.value !== v) {
       this.attributeData.value = v;
     }
