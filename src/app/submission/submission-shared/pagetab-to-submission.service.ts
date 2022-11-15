@@ -97,7 +97,12 @@ export class PageTabToSubmissionService {
     return attrData;
   }
 
-  private pageTabStudyAttributesToAttributesData(attrs: PtAttribute[], sectionType: SectionType): AttributeData[] {
+  private pageTabStudyAttributesToAttributesData(
+    attrs: PtAttribute[],
+    sectionType: SectionType | null
+  ): AttributeData[] {
+    if (sectionType === null) return this.pageTabAttributesToAttributeData(attrs);
+
     const attributesData: AttributeData[] = [];
 
     const selectFieldTypes: FieldType[] = sectionType.fieldTypes.filter(({ valueType }) =>
@@ -143,10 +148,7 @@ export class PageTabToSubmissionService {
       AttrExceptions.editable.includes(attribute.name!)
     );
     const parentAndChildAttributes = mergeAttributes(editableParentAttributes, ptSection.attributes || []);
-    const attributes = sectionType
-      ? this.pageTabStudyAttributesToAttributesData(parentAndChildAttributes, sectionType)
-      : this.pageTabAttributesToAttributeData(parentAndChildAttributes);
-
+    const attributes = this.pageTabStudyAttributesToAttributesData(parentAndChildAttributes, sectionType);
     const links = flatArray<PtLink>(ptSection.links || []);
     const files = flatArray<PtFile>(ptSection.files || []);
     const subsections = flatArray(ptSection.subsections || []);
@@ -163,7 +165,9 @@ export class PageTabToSubmissionService {
     if (hasLinks) {
       tables.push({
         type: 'Link',
-        entries: links.map((link) => toUntyped(link)).map((link) => this.pageTabAttributesToAttributeData(link))
+        entries: links
+          .map((link) => toUntyped(link))
+          .map((link) => this.pageTabStudyAttributesToAttributesData(link, null))
       } as TableData);
     }
 
@@ -172,7 +176,7 @@ export class PageTabToSubmissionService {
         type: 'File',
         entries: files
           .map((file) => [{ name: 'File', value: file.path } as PtAttribute].concat(file.attributes || []))
-          .map((file) => this.pageTabAttributesToAttributeData(file))
+          .map((file) => this.pageTabStudyAttributesToAttributesData(file, null))
       } as TableData);
     }
 
@@ -192,7 +196,7 @@ export class PageTabToSubmissionService {
       tableTypes.forEach((tableType) => {
         const entries = tableSections
           .filter((tableSection) => tableSection.type === tableType)
-          .map((tableSection) => this.pageTabAttributesToAttributeData(tableSection.attributes || []));
+          .map((tableSection) => this.pageTabStudyAttributesToAttributesData(tableSection.attributes || [], null));
 
         tables.push({
           type: tableType,
@@ -203,11 +207,23 @@ export class PageTabToSubmissionService {
 
     const formattedSections = subsections
       .filter(this.hasSubsections)
-      .map((section) => this.pageTabSectionToSectionData(section, [], null));
+      .map((section) =>
+        this.pageTabSectionToSectionData(
+          section,
+          [],
+          sectionType?.sectionTypes.find((secType) => secType.name === section.type) || null
+        )
+      );
 
     const formattedSubSections = subsections
       .filter((section) => section.type !== 'Protocol')
-      .map((subSection) => this.pageTabSectionToSectionData(subSection, [], null));
+      .map((subSection) =>
+        this.pageTabSectionToSectionData(
+          subSection,
+          [],
+          sectionType?.sectionTypes.find((secType) => secType.name === subSection.type) || null
+        )
+      );
 
     return {
       type: ptSection.type,
