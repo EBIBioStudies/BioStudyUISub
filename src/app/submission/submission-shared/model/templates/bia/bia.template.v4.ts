@@ -148,16 +148,6 @@ export const biaTemplateV4 = {
             }
           },
           {
-            name: 'ORCID',
-            valueType: {
-              name: 'orcid'
-            },
-            display: 'desirable',
-            helpContextual: {
-              description: 'Author ORCID ID.'
-            }
-          },
-          {
             name: 'Organisation',
             valueType: {
               name: 'org',
@@ -185,6 +175,16 @@ export const biaTemplateV4 = {
             display: 'desirable',
             helpContextual: {
               description: 'Author role in the study.'
+            }
+          },
+          {
+            name: 'ORCID',
+            valueType: {
+              name: 'orcid'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'Author ORCID ID.'
             }
           }
         ],
