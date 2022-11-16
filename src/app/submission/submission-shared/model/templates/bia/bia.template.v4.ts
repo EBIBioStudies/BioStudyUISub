@@ -148,6 +148,16 @@ export const biaTemplateV4 = {
             }
           },
           {
+            name: 'ORCID',
+            valueType: {
+              name: 'orcid'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'Author ORCID ID.'
+            }
+          },
+          {
             name: 'Organisation',
             valueType: {
               name: 'org',
@@ -175,16 +185,6 @@ export const biaTemplateV4 = {
             display: 'desirable',
             helpContextual: {
               description: 'Author role in the study.'
-            }
-          },
-          {
-            name: 'ORCID',
-            valueType: {
-              name: 'orcid'
-            },
-            display: 'desirable',
-            helpContextual: {
-              description: 'Author ORCID ID.'
             }
           }
         ],
@@ -262,7 +262,7 @@ export const biaTemplateV4 = {
         rowAsSection: true,
         columnTypes: [
           {
-            name: 'Link URL',
+            name: 'Link',
             valueType: {
               name: 'idlink'
             },
@@ -272,7 +272,7 @@ export const biaTemplateV4 = {
             }
           },
           {
-            name: 'Link description',
+            name: 'Description',
             valueType: {
               name: 'text'
             },
