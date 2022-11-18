@@ -206,6 +206,30 @@ export const arrayExpressTemplate = {
     ],
     sectionTypes: [
       {
+        name: 'Protocols',
+        icon: 'fa-list',
+        uniqueCols: true,
+        allowImport: true,
+        columnTypes: [
+          {
+            name: 'Name',
+            valueType: { name: 'text' }
+          },
+          {
+            name: 'Type',
+            valueType: { name: 'text' }
+          },
+          {
+            name: 'Description',
+            valueType: { name: 'text' }
+          },
+          {
+            name: 'Hardware',
+            valueType: { name: 'text' }
+          }
+        ]
+      },
+      {
         name: 'Samples',
         displayAnnotations: true,
         fieldTypes: [
