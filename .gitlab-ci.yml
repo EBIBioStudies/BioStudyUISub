@@ -83,6 +83,12 @@ build:beta:
   only:
     - beta@ndiaz/BioStudyUISub
 
+build:sandbox:
+  <<: *build_template
+  environment: SANDBOX
+  only:
+    - master@ndiaz/BioStudyUISub
+
 build:prod:
   <<: *build_template
   environment: PROD
@@ -92,9 +98,9 @@ build:prod:
 # Build Docker image per environment
 build_image:prod:
   <<: *build_image_template
-  environment: PROD
+  environment: SANDBOX
   dependencies:
-    - build:prod
+    - build:sandbox
   only:
     - master@ndiaz/BioStudyUISub
   when: manual
