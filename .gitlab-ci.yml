@@ -90,11 +90,11 @@ build:prod:
     - master@ndiaz/BioStudyUISub
 
 # Build Docker image per environment
-build_image:dev:
+build_image:prod:
   <<: *build_image_template
-  environment: DEV
+  environment: PROD
   dependencies:
-    - build:dev
+    - build:prod
   only:
     - dev@ndiaz/BioStudyUISub
   when: manual
