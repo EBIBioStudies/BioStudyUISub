@@ -96,7 +96,7 @@ build_image:prod:
   dependencies:
     - build:prod
   only:
-    - dev@ndiaz/BioStudyUISub
+    - master@ndiaz/BioStudyUISub
   when: manual
 
 # Deploy per environment
