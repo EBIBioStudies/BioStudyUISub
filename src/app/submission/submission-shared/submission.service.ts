@@ -8,6 +8,7 @@ import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 import { PageTab, DraftPayload } from './model/pagetab';
 import { SubmissionToPageTabService } from './submission-to-pagetab.service';
 import { filterAndFormatDraftSubmissions } from './utils/submission-draft.utils';
+import { AttributeNames } from '../utils/constants';
 
 export interface DraftSubmissionWrapper {
   key: string;
@@ -98,7 +99,8 @@ export class SubmissionService {
     const formData = new FormData();
 
     if (isDefinedAndNotEmpty(attachTo)) {
-      formData.append('AttachTo', attachTo);
+      const collection = { name: AttributeNames.ATTACH_TO, value: attachTo };
+      formData.append('attributes', JSON.stringify(collection));
     }
 
     formData.append('submission', file);
