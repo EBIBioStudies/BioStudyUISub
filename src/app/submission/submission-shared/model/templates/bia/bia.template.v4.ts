@@ -803,6 +803,7 @@ export const biaTemplateV4 = {
             description: 'Associate parts of the study into a Study Components.',
             uniqueCols: true,
             rowAsSection: true,
+            display: 'required',
             columnTypes: [
               {
                 dependency: {
@@ -810,7 +811,7 @@ export const biaTemplateV4 = {
                   section_type: 'Biosample',
                   type: 'section'
                 },
-                display: 'desirable',
+                display: 'required',
                 name: 'Biosample',
                 uniqueValues: false,
                 valueType: {
@@ -825,7 +826,7 @@ export const biaTemplateV4 = {
                   section_type: 'Specimen',
                   type: 'section'
                 },
-                display: 'desirable',
+                display: 'required',
                 name: 'Specimen',
                 uniqueValues: false,
                 valueType: {
@@ -840,7 +841,7 @@ export const biaTemplateV4 = {
                   section_type: 'Image acquisition',
                   type: 'section'
                 },
-                display: 'desirable',
+                display: 'required',
                 name: 'Image acquisition',
                 uniqueValues: false,
                 valueType: {
