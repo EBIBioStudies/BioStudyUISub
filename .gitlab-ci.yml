@@ -5,7 +5,6 @@ stages:
   - setup
   - test
   - build
-  - build_image
   - deploy
 
 .build_template: &build_template
@@ -18,16 +17,6 @@ stages:
     paths:
       - subtool-$CI_ENVIRONMENT_SLUG.tar.gz
     expire_in: 2 days
-
-.build_image: &build_image_template
-  stage: build_image
-  image: docker:latest
-  services:
-    - docker:dind
-  dependencies:
-    - build
-  script:
-    - sh ./tasks/build_image.sh
 
 .deploy_template: &deploy_definition
   stage: deploy
@@ -85,7 +74,11 @@ build:beta:
 
 build:sandbox:
   <<: *build_template
+  variables:
+    GIT_CLONE_PATH: '$CI_BUILDS_DIR/$CI_JOB_ID/$CI_PROJECT_NAME'
   environment: SANDBOX
+  tags:
+    - sandbox_runner
   only:
     - master@ndiaz/BioStudyUISub
 
@@ -94,16 +87,6 @@ build:prod:
   environment: PROD
   only:
     - master@ndiaz/BioStudyUISub
-
-# Build Docker image per environment
-build_image:prod:
-  <<: *build_image_template
-  environment: SANDBOX
-  dependencies:
-    - build:sandbox
-  only:
-    - master@ndiaz/BioStudyUISub
-  when: manual
 
 # Deploy per environment
 deploy:dev:
@@ -130,4 +113,22 @@ deploy:prod:
     - build:prod
   only:
     - master@ndiaz/BioStudyUISub
+  when: manual
+
+deploy:sandbox:
+  stage: deploy
+  image: docker:latest
+  variables:
+    GIT_CLONE_PATH: '$CI_BUILDS_DIR/$CI_JOB_ID/$CI_PROJECT_NAME'
+  services:
+    - docker:dind
+  environment: SANDBOX
+  script:
+    - sh ./tasks/build_image.sh
+  tags:
+    - sandbox_runner
+  only:
+    - master@ndiaz/BioStudyUISub
+  dependencies:
+    - build:sandbox
   when: manual
