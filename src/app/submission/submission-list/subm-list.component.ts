@@ -15,6 +15,7 @@ import { SubmissionStatus } from 'app/submission/submission-shared/submission.st
 import { SubmissionStatusService } from '../submission-shared/submission-status.service';
 import { TextCellComponent } from './ag-grid/text-cell.component';
 import { TextFilterComponent } from './ag-grid/text-filter.component';
+import { UserSession } from '../../auth/shared';
 
 @Component({
   selector: 'st-subm-list',
@@ -35,6 +36,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
   private datasource: any;
 
   constructor(
+    private userSession: UserSession,
     private submService: SubmissionService,
     private modalService: ModalService,
     private router: Router,
@@ -327,9 +329,10 @@ export class SubmListComponent implements OnDestroy, OnInit {
 
   private canDeleteRow(row): boolean {
     return (
-      ['S-', 'TMP_'].some((prefix) => row.accno.indexOf(prefix) >= 0) &&
-      new Date(row.rtime).getTime() > Date.now() &&
-      !this.isProcessingRowSubmission(row)
+      (['S-', 'TMP_'].some((prefix) => row.accno.indexOf(prefix) >= 0) &&
+        new Date(row.rtime).getTime() > Date.now() &&
+        !this.isProcessingRowSubmission(row)) ||
+      this.userSession.isSuperUser()
     );
   }
 
