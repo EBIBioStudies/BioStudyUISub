@@ -469,14 +469,30 @@ export class SectionType extends TypeBase {
     data?: Partial<SectionType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+    parentSectionType?: SectionType
   ) {
     super(name, isTemplBased, scope);
-
     data = data || {};
-    this.displayType = DisplayType.create(data.display || parentDisplayType.name);
+
+    /**
+     * SectionType attribute precedence is:
+     *  1. explicitly defined value (what comes in data)
+     *  2. what the parent has (recursive case)
+     *  3. explicit default for the root SectionType
+     */
+    this.displayType = DisplayType.create(
+      data.display ||
+      parentSectionType?.displayType?.name ||
+      DisplayType.OPTIONAL.name
+    );
+    // just OR short-circuit would pick 'any true between parent and this',
+    //  as opposed to 'whatever this has set if defined, otherwise parent, otherwise false'
+    //  so if parent had true but this (explicitly) had false, it would still evaluate to true
+    this.displayAnnotations = data.displayAnnotations !== undefined ? data.displayAnnotations :
+      parentSectionType?.displayAnnotations !== undefined ? parentSectionType.displayAnnotations :
+      false;
+
     this.display = this.displayType.name;
-    this.displayAnnotations = data.displayAnnotations || false;
     this.tableGroups = (data.tableGroups || []).filter((gr) => !isArrayEmpty(gr));
     this.minRequired = Number.isInteger(data.minRequired) ? Number(data.minRequired) : 1;
     this.annotationsType = new AnnotationsType(
@@ -496,12 +512,12 @@ export class SectionType extends TypeBase {
         new TableType(tableType.name, tableType, this.tableScope, isTemplBased, this.displayType, tableType.title)
     );
     (data.sectionTypes || []).forEach(
-      (sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this.displayType)
+      (sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this)
     );
   }
 
-  static createDefault(name: string, scope?: TypeScope<TypeBase>, parentDisplayType?: DisplayType): SectionType {
-    return new SectionType(name, {}, scope, false, parentDisplayType);
+  static createDefault(name: string, scope?: TypeScope<TypeBase>, parentSectionType?: SectionType): SectionType {
+    return new SectionType(name, {}, scope, false, parentSectionType);
   }
 
   get fieldTypes(): FieldType[] {
@@ -528,7 +544,7 @@ export class SectionType extends TypeBase {
 
   getSectionType(name: string): SectionType {
     return this.sectionScope.getOrElse(name, () =>
-      SectionType.createDefault(name, this.sectionScope, this.displayType)
+      SectionType.createDefault(name, this.sectionScope, this)
     );
   }
 
@@ -564,7 +580,7 @@ export class SubmissionType extends TypeBase {
       typeObj.sectionType,
       new TypeScope<TypeBase>(),
       true,
-      DisplayType.create(typeObj.display)
+      undefined
     );
   }
 
