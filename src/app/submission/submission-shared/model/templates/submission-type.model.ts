@@ -127,7 +127,7 @@ export class DisplayType {
     this.name = name;
   }
 
-  static create(name: string): DisplayType {
+  static create(name: string | undefined): DisplayType {
     return (
       [DisplayType.DESIRABLE, DisplayType.OPTIONAL, DisplayType.READONLY, DisplayType.REQUIRED].find(
         (type) => type.name === name
@@ -482,8 +482,7 @@ export class SectionType extends TypeBase {
      */
     this.displayType = DisplayType.create(
       data.display ||
-      parentSectionType?.displayType?.name ||
-      DisplayType.OPTIONAL.name
+      parentSectionType?.displayType?.name
     );
     // just OR short-circuit would pick 'any true between parent and this',
     //  as opposed to 'whatever this has set if defined, otherwise parent, otherwise false'
