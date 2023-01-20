@@ -75,26 +75,22 @@ export const arrayExpressTemplate = {
           {
             autosuggest: false,
             name: 'Email',
-            valueType: { name: 'text' },
-            display: 'optional'
+            valueType: { name: 'text' }
           },
           {
             name: 'Organisation',
             valueType: {
               name: 'org',
               multiple: true
-            },
-            display: 'optional'
+            }
           },
           {
             name: 'Role',
-            valueType: { name: 'text' },
-            display: 'desirable'
+            valueType: { name: 'text' }
           },
           {
             name: 'ORCID',
-            valueType: { name: 'orcid' },
-            display: 'optional'
+            valueType: { name: 'orcid' }
           }
         ]
       },

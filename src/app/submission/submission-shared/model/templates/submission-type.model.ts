@@ -349,7 +349,7 @@ export class TableType extends TypeBase {
     this.allowImport = data.allowImport === true;
     this.rowAsSection = data.rowAsSection === true;
 
-    (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, parentSectionType, ct, this.columnScope));
+    (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, this as unknown as SectionType, ct, this.columnScope));
   }
 
   static createDefault(
@@ -372,7 +372,7 @@ export class TableType extends TypeBase {
     }
 
     if (createDefault) {
-      return ColumnType.createDefault(name, this.parentSectionType, this.columnScope);
+      return ColumnType.createDefault(name, this as unknown as SectionType, this.columnScope);
     }
 
     return undefined;
