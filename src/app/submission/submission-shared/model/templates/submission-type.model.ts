@@ -288,9 +288,9 @@ export class FieldType extends TypeBase {
 
   constructor(
     name: string,
+    parentSectionType: SectionType,
     data: Partial<FieldType> = {},
     scope?: TypeScope<TypeBase>,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL,
     title?: string
   ) {
     super(name, true, scope, title);
@@ -299,7 +299,7 @@ export class FieldType extends TypeBase {
     this.icon = data.icon || 'fa-pencil-square-o';
     this.helpText = data.helpText || '';
     this.helpLink = data.helpLink || '';
-    this.displayType = DisplayType.create(data.display || parentDisplayType.name);
+    this.displayType = DisplayType.create(data.display || parentSectionType.displayType.name);
     this.display = this.displayType.name;
     this.asyncValueValidatorName = data.asyncValueValidatorName || null;
     this.helpContextual = data.helpContextual
@@ -328,10 +328,10 @@ export class TableType extends TypeBase {
 
   constructor(
     name: string,
+    parentSectionType: SectionType,
     data?: Partial<TableType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL,
     title?: string
   ) {
     super(name, isTemplBased, scope, title);
@@ -341,7 +341,7 @@ export class TableType extends TypeBase {
     this.singleRow = data.singleRow === true;
     this.uniqueCols = data.uniqueCols === true;
     this.allowCustomCols = data.allowCustomCols !== false;
-    this.displayType = DisplayType.create(data.display || parentDisplayType.name);
+    this.displayType = DisplayType.create(data.display || parentSectionType.displayType.name);
     this.display = this.displayType.name;
     this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
     this.allowImport = data.allowImport === true;
@@ -352,12 +352,12 @@ export class TableType extends TypeBase {
 
   static createDefault(
     name: string,
+    parentSectionType: SectionType,
     singleRow?: boolean,
     uniqueCols?: boolean,
-    scope?: TypeScope<TypeBase>,
-    parentDisplayType?: DisplayType
+    scope?: TypeScope<TypeBase>
   ): TableType {
-    return new TableType(name, { singleRow, uniqueCols }, scope, false, parentDisplayType);
+    return new TableType(name, parentSectionType,{ singleRow, uniqueCols }, scope, false);
   }
 
   get columnTypes(): ColumnType[] {
@@ -379,18 +379,18 @@ export class TableType extends TypeBase {
 
 export class AnnotationsType extends TableType {
   constructor(
+    parentSectionType: SectionType,
     data?: Partial<TableType>,
     scope?: TypeScope<TypeBase>,
-    isTemplBased: boolean = true,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+    isTemplBased: boolean = true
   ) {
     const annotationData = Object.assign(data || {}, { singleRow: true });
     super(
       LowerCaseSectionNames.ANNOTATIONS,
+      parentSectionType,
       annotationData,
       scope,
       isTemplBased,
-      parentDisplayType,
       annotationData.title
     );
   }
@@ -495,20 +495,20 @@ export class SectionType extends TypeBase {
     this.tableGroups = (data.tableGroups || []).filter((gr) => !isArrayEmpty(gr));
     this.minRequired = Number.isInteger(data.minRequired) ? Number(data.minRequired) : 1;
     this.annotationsType = new AnnotationsType(
+      this,
       data.annotationsType,
       new TypeScope<AnnotationsType>(),
-      isTemplBased,
-      this.displayType
+      isTemplBased
     );
     this.sectionExample = data.sectionExample || '';
     this.banner = data.banner;
 
     (data.fieldTypes || []).forEach(
-      (fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType, fieldType.title)
+      (fieldType) => new FieldType(fieldType.name, this, fieldType, this.fieldScope, fieldType.title)
     );
     (data.tableTypes || []).forEach(
       (tableType) =>
-        new TableType(tableType.name, tableType, this.tableScope, isTemplBased, this.displayType, tableType.title)
+        new TableType(tableType.name, this, tableType, this.tableScope, isTemplBased, tableType.title)
     );
     (data.sectionTypes || []).forEach(
       (sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this)
@@ -533,7 +533,7 @@ export class SectionType extends TypeBase {
 
   getTableType(name: string, singleRow: boolean = false, uniqueCols: boolean = false): TableType {
     return this.tableScope.getOrElse(name, () =>
-      TableType.createDefault(name, singleRow, uniqueCols, this.tableScope, this.displayType)
+      TableType.createDefault(name, this, singleRow, uniqueCols, this.tableScope)
     );
   }
 
