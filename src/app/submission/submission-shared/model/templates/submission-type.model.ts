@@ -321,6 +321,7 @@ export class TableType extends TypeBase {
   readonly singleRow: boolean;
   readonly uniqueCols: boolean;
   readonly rowAsSection: boolean;
+  readonly parentSectionType: SectionType;
 
   readonly allowImport: boolean;
 
@@ -337,6 +338,7 @@ export class TableType extends TypeBase {
     super(name, isTemplBased, scope, title);
 
     data = data || {};
+    this.parentSectionType = parentSectionType;
     this.description = data.description || '';
     this.singleRow = data.singleRow === true;
     this.uniqueCols = data.uniqueCols === true;
@@ -347,7 +349,7 @@ export class TableType extends TypeBase {
     this.allowImport = data.allowImport === true;
     this.rowAsSection = data.rowAsSection === true;
 
-    (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, ct, this.columnScope));
+    (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, parentSectionType, ct, this.columnScope));
   }
 
   static createDefault(
@@ -370,7 +372,7 @@ export class TableType extends TypeBase {
     }
 
     if (createDefault) {
-      return ColumnType.createDefault(name, this.columnScope);
+      return ColumnType.createDefault(name, this.parentSectionType, this.columnScope);
     }
 
     return undefined;
@@ -409,15 +411,15 @@ export class ColumnType extends TypeBase {
 
   constructor(
     name: string,
+    parentSectionType: SectionType,
     data?: Partial<ColumnType>,
     scope?: TypeScope<ColumnType>,
-    isTemplBased: boolean = true,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+    isTemplBased: boolean = true
   ) {
     super(name, isTemplBased, scope as TypeScope<TypeBase>);
 
     data = data || {};
-    this.displayType = DisplayType.create(data.display || parentDisplayType.name);
+    this.displayType = DisplayType.create(data.display || parentSectionType.displayType.name);
     this.display = this.displayType.name;
     this.valueType = ValueTypeFactory.create(data.valueType || {});
     this.autosuggest = data.autosuggest !== undefined ? data.autosuggest : true;
@@ -433,8 +435,8 @@ export class ColumnType extends TypeBase {
       : undefined;
   }
 
-  static createDefault(name: string, scope?: TypeScope<ColumnType>): ColumnType {
-    return new ColumnType(name, {}, scope, false);
+  static createDefault(name: string, parentSectionType: SectionType, scope?: TypeScope<ColumnType>): ColumnType {
+    return new ColumnType(name, parentSectionType, {}, scope, false);
   }
 
   get isRequired(): boolean {

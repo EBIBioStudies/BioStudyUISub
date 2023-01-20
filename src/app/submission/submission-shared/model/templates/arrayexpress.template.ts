@@ -88,7 +88,8 @@ export const arrayExpressTemplate = {
           },
           {
             name: 'Role',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'desirable'
           },
           {
             name: 'ORCID',
