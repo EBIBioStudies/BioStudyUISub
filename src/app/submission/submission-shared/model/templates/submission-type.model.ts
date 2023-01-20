@@ -580,7 +580,7 @@ export class SubmissionType extends TypeBase {
       typeObj.sectionType,
       new TypeScope<TypeBase>(),
       true,
-      typeObj as unknown as SectionType
+      typeObj.sectionType
     );
   }
 

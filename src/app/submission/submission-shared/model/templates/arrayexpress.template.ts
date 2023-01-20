@@ -6,6 +6,7 @@ export const arrayExpressTemplate = {
   sectionType: {
     name: 'Study',
     displayAnnotations: true,
+    display: 'readonly',
     banner: {
       src: 'images/ae-logo-64.svg',
       alt: 'ArrayExpress logo',
