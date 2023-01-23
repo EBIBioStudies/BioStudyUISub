@@ -167,6 +167,18 @@ export interface BannerType {
   readonly contactUs: { text: string; email: string };
 }
 
+/**
+ * Bundles a set of attributes that children "inherit" from their parent.
+ *
+ * e.g. tables that are children of sections should use the section's displayType if they don't have an explicit one
+ *
+ * Note that tables are both children (of sections) and containers (to columns)
+ */
+export interface ContainerType {
+  readonly display: string;
+  readonly displayAnnotations?: boolean;
+}
+
 export enum ValueTypeName {
   text,
   largetext,
@@ -288,7 +300,7 @@ export class FieldType extends TypeBase {
 
   constructor(
     name: string,
-    parentSectionType: SectionType,
+    parentContainerType: ContainerType,
     data: Partial<FieldType> = {},
     scope?: TypeScope<TypeBase>,
     title?: string
@@ -299,7 +311,7 @@ export class FieldType extends TypeBase {
     this.icon = data.icon || 'fa-pencil-square-o';
     this.helpText = data.helpText || '';
     this.helpLink = data.helpLink || '';
-    this.displayType = DisplayType.create(data.display || parentSectionType.displayType.name);
+    this.displayType = DisplayType.create(data.display || parentContainerType.display);
     this.display = this.displayType.name;
     this.asyncValueValidatorName = data.asyncValueValidatorName || null;
     this.helpContextual = data.helpContextual
@@ -312,16 +324,16 @@ export class FieldType extends TypeBase {
   }
 }
 
-export class TableType extends TypeBase {
+export class TableType extends TypeBase implements ContainerType {
   readonly allowCustomCols: boolean;
   readonly description: string;
-  readonly display: string;
   readonly displayType: DisplayType;
   readonly icon: string;
   readonly singleRow: boolean;
   readonly uniqueCols: boolean;
   readonly rowAsSection: boolean;
-  readonly parentSectionType: SectionType;
+  readonly display: string;
+  readonly parentContainerType: ContainerType;
 
   readonly allowImport: boolean;
 
@@ -329,7 +341,7 @@ export class TableType extends TypeBase {
 
   constructor(
     name: string,
-    parentSectionType: SectionType,
+    parentContainerType: ContainerType,
     data?: Partial<TableType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
@@ -338,28 +350,28 @@ export class TableType extends TypeBase {
     super(name, isTemplBased, scope, title);
 
     data = data || {};
-    this.parentSectionType = parentSectionType;
+    this.parentContainerType = parentContainerType;
     this.description = data.description || '';
     this.singleRow = data.singleRow === true;
     this.uniqueCols = data.uniqueCols === true;
     this.allowCustomCols = data.allowCustomCols !== false;
-    this.displayType = DisplayType.create(data.display || parentSectionType.displayType.name);
+    this.displayType = DisplayType.create(data.display || parentContainerType.display);
     this.display = this.displayType.name;
     this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
     this.allowImport = data.allowImport === true;
     this.rowAsSection = data.rowAsSection === true;
 
-    (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, this as unknown as SectionType, ct, this.columnScope));
+    (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, this, ct, this.columnScope));
   }
 
   static createDefault(
     name: string,
-    parentSectionType: SectionType,
+    parentContainerType: ContainerType,
     singleRow?: boolean,
     uniqueCols?: boolean,
     scope?: TypeScope<TypeBase>
   ): TableType {
-    return new TableType(name, parentSectionType,{ singleRow, uniqueCols }, scope, false);
+    return new TableType(name, parentContainerType, { singleRow, uniqueCols }, scope, false);
   }
 
   get columnTypes(): ColumnType[] {
@@ -372,7 +384,7 @@ export class TableType extends TypeBase {
     }
 
     if (createDefault) {
-      return ColumnType.createDefault(name, this as unknown as SectionType, this.columnScope);
+      return ColumnType.createDefault(name, this, this.columnScope);
     }
 
     return undefined;
@@ -381,7 +393,7 @@ export class TableType extends TypeBase {
 
 export class AnnotationsType extends TableType {
   constructor(
-    parentSectionType: SectionType,
+    parentContainerType: ContainerType,
     data?: Partial<TableType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true
@@ -389,7 +401,7 @@ export class AnnotationsType extends TableType {
     const annotationData = Object.assign(data || {}, { singleRow: true });
     super(
       LowerCaseSectionNames.ANNOTATIONS,
-      parentSectionType,
+      parentContainerType,
       annotationData,
       scope,
       isTemplBased,
@@ -411,7 +423,7 @@ export class ColumnType extends TypeBase {
 
   constructor(
     name: string,
-    parentSectionType: SectionType,
+    parentContainerType: ContainerType,
     data?: Partial<ColumnType>,
     scope?: TypeScope<ColumnType>,
     isTemplBased: boolean = true
@@ -419,7 +431,7 @@ export class ColumnType extends TypeBase {
     super(name, isTemplBased, scope as TypeScope<TypeBase>);
 
     data = data || {};
-    this.displayType = DisplayType.create(data.display || parentSectionType.displayType.name);
+    this.displayType = DisplayType.create(data.display || parentContainerType.display);
     this.display = this.displayType.name;
     this.valueType = ValueTypeFactory.create(data.valueType || {});
     this.autosuggest = data.autosuggest !== undefined ? data.autosuggest : true;
@@ -435,8 +447,8 @@ export class ColumnType extends TypeBase {
       : undefined;
   }
 
-  static createDefault(name: string, parentSectionType: SectionType, scope?: TypeScope<ColumnType>): ColumnType {
-    return new ColumnType(name, parentSectionType, {}, scope, false);
+  static createDefault(name: string, parentContainerType: ContainerType, scope?: TypeScope<ColumnType>): ColumnType {
+    return new ColumnType(name, parentContainerType, {}, scope, false);
   }
 
   get isRequired(): boolean {
@@ -452,7 +464,7 @@ export class ColumnType extends TypeBase {
   }
 }
 
-export class SectionType extends TypeBase {
+export class SectionType extends TypeBase implements ContainerType {
   readonly annotationsType: AnnotationsType;
   readonly display: string;
   readonly displayType: DisplayType;
@@ -471,7 +483,7 @@ export class SectionType extends TypeBase {
     data?: Partial<SectionType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
-    parentSectionType?: SectionType
+    parentContainerType?: ContainerType
   ) {
     super(name, isTemplBased, scope);
     data = data || {};
@@ -482,16 +494,17 @@ export class SectionType extends TypeBase {
      *  2. what the parent has (recursive case)
      *  3. explicit default for the root SectionType
      */
-    this.displayType = DisplayType.create(
-      data.display ||
-      parentSectionType?.displayType?.name
-    );
+    this.displayType = DisplayType.create(data.display || parentContainerType?.display);
+
     // just OR short-circuit would pick 'any true between parent and this',
     //  as opposed to 'whatever this has set if defined, otherwise parent, otherwise false'
     //  so if parent had true but this (explicitly) had false, it would still evaluate to true
-    this.displayAnnotations = data.displayAnnotations !== undefined ? data.displayAnnotations :
-      parentSectionType?.displayAnnotations !== undefined ? parentSectionType.displayAnnotations :
-      false;
+    this.displayAnnotations =
+      data.displayAnnotations !== undefined
+        ? data.displayAnnotations
+        : parentContainerType?.displayAnnotations !== undefined
+        ? parentContainerType.displayAnnotations
+        : false;
 
     this.display = this.displayType.name;
     this.tableGroups = (data.tableGroups || []).filter((gr) => !isArrayEmpty(gr));
@@ -509,16 +522,15 @@ export class SectionType extends TypeBase {
       (fieldType) => new FieldType(fieldType.name, this, fieldType, this.fieldScope, fieldType.title)
     );
     (data.tableTypes || []).forEach(
-      (tableType) =>
-        new TableType(tableType.name, this, tableType, this.tableScope, isTemplBased, tableType.title)
+      (tableType) => new TableType(tableType.name, this, tableType, this.tableScope, isTemplBased, tableType.title)
     );
     (data.sectionTypes || []).forEach(
       (sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this)
     );
   }
 
-  static createDefault(name: string, scope?: TypeScope<TypeBase>, parentSectionType?: SectionType): SectionType {
-    return new SectionType(name, {}, scope, false, parentSectionType);
+  static createDefault(name: string, scope?: TypeScope<TypeBase>, parentContainerType?: ContainerType): SectionType {
+    return new SectionType(name, {}, scope, false, parentContainerType);
   }
 
   get fieldTypes(): FieldType[] {
@@ -544,9 +556,7 @@ export class SectionType extends TypeBase {
   }
 
   getSectionType(name: string): SectionType {
-    return this.sectionScope.getOrElse(name, () =>
-      SectionType.createDefault(name, this.sectionScope, this)
-    );
+    return this.sectionScope.getOrElse(name, () => SectionType.createDefault(name, this.sectionScope, this));
   }
 
   sectionType(names: string[]): any {
