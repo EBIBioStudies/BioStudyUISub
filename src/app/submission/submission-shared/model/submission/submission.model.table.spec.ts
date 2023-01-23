@@ -8,7 +8,7 @@ describe('Submission Model: Table', () => {
   });
 
   it('can be multi row', () => {
-    const f = new Table(TableType.createDefault('MultiRowTable', {display: 'required'}));
+    const f = new Table(TableType.createDefault('MultiRowTable', {display: 'optional'}));
     expect(f.colSize()).toBe(0);
     expect(f.rowSize()).toBe(0);
     expect(f.singleRow).toBeFalsy();
@@ -16,14 +16,14 @@ describe('Submission Model: Table', () => {
   });
 
   it('can be single row', () => {
-    const f = new Table(TableType.createDefault('SingleRowTable', {display: 'required'},true));
+    const f = new Table(TableType.createDefault('SingleRowTable', {display: 'optional'},true));
     expect(f.colSize()).toBe(0);
     expect(f.rowSize()).toBe(0);
     expect(f.singleRow).toBeTruthy();
   });
 
   it('allows to add more rows to a multi row table', () => {
-    const f = new Table(TableType.createDefault('MultiRowTable', {display: 'required'}));
+    const f = new Table(TableType.createDefault('MultiRowTable', {display: 'optional'}));
     expect(f.singleRow).toBeFalsy();
     expect(f.rowSize()).toBe(0);
     f.addRow();
@@ -32,18 +32,18 @@ describe('Submission Model: Table', () => {
   });
 
   it('creates default empty values (in rows) when a new column is added', () => {
-    const f = new Table(TableType.createDefault('ATable', {display: 'required'}));
+    const f = new Table(TableType.createDefault('ATable', {display: 'optional'}));
     f.addRow();
     const col = f.addColumn('col1')!;
     expect(f.rows[0]!.valueFor(col.id)!.value).toBe('');
   });
 
   it('removes values from all rows when a column is deleted', () => {
-    const f = new Table(TableType.createDefault('ATable', {display: 'required'}));
+    const f = new Table(TableType.createDefault('ATable', {display: 'optional'}));
     const col = f.addColumn('col1')!;
     f.addRow();
     f.addRow();
-    expect(f.rowSize()).toBe(3);
+    expect(f.rowSize()).toBe(2);
     expect(f.rows[0]!.valueFor(col.id)!.value).toBe('');
     expect(f.rows[1]!.valueFor(col.id)!.value).toBe('');
 
@@ -53,7 +53,7 @@ describe('Submission Model: Table', () => {
   });
 
   it('automatically updates columns and rows when new data added as attributes', () => {
-    const f = new Table(TableType.createDefault('ATable', {display: 'required'}));
+    const f = new Table(TableType.createDefault('ATable', {display: 'optional'}));
     f.add([
       {
         name: 'col1',
@@ -64,8 +64,8 @@ describe('Submission Model: Table', () => {
         value: 'value2'
       }
     ]);
-    // KNOWN BUG: Newly added tables have 2 rows
-    expect(f.rowSize()).toBe(2);
+
+    expect(f.rowSize()).toBe(1);
     expect(f.colSize()).toBe(2);
     const ids = f.columns.map((c) => c.id);
     expect(
@@ -93,7 +93,7 @@ describe('Submission Model: Table', () => {
       ]
     } as TableData;
 
-    const f = new Table(TableType.createDefault(data.type!, {display: 'required'}), data);
+    const f = new Table(TableType.createDefault(data.type!, {display: 'optional'}), data);
     expect(f.rowSize()).toBe(1);
     expect(f.colSize()).toBe(2);
     const ids = f.columns.map((c) => c.id);
@@ -108,7 +108,7 @@ describe('Submission Model: Table', () => {
   it('creates required columns according the type definition', () => {
     const type = new TableType(
       'ATable',
-      {display: 'required'},
+      {display: 'optional'},
       {
         columnTypes: [
           { name: 'col1', display: 'required' } as ColumnType,
