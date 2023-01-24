@@ -174,7 +174,7 @@ export interface BannerType {
  *
  * Note that tables are both children (of sections) and containers (to columns)
  */
-export interface ContainerType {
+export interface CascadedAttributes {
   readonly display: string;
   readonly displayAnnotations?: boolean;
 }
@@ -300,7 +300,7 @@ export class FieldType extends TypeBase {
 
   constructor(
     name: string,
-    parentContainerType: ContainerType,
+    parentCascadedAttributes: CascadedAttributes,
     data: Partial<FieldType> = {},
     scope?: TypeScope<TypeBase>,
     title?: string
@@ -311,7 +311,7 @@ export class FieldType extends TypeBase {
     this.icon = data.icon || 'fa-pencil-square-o';
     this.helpText = data.helpText || '';
     this.helpLink = data.helpLink || '';
-    this.displayType = DisplayType.create(data.display || parentContainerType.display);
+    this.displayType = DisplayType.create(data.display || parentCascadedAttributes.display);
     this.display = this.displayType.name;
     this.asyncValueValidatorName = data.asyncValueValidatorName || null;
     this.helpContextual = data.helpContextual
@@ -324,7 +324,7 @@ export class FieldType extends TypeBase {
   }
 }
 
-export class TableType extends TypeBase implements ContainerType {
+export class TableType extends TypeBase implements CascadedAttributes {
   readonly allowCustomCols: boolean;
   readonly description: string;
   readonly displayType: DisplayType;
@@ -333,7 +333,7 @@ export class TableType extends TypeBase implements ContainerType {
   readonly uniqueCols: boolean;
   readonly rowAsSection: boolean;
   readonly display: string;
-  readonly parentContainerType: ContainerType;
+  readonly parentCascadedAttributes: CascadedAttributes;
 
   readonly allowImport: boolean;
 
@@ -341,7 +341,7 @@ export class TableType extends TypeBase implements ContainerType {
 
   constructor(
     name: string,
-    parentContainerType: ContainerType,
+    parentCascadedAttributes: CascadedAttributes,
     data?: Partial<TableType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
@@ -350,12 +350,12 @@ export class TableType extends TypeBase implements ContainerType {
     super(name, isTemplBased, scope, title);
 
     data = data || {};
-    this.parentContainerType = parentContainerType;
+    this.parentCascadedAttributes = parentCascadedAttributes;
     this.description = data.description || '';
     this.singleRow = data.singleRow === true;
     this.uniqueCols = data.uniqueCols === true;
     this.allowCustomCols = data.allowCustomCols !== false;
-    this.displayType = DisplayType.create(data.display || parentContainerType.display);
+    this.displayType = DisplayType.create(data.display || parentCascadedAttributes.display);
     this.display = this.displayType.name;
     this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
     this.allowImport = data.allowImport === true;
@@ -366,12 +366,12 @@ export class TableType extends TypeBase implements ContainerType {
 
   static createDefault(
     name: string,
-    parentContainerType: ContainerType,
+    parentCascadedAttributes: CascadedAttributes,
     singleRow?: boolean,
     uniqueCols?: boolean,
     scope?: TypeScope<TypeBase>
   ): TableType {
-    return new TableType(name, parentContainerType, { singleRow, uniqueCols }, scope, false);
+    return new TableType(name, parentCascadedAttributes, { singleRow, uniqueCols }, scope, false);
   }
 
   get columnTypes(): ColumnType[] {
@@ -393,7 +393,7 @@ export class TableType extends TypeBase implements ContainerType {
 
 export class AnnotationsType extends TableType {
   constructor(
-    parentContainerType: ContainerType,
+    parentCascadedAttributes: CascadedAttributes,
     data?: Partial<TableType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true
@@ -401,7 +401,7 @@ export class AnnotationsType extends TableType {
     const annotationData = Object.assign(data || {}, { singleRow: true });
     super(
       LowerCaseSectionNames.ANNOTATIONS,
-      parentContainerType,
+      parentCascadedAttributes,
       annotationData,
       scope,
       isTemplBased,
@@ -423,7 +423,7 @@ export class ColumnType extends TypeBase {
 
   constructor(
     name: string,
-    parentContainerType: ContainerType,
+    parentCascadedAttributes: CascadedAttributes,
     data?: Partial<ColumnType>,
     scope?: TypeScope<ColumnType>,
     isTemplBased: boolean = true
@@ -431,7 +431,7 @@ export class ColumnType extends TypeBase {
     super(name, isTemplBased, scope as TypeScope<TypeBase>);
 
     data = data || {};
-    this.displayType = DisplayType.create(data.display || parentContainerType.display);
+    this.displayType = DisplayType.create(data.display || parentCascadedAttributes.display);
     this.display = this.displayType.name;
     this.valueType = ValueTypeFactory.create(data.valueType || {});
     this.autosuggest = data.autosuggest !== undefined ? data.autosuggest : true;
@@ -447,8 +447,12 @@ export class ColumnType extends TypeBase {
       : undefined;
   }
 
-  static createDefault(name: string, parentContainerType: ContainerType, scope?: TypeScope<ColumnType>): ColumnType {
-    return new ColumnType(name, parentContainerType, {}, scope, false);
+  static createDefault(
+    name: string,
+    parentCascadedAttributes: CascadedAttributes,
+    scope?: TypeScope<ColumnType>
+  ): ColumnType {
+    return new ColumnType(name, parentCascadedAttributes, {}, scope, false);
   }
 
   get isRequired(): boolean {
@@ -464,7 +468,7 @@ export class ColumnType extends TypeBase {
   }
 }
 
-export class SectionType extends TypeBase implements ContainerType {
+export class SectionType extends TypeBase implements CascadedAttributes {
   readonly annotationsType: AnnotationsType;
   readonly display: string;
   readonly displayType: DisplayType;
@@ -483,7 +487,7 @@ export class SectionType extends TypeBase implements ContainerType {
     data?: Partial<SectionType>,
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
-    parentContainerType?: ContainerType
+    parentCascadedAttributes?: CascadedAttributes
   ) {
     super(name, isTemplBased, scope);
     data = data || {};
@@ -494,7 +498,7 @@ export class SectionType extends TypeBase implements ContainerType {
      *  2. what the parent has (recursive case)
      *  3. explicit default for the root SectionType
      */
-    this.displayType = DisplayType.create(data.display || parentContainerType?.display);
+    this.displayType = DisplayType.create(data.display || parentCascadedAttributes?.display);
 
     // just OR short-circuit would pick 'any true between parent and this',
     //  as opposed to 'whatever this has set if defined, otherwise parent, otherwise false'
@@ -502,8 +506,8 @@ export class SectionType extends TypeBase implements ContainerType {
     this.displayAnnotations =
       data.displayAnnotations !== undefined
         ? data.displayAnnotations
-        : parentContainerType?.displayAnnotations !== undefined
-        ? parentContainerType.displayAnnotations
+        : parentCascadedAttributes?.displayAnnotations !== undefined
+        ? parentCascadedAttributes.displayAnnotations
         : false;
 
     this.display = this.displayType.name;
@@ -529,8 +533,12 @@ export class SectionType extends TypeBase implements ContainerType {
     );
   }
 
-  static createDefault(name: string, scope?: TypeScope<TypeBase>, parentContainerType?: ContainerType): SectionType {
-    return new SectionType(name, {}, scope, false, parentContainerType);
+  static createDefault(
+    name: string,
+    scope?: TypeScope<TypeBase>,
+    parentCascadedAttributes?: CascadedAttributes
+  ): SectionType {
+    return new SectionType(name, {}, scope, false, parentCascadedAttributes);
   }
 
   get fieldTypes(): FieldType[] {
