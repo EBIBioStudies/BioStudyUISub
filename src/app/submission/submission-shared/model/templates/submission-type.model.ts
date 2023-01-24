@@ -366,7 +366,7 @@ export class TableType extends TypeBase implements CascadedAttributes {
 
   static createDefault(
     name: string,
-    parentCascadedAttributes: CascadedAttributes,
+    parentCascadedAttributes: CascadedAttributes = { display: 'optional' },
     singleRow?: boolean,
     uniqueCols?: boolean,
     scope?: TypeScope<TypeBase>

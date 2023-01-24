@@ -8,7 +8,7 @@ describe('Submission Model: Table', () => {
   });
 
   it('can be multi row', () => {
-    const f = new Table(TableType.createDefault('MultiRowTable', {display: 'optional'}));
+    const f = new Table(TableType.createDefault('MultiRowTable'));
     expect(f.colSize()).toBe(0);
     expect(f.rowSize()).toBe(0);
     expect(f.singleRow).toBeFalsy();
@@ -16,14 +16,14 @@ describe('Submission Model: Table', () => {
   });
 
   it('can be single row', () => {
-    const f = new Table(TableType.createDefault('SingleRowTable', {display: 'optional'},true));
+    const f = new Table(TableType.createDefault('SingleRowTable', {display: 'optional'}, true));
     expect(f.colSize()).toBe(0);
     expect(f.rowSize()).toBe(0);
     expect(f.singleRow).toBeTruthy();
   });
 
   it('allows to add more rows to a multi row table', () => {
-    const f = new Table(TableType.createDefault('MultiRowTable', {display: 'optional'}));
+    const f = new Table(TableType.createDefault('MultiRowTable'));
     expect(f.singleRow).toBeFalsy();
     expect(f.rowSize()).toBe(0);
     f.addRow();
@@ -32,14 +32,14 @@ describe('Submission Model: Table', () => {
   });
 
   it('creates default empty values (in rows) when a new column is added', () => {
-    const f = new Table(TableType.createDefault('ATable', {display: 'optional'}));
+    const f = new Table(TableType.createDefault('ATable'));
     f.addRow();
     const col = f.addColumn('col1')!;
     expect(f.rows[0]!.valueFor(col.id)!.value).toBe('');
   });
 
   it('removes values from all rows when a column is deleted', () => {
-    const f = new Table(TableType.createDefault('ATable', {display: 'optional'}));
+    const f = new Table(TableType.createDefault('ATable'));
     const col = f.addColumn('col1')!;
     f.addRow();
     f.addRow();
@@ -53,7 +53,7 @@ describe('Submission Model: Table', () => {
   });
 
   it('automatically updates columns and rows when new data added as attributes', () => {
-    const f = new Table(TableType.createDefault('ATable', {display: 'optional'}));
+    const f = new Table(TableType.createDefault('ATable'));
     f.add([
       {
         name: 'col1',
@@ -93,7 +93,7 @@ describe('Submission Model: Table', () => {
       ]
     } as TableData;
 
-    const f = new Table(TableType.createDefault(data.type!, {display: 'optional'}), data);
+    const f = new Table(TableType.createDefault(data.type!), data);
     expect(f.rowSize()).toBe(1);
     expect(f.colSize()).toBe(2);
     const ids = f.columns.map((c) => c.id);
