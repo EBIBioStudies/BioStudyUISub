@@ -108,13 +108,13 @@ describe('Submission Model: Table', () => {
   it('creates required columns according the type definition', () => {
     const type = new TableType(
       'ATable',
-      {display: 'optional'},
       {
         columnTypes: [
           { name: 'col1', display: 'required' } as ColumnType,
           { name: 'col2', display: 'optional' } as ColumnType
         ]
       },
+      undefined,
       undefined,
       true
     );

@@ -300,8 +300,8 @@ export class FieldType extends TypeBase {
 
   constructor(
     name: string,
-    parentCascadedAttributes: CascadedAttributes,
     data: Partial<FieldType> = {},
+    parentCascadedAttributes: CascadedAttributes = { display: 'optional' },
     scope?: TypeScope<TypeBase>,
     title?: string
   ) {
@@ -341,8 +341,8 @@ export class TableType extends TypeBase implements CascadedAttributes {
 
   constructor(
     name: string,
-    parentCascadedAttributes: CascadedAttributes,
     data?: Partial<TableType>,
+    parentCascadedAttributes: CascadedAttributes = { display: 'optional' },
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
     title?: string
@@ -361,7 +361,7 @@ export class TableType extends TypeBase implements CascadedAttributes {
     this.allowImport = data.allowImport === true;
     this.rowAsSection = data.rowAsSection === true;
 
-    (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, this, ct, this.columnScope));
+    (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, ct, this, this.columnScope));
   }
 
   static createDefault(
@@ -371,7 +371,7 @@ export class TableType extends TypeBase implements CascadedAttributes {
     uniqueCols?: boolean,
     scope?: TypeScope<TypeBase>
   ): TableType {
-    return new TableType(name, parentCascadedAttributes, { singleRow, uniqueCols }, scope, false);
+    return new TableType(name, { singleRow, uniqueCols }, parentCascadedAttributes, scope, false);
   }
 
   get columnTypes(): ColumnType[] {
@@ -393,16 +393,16 @@ export class TableType extends TypeBase implements CascadedAttributes {
 
 export class AnnotationsType extends TableType {
   constructor(
-    parentCascadedAttributes: CascadedAttributes,
     data?: Partial<TableType>,
+    parentCascadedAttributes: CascadedAttributes = { display: 'optional' },
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true
   ) {
     const annotationData = Object.assign(data || {}, { singleRow: true });
     super(
       LowerCaseSectionNames.ANNOTATIONS,
-      parentCascadedAttributes,
       annotationData,
+      parentCascadedAttributes,
       scope,
       isTemplBased,
       annotationData.title
@@ -423,8 +423,8 @@ export class ColumnType extends TypeBase {
 
   constructor(
     name: string,
-    parentCascadedAttributes: CascadedAttributes,
     data?: Partial<ColumnType>,
+    parentCascadedAttributes: CascadedAttributes = { display: 'optional' },
     scope?: TypeScope<ColumnType>,
     isTemplBased: boolean = true
   ) {
@@ -452,7 +452,7 @@ export class ColumnType extends TypeBase {
     parentCascadedAttributes: CascadedAttributes,
     scope?: TypeScope<ColumnType>
   ): ColumnType {
-    return new ColumnType(name, parentCascadedAttributes, {}, scope, false);
+    return new ColumnType(name, {}, parentCascadedAttributes, scope, false);
   }
 
   get isRequired(): boolean {
@@ -485,9 +485,9 @@ export class SectionType extends TypeBase implements CascadedAttributes {
   constructor(
     name: string,
     data?: Partial<SectionType>,
+    parentCascadedAttributes?: CascadedAttributes,
     scope?: TypeScope<TypeBase>,
-    isTemplBased: boolean = true,
-    parentCascadedAttributes?: CascadedAttributes
+    isTemplBased: boolean = true
   ) {
     super(name, isTemplBased, scope);
     data = data || {};
@@ -529,7 +529,7 @@ export class SectionType extends TypeBase implements CascadedAttributes {
       (tableType) => new TableType(tableType.name, this, tableType, this.tableScope, isTemplBased, tableType.title)
     );
     (data.sectionTypes || []).forEach(
-      (sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this)
+      (sectionType) => new SectionType(sectionType.name, sectionType, this, this.sectionScope, isTemplBased)
     );
   }
 
@@ -538,7 +538,7 @@ export class SectionType extends TypeBase implements CascadedAttributes {
     scope?: TypeScope<TypeBase>,
     parentCascadedAttributes?: CascadedAttributes
   ): SectionType {
-    return new SectionType(name, {}, scope, false, parentCascadedAttributes);
+    return new SectionType(name, {}, parentCascadedAttributes, scope, false);
   }
 
   get fieldTypes(): FieldType[] {
@@ -597,9 +597,9 @@ export class SubmissionType extends TypeBase {
     this.sectionType = new SectionType(
       typeObj.sectionType.name,
       typeObj.sectionType,
+      undefined,
       new TypeScope<TypeBase>(),
-      true,
-      undefined
+      true
     );
   }
 
