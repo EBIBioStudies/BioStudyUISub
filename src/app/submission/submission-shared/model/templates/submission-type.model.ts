@@ -333,7 +333,6 @@ export class TableType extends TypeBase implements CascadedAttributes {
   readonly uniqueCols: boolean;
   readonly rowAsSection: boolean;
   readonly display: string;
-  readonly parentCascadedAttributes: CascadedAttributes;
 
   readonly allowImport: boolean;
 
@@ -350,7 +349,6 @@ export class TableType extends TypeBase implements CascadedAttributes {
     super(name, isTemplBased, scope, title);
 
     data = data || {};
-    this.parentCascadedAttributes = parentCascadedAttributes;
     this.description = data.description || '';
     this.singleRow = data.singleRow === true;
     this.uniqueCols = data.uniqueCols === true;
