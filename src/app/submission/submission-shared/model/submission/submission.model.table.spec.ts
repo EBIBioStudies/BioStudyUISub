@@ -16,7 +16,7 @@ describe('Submission Model: Table', () => {
   });
 
   it('can be single row', () => {
-    const f = new Table(TableType.createDefault('SingleRowTable', true));
+    const f = new Table(TableType.createDefault('SingleRowTable', {display: 'optional'}, true));
     expect(f.colSize()).toBe(0);
     expect(f.rowSize()).toBe(0);
     expect(f.singleRow).toBeTruthy();
@@ -64,6 +64,7 @@ describe('Submission Model: Table', () => {
         value: 'value2'
       }
     ]);
+
     expect(f.rowSize()).toBe(1);
     expect(f.colSize()).toBe(2);
     const ids = f.columns.map((c) => c.id);
@@ -91,6 +92,7 @@ describe('Submission Model: Table', () => {
         ]
       ]
     } as TableData;
+
     const f = new Table(TableType.createDefault(data.type!), data);
     expect(f.rowSize()).toBe(1);
     expect(f.colSize()).toBe(2);
@@ -112,6 +114,7 @@ describe('Submission Model: Table', () => {
           { name: 'col2', display: 'optional' } as ColumnType
         ]
       },
+      undefined,
       undefined,
       true
     );

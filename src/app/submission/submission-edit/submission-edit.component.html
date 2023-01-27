@@ -36,11 +36,6 @@
                 left-hand side lists those fields still incomplete or incorrect. Use the
                 <span class="font-weight-bold">Add</span> tab to quickly add new rows or tables.
               </p>
-              <p *ngIf="banner && banner.contactUs" class="card-text">
-                <i class="fa fa-exclamation-triangle"></i>
-                {{ banner.contactUs.text }}
-                <a href="mailto:{{ banner.contactUs.email }}">{{ banner.contactUs.email }}</a>
-              </p>
               <div class="alert alert-warning mb-0" role="alert">
                 <strong>Please note:</strong> all fields are required unless they are marked as "<i>Optional</i>"
               </div>
@@ -83,6 +78,12 @@
                 <p class="card-text">Please wait while the data in the form is being submitted and validated.</p>
               </ng-container>
             </ng-container>
+
+            <p *ngIf="banner && banner.contactUs" class="card-text">
+              <i class="fa fa-exclamation-triangle"></i>
+              {{ banner.contactUs.text }}
+              <a href="mailto:{{ banner.contactUs.email }}">{{ banner.contactUs.email }}</a>
+            </p>
 
             <ng-container *ngIf="isTemp && readonly">
               <h2 class="card-title">

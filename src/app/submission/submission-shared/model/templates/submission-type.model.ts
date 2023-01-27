@@ -127,7 +127,7 @@ export class DisplayType {
     this.name = name;
   }
 
-  static create(name: string): DisplayType {
+  static create(name: string | undefined): DisplayType {
     return (
       [DisplayType.DESIRABLE, DisplayType.OPTIONAL, DisplayType.READONLY, DisplayType.REQUIRED].find(
         (type) => type.name === name
@@ -165,6 +165,18 @@ export interface BannerType {
   readonly alt: string;
   readonly backgroundColor: string;
   readonly contactUs: { text: string; email: string };
+}
+
+/**
+ * Bundles a set of attributes that children "inherit" from their parent.
+ *
+ * e.g. tables that are children of sections should use the section's displayType if they don't have an explicit one
+ *
+ * Note that tables are both children (of sections) and containers (to columns)
+ */
+export interface CascadedAttributes {
+  readonly display: string;
+  readonly displayAnnotations?: boolean;
 }
 
 export enum ValueTypeName {
@@ -289,8 +301,8 @@ export class FieldType extends TypeBase {
   constructor(
     name: string,
     data: Partial<FieldType> = {},
+    parentCascadedAttributes: CascadedAttributes = { display: 'optional' },
     scope?: TypeScope<TypeBase>,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL,
     title?: string
   ) {
     super(name, true, scope, title);
@@ -299,7 +311,7 @@ export class FieldType extends TypeBase {
     this.icon = data.icon || 'fa-pencil-square-o';
     this.helpText = data.helpText || '';
     this.helpLink = data.helpLink || '';
-    this.displayType = DisplayType.create(data.display || parentDisplayType.name);
+    this.displayType = DisplayType.create(data.display || parentCascadedAttributes.display);
     this.display = this.displayType.name;
     this.asyncValueValidatorName = data.asyncValueValidatorName || null;
     this.helpContextual = data.helpContextual
@@ -312,15 +324,15 @@ export class FieldType extends TypeBase {
   }
 }
 
-export class TableType extends TypeBase {
+export class TableType extends TypeBase implements CascadedAttributes {
   readonly allowCustomCols: boolean;
   readonly description: string;
-  readonly display: string;
   readonly displayType: DisplayType;
   readonly icon: string;
   readonly singleRow: boolean;
   readonly uniqueCols: boolean;
   readonly rowAsSection: boolean;
+  readonly display: string;
 
   readonly allowImport: boolean;
 
@@ -329,9 +341,9 @@ export class TableType extends TypeBase {
   constructor(
     name: string,
     data?: Partial<TableType>,
+    parentCascadedAttributes: CascadedAttributes = { display: 'optional' },
     scope?: TypeScope<TypeBase>,
     isTemplBased: boolean = true,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL,
     title?: string
   ) {
     super(name, isTemplBased, scope, title);
@@ -341,23 +353,23 @@ export class TableType extends TypeBase {
     this.singleRow = data.singleRow === true;
     this.uniqueCols = data.uniqueCols === true;
     this.allowCustomCols = data.allowCustomCols !== false;
-    this.displayType = DisplayType.create(data.display || parentDisplayType.name);
+    this.displayType = DisplayType.create(data.display || parentCascadedAttributes.display);
     this.display = this.displayType.name;
     this.icon = data.icon || (this.singleRow ? 'fa-list' : 'fa-th');
     this.allowImport = data.allowImport === true;
     this.rowAsSection = data.rowAsSection === true;
 
-    (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, ct, this.columnScope));
+    (data.columnTypes || []).forEach((ct) => new ColumnType(ct.name, ct, this, this.columnScope));
   }
 
   static createDefault(
     name: string,
+    parentCascadedAttributes?,
     singleRow?: boolean,
     uniqueCols?: boolean,
-    scope?: TypeScope<TypeBase>,
-    parentDisplayType?: DisplayType
+    scope?: TypeScope<TypeBase>
   ): TableType {
-    return new TableType(name, { singleRow, uniqueCols }, scope, false, parentDisplayType);
+    return new TableType(name, { singleRow, uniqueCols }, parentCascadedAttributes, scope, false);
   }
 
   get columnTypes(): ColumnType[] {
@@ -370,7 +382,7 @@ export class TableType extends TypeBase {
     }
 
     if (createDefault) {
-      return ColumnType.createDefault(name, this.columnScope);
+      return ColumnType.createDefault(name, this, this.columnScope);
     }
 
     return undefined;
@@ -380,17 +392,17 @@ export class TableType extends TypeBase {
 export class AnnotationsType extends TableType {
   constructor(
     data?: Partial<TableType>,
+    parentCascadedAttributes: CascadedAttributes = { display: 'optional' },
     scope?: TypeScope<TypeBase>,
-    isTemplBased: boolean = true,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+    isTemplBased: boolean = true
   ) {
     const annotationData = Object.assign(data || {}, { singleRow: true });
     super(
       LowerCaseSectionNames.ANNOTATIONS,
       annotationData,
+      parentCascadedAttributes,
       scope,
       isTemplBased,
-      parentDisplayType,
       annotationData.title
     );
   }
@@ -410,14 +422,14 @@ export class ColumnType extends TypeBase {
   constructor(
     name: string,
     data?: Partial<ColumnType>,
+    parentCascadedAttributes: CascadedAttributes = { display: 'optional' },
     scope?: TypeScope<ColumnType>,
-    isTemplBased: boolean = true,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+    isTemplBased: boolean = true
   ) {
     super(name, isTemplBased, scope as TypeScope<TypeBase>);
 
     data = data || {};
-    this.displayType = DisplayType.create(data.display || parentDisplayType.name);
+    this.displayType = DisplayType.create(data.display || parentCascadedAttributes.display);
     this.display = this.displayType.name;
     this.valueType = ValueTypeFactory.create(data.valueType || {});
     this.autosuggest = data.autosuggest !== undefined ? data.autosuggest : true;
@@ -433,8 +445,12 @@ export class ColumnType extends TypeBase {
       : undefined;
   }
 
-  static createDefault(name: string, scope?: TypeScope<ColumnType>): ColumnType {
-    return new ColumnType(name, {}, scope, false);
+  static createDefault(
+    name: string,
+    parentCascadedAttributes: CascadedAttributes,
+    scope?: TypeScope<ColumnType>
+  ): ColumnType {
+    return new ColumnType(name, {}, parentCascadedAttributes, scope, false);
   }
 
   get isRequired(): boolean {
@@ -450,7 +466,7 @@ export class ColumnType extends TypeBase {
   }
 }
 
-export class SectionType extends TypeBase {
+export class SectionType extends TypeBase implements CascadedAttributes {
   readonly annotationsType: AnnotationsType;
   readonly display: string;
   readonly displayType: DisplayType;
@@ -467,41 +483,60 @@ export class SectionType extends TypeBase {
   constructor(
     name: string,
     data?: Partial<SectionType>,
+    parentCascadedAttributes?: CascadedAttributes,
     scope?: TypeScope<TypeBase>,
-    isTemplBased: boolean = true,
-    parentDisplayType: DisplayType = DisplayType.OPTIONAL
+    isTemplBased: boolean = true
   ) {
     super(name, isTemplBased, scope);
-
     data = data || {};
-    this.displayType = DisplayType.create(data.display || parentDisplayType.name);
+
+    /**
+     * SectionType attribute precedence is:
+     *  1. explicitly defined value (what comes in data)
+     *  2. what the parent has (recursive case)
+     *  3. explicit default for the root SectionType
+     */
+    this.displayType = DisplayType.create(data.display || parentCascadedAttributes?.display);
+
+    // just OR short-circuit would pick 'any true between parent and this',
+    //  as opposed to 'whatever this has set if defined, otherwise parent, otherwise false'
+    //  so if parent had true but this (explicitly) had false, it would still evaluate to true
+    this.displayAnnotations =
+      data.displayAnnotations !== undefined
+        ? data.displayAnnotations
+        : parentCascadedAttributes?.displayAnnotations !== undefined
+        ? parentCascadedAttributes.displayAnnotations
+        : false;
+
     this.display = this.displayType.name;
-    this.displayAnnotations = data.displayAnnotations || false;
     this.tableGroups = (data.tableGroups || []).filter((gr) => !isArrayEmpty(gr));
     this.minRequired = Number.isInteger(data.minRequired) ? Number(data.minRequired) : 1;
     this.annotationsType = new AnnotationsType(
+      this,
       data.annotationsType,
       new TypeScope<AnnotationsType>(),
-      isTemplBased,
-      this.displayType
+      isTemplBased
     );
     this.sectionExample = data.sectionExample || '';
     this.banner = data.banner;
 
     (data.fieldTypes || []).forEach(
-      (fieldType) => new FieldType(fieldType.name, fieldType, this.fieldScope, this.displayType, fieldType.title)
+      (fieldType) => new FieldType(fieldType.name, this, fieldType, this.fieldScope, fieldType.title)
     );
     (data.tableTypes || []).forEach(
-      (tableType) =>
-        new TableType(tableType.name, tableType, this.tableScope, isTemplBased, this.displayType, tableType.title)
+      (tableType) => new TableType(tableType.name, this, tableType, this.tableScope, isTemplBased, tableType.title)
     );
     (data.sectionTypes || []).forEach(
-      (sectionType) => new SectionType(sectionType.name, sectionType, this.sectionScope, isTemplBased, this.displayType)
+      (sectionType) => new SectionType(sectionType.name, sectionType, this, this.sectionScope, isTemplBased)
     );
   }
 
-  static createDefault(name: string, scope?: TypeScope<TypeBase>, parentDisplayType?: DisplayType): SectionType {
-    return new SectionType(name, {}, scope, false, parentDisplayType);
+  static createDefault(
+    name: string,
+    scope?: TypeScope<TypeBase>,
+    parentCascadedAttributes?: CascadedAttributes
+  ): SectionType {
+    return new SectionType(name, {}, parentCascadedAttributes, scope, false);
   }
 
   get fieldTypes(): FieldType[] {
@@ -518,7 +553,7 @@ export class SectionType extends TypeBase {
 
   getTableType(name: string, singleRow: boolean = false, uniqueCols: boolean = false): TableType {
     return this.tableScope.getOrElse(name, () =>
-      TableType.createDefault(name, singleRow, uniqueCols, this.tableScope, this.displayType)
+      TableType.createDefault(name, this, singleRow, uniqueCols, this.tableScope)
     );
   }
 
@@ -527,9 +562,7 @@ export class SectionType extends TypeBase {
   }
 
   getSectionType(name: string): SectionType {
-    return this.sectionScope.getOrElse(name, () =>
-      SectionType.createDefault(name, this.sectionScope, this.displayType)
-    );
+    return this.sectionScope.getOrElse(name, () => SectionType.createDefault(name, this.sectionScope, this));
   }
 
   sectionType(names: string[]): any {
@@ -562,9 +595,9 @@ export class SubmissionType extends TypeBase {
     this.sectionType = new SectionType(
       typeObj.sectionType.name,
       typeObj.sectionType,
+      undefined,
       new TypeScope<TypeBase>(),
-      true,
-      DisplayType.create(typeObj.display)
+      true
     );
   }
 

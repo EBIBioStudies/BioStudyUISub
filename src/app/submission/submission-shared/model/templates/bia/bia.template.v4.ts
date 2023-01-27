@@ -800,7 +800,7 @@ export const biaTemplateV4 = {
           {
             name: 'Associations',
             icon: 'fa-address-card',
-            description: 'Associate parts of the study into a Study Components.',
+            description: 'Associate parts of the study into a Study Component.',
             uniqueCols: true,
             rowAsSection: true,
             display: 'required',
