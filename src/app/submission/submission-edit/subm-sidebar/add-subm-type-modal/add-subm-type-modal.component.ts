@@ -12,7 +12,7 @@ import { SectionForm } from '../../shared/model/section-form.model';
 export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
   tableNames?: string[];
   sectionForm!: SectionForm;
-  typeBase: string = 'Grid';
+  typeBase: string = 'Table';
   typeName: string = '';
 
   @ViewChild('focusBtn', { static: true })
@@ -51,7 +51,7 @@ export class AddSubmTypeModalComponent implements OnInit, AfterViewInit {
 
   onCancel(form: NgForm): void {
     form.reset();
-    this.typeBase = 'Grid';
+    this.typeBase = 'Table';
     this.hide();
   }
 
