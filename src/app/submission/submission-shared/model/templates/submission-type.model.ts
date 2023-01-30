@@ -521,10 +521,10 @@ export class SectionType extends TypeBase implements CascadedAttributes {
     this.banner = data.banner;
 
     (data.fieldTypes || []).forEach(
-      (fieldType) => new FieldType(fieldType.name, this, fieldType, this.fieldScope, fieldType.title)
+      (fieldType) => new FieldType(fieldType.name, fieldType, this, this.fieldScope, fieldType.title)
     );
     (data.tableTypes || []).forEach(
-      (tableType) => new TableType(tableType.name, this, tableType, this.tableScope, isTemplBased, tableType.title)
+      (tableType) => new TableType(tableType.name, tableType, this, this.tableScope, isTemplBased, tableType.title)
     );
     (data.sectionTypes || []).forEach(
       (sectionType) => new SectionType(sectionType.name, sectionType, this, this.sectionScope, isTemplBased)
