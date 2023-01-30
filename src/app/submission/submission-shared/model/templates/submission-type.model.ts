@@ -512,8 +512,8 @@ export class SectionType extends TypeBase implements CascadedAttributes {
     this.tableGroups = (data.tableGroups || []).filter((gr) => !isArrayEmpty(gr));
     this.minRequired = Number.isInteger(data.minRequired) ? Number(data.minRequired) : 1;
     this.annotationsType = new AnnotationsType(
-      this,
       data.annotationsType,
+      this,
       new TypeScope<AnnotationsType>(),
       isTemplBased
     );
@@ -592,7 +592,7 @@ export class SubmissionType extends TypeBase {
       throw Error('sectionType is not defined in the template');
     }
 
-    this.sectionType = new SectionType(
+    be:this.sectionType = new SectionType(
       typeObj.sectionType.name,
       typeObj.sectionType,
       undefined,
