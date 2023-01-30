@@ -215,7 +215,8 @@ export const defaultTemplate = {
       },
       {
         name: 'File',
-        description: 'List the data files for the study and describe their respective scopes.',
+        description:
+          'List and describe the data files associated with your study. It is possible to link entire directories, but note that for data consumers these will be served as zip files.',
         icon: 'fa-file',
         uniqueCols: true,
         allowImport: true,
