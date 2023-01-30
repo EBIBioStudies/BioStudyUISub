@@ -592,7 +592,7 @@ export class SubmissionType extends TypeBase {
       throw Error('sectionType is not defined in the template');
     }
 
-    be:this.sectionType = new SectionType(
+    this.sectionType = new SectionType(
       typeObj.sectionType.name,
       typeObj.sectionType,
       undefined,
