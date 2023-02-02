@@ -97,7 +97,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.1000.7",
-    "@angular/cli": "10.0.7",
+    "@angular/cli": "15.1.4",
     "@angular/compiler-cli": "10.0.12",
     "@testing-library/angular": "10.11.0",
     "@testing-library/jest-dom": "5.14.1",
