@@ -461,7 +461,8 @@ export const proteinDesignsTemplate = {
           },
           {
             name: 'Role',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'ORCID',
@@ -470,11 +471,13 @@ export const proteinDesignsTemplate = {
           },
           {
             name: 'Address',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Department',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           }
         ]
       }
