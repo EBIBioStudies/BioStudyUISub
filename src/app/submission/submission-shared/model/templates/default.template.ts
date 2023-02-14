@@ -4,13 +4,13 @@ export const defaultTemplate = {
   description: 'Generic submission',
   sectionType: {
     name: 'Study',
+    display: 'required',
     tableGroups: [['Link', 'File']],
     displayAnnotations: true,
     fieldTypes: [
       {
         name: 'Title',
         icon: 'fa-heading',
-        display: 'required',
         valueType: {
           name: 'largetext',
           minlength: 25
@@ -21,7 +21,6 @@ export const defaultTemplate = {
         name: 'ReleaseDate',
         title: 'Release Date',
         icon: 'fa-calendar-alt',
-        display: 'required',
         valueType: {
           name: 'date',
           allowPast: false
@@ -30,7 +29,6 @@ export const defaultTemplate = {
       {
         name: 'Description',
         icon: 'fa-comment',
-        display: 'required',
         valueType: {
           name: 'largetext',
           minlength: 50
@@ -39,7 +37,6 @@ export const defaultTemplate = {
       {
         name: 'Organism',
         icon: 'fa-tag',
-        display: 'required',
         helpText: 'Add organism',
         helpLink: 'help#new-item-dropdown',
         valueType: {
@@ -119,19 +116,23 @@ export const defaultTemplate = {
         },
         {
           name: 'Experimental design',
-          valueType: { name: 'text' }
+          valueType: { name: 'text' },
+          display: 'optional'
         },
         {
           name: 'Experimental factor',
-          valueType: { name: 'text' }
+          valueType: { name: 'text' },
+          display: 'optional'
         },
         {
           name: 'Organ',
-          valueType: { name: 'text' }
+          valueType: { name: 'text' },
+          display: 'optional'
         },
         {
           name: 'Cell type',
-          valueType: { name: 'text' }
+          valueType: { name: 'text' },
+          display: 'optional'
         }
       ]
     },
@@ -140,22 +141,19 @@ export const defaultTemplate = {
         name: 'Contact',
         description: 'Add the contact details for the authors involved in the study.',
         icon: 'fa-address-card',
-        display: 'required',
         uniqueCols: true,
         allowImport: true,
         rowAsSection: true,
         columnTypes: [
           {
             autosuggest: false,
-            display: 'required',
             name: 'Name',
             valueType: { name: 'text' }
           },
           {
             autosuggest: false,
             name: 'E-mail',
-            valueType: { name: 'text' },
-            display: 'required'
+            valueType: { name: 'text' }
           },
           {
             name: 'Organisation',
@@ -164,12 +162,12 @@ export const defaultTemplate = {
             valueType: {
               name: 'org',
               multiple: true
-            },
-            display: 'required'
+            }
           },
           {
             name: 'Role',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'ORCID',
@@ -178,15 +176,18 @@ export const defaultTemplate = {
           },
           {
             name: 'Address',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Department',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Funding',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           }
         ]
       },
@@ -200,6 +201,7 @@ export const defaultTemplate = {
         uniqueCols: true,
         allowImport: true,
         rowAsSection: true,
+        display: 'desirable',
         columnTypes: [
           {
             name: 'Link',
@@ -209,7 +211,7 @@ export const defaultTemplate = {
           {
             name: 'Description',
             valueType: { name: 'text' },
-            display: 'desirable'
+            display: 'required'
           }
         ]
       },
@@ -221,6 +223,7 @@ export const defaultTemplate = {
         uniqueCols: true,
         allowImport: true,
         rowAsSection: true,
+        display: 'desirable',
         columnTypes: [
           {
             name: 'File',
@@ -234,8 +237,7 @@ export const defaultTemplate = {
           },
           {
             name: 'Type',
-            valueType: { name: 'text' },
-            display: 'desirable'
+            valueType: { name: 'text' }
           }
         ]
       },
@@ -258,18 +260,15 @@ export const defaultTemplate = {
           },
           {
             name: 'Authors',
-            valueType: { name: 'text' },
-            display: 'required'
+            valueType: { name: 'text' }
           },
           {
             name: 'Title',
-            valueType: { name: 'text' },
-            display: 'required'
+            valueType: { name: 'text' }
           },
           {
             name: 'Year',
-            valueType: { name: 'text' },
-            display: 'required'
+            valueType: { name: 'text' }
           },
           {
             name: 'Volume',
@@ -283,15 +282,18 @@ export const defaultTemplate = {
           },
           {
             name: 'Type',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Issn',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'DOI',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           }
         ]
       }
