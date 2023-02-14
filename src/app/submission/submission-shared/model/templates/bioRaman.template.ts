@@ -90,15 +90,18 @@ export const bioRamanTemplate = {
           },
           {
             name: 'Address',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Department',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Funding',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           }
         ]
       },
@@ -144,15 +147,18 @@ export const bioRamanTemplate = {
           },
           {
             name: 'Type',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Issn',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'DOI',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           }
         ]
       }
@@ -171,7 +177,8 @@ export const bioRamanTemplate = {
             valueType: {
               name: 'text',
               placeholder: 'Description of what is being assayed. Sample names from publications can also go here.'
-            }
+            },
+            display: 'optional'
           },
           {
             name: 'Source',
@@ -180,7 +187,8 @@ export const bioRamanTemplate = {
               name: 'text',
               placeholder:
                 'Source of the sample, such as a strain collection, chemical supplier, or the environment or tissue sample was taken from.'
-            }
+            },
+            display: 'optional'
           },
           {
             name: 'Composition',
@@ -189,7 +197,8 @@ export const bioRamanTemplate = {
               name: 'largetext',
               placeholder:
                 'Entities are contained in the sample,  including not just the cells of interest, but the media, and well as any extraneous materials such as tissue, debris, biofilm matrix, or soil.'
-            }
+            },
+            display: 'optional'
           },
           {
             name: 'Sample condition',
@@ -197,12 +206,14 @@ export const bioRamanTemplate = {
             valueType: {
               name: 'largetext',
               placeholder: 'Are the cells dry or wet, are they fixed or unfixed, and what are they suspended in. '
-            }
+            },
+            display: 'optional'
           },
           {
             name: 'Mounting substrate',
             icon: 'fa-layer-group',
-            valueType: { name: 'text', placeholder: 'Glass coverslip, aluminum slide, CaF2 Slide' }
+            valueType: { name: 'text', placeholder: 'Glass coverslip, aluminum slide, CaF2 Slide' },
+            display: 'optional'
           }
         ],
         tableTypes: [
@@ -243,7 +254,8 @@ export const bioRamanTemplate = {
           {
             name: 'Raman system used',
             icon: 'fa-microscope',
-            valueType: { name: 'text', placeholder: 'Manufacturer and model of scope used' }
+            valueType: { name: 'text', placeholder: 'Manufacturer and model of scope used' },
+            display: 'optional'
           },
           {
             name: 'Measurement type',
@@ -258,7 +270,8 @@ export const bioRamanTemplate = {
                 'Hyper Raman Scattering (HRS)',
                 'Surface-enhanced Raman Scattering (SERS)'
               ]
-            }
+            },
+            display: 'optional'
           },
           {
             name: 'Raw spectrum',

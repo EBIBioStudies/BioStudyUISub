@@ -256,19 +256,23 @@ export const hecatosTemplate = {
           },
           {
             name: 'Role',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Address',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Department',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Funding',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           }
         ]
       },
@@ -370,15 +374,18 @@ export const hecatosTemplate = {
           },
           {
             name: 'Type',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Issn',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'DOI',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           }
         ]
       },

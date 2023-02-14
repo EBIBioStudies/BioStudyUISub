@@ -119,19 +119,23 @@ export const defaultTemplate = {
         },
         {
           name: 'Experimental design',
-          valueType: { name: 'text' }
+          valueType: { name: 'text' },
+          display: 'optional'
         },
         {
           name: 'Experimental factor',
-          valueType: { name: 'text' }
+          valueType: { name: 'text' },
+          display: 'optional'
         },
         {
           name: 'Organ',
-          valueType: { name: 'text' }
+          valueType: { name: 'text' },
+          display: 'optional'
         },
         {
           name: 'Cell type',
-          valueType: { name: 'text' }
+          valueType: { name: 'text' },
+          display: 'optional'
         }
       ]
     },
@@ -169,7 +173,8 @@ export const defaultTemplate = {
           },
           {
             name: 'Role',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'ORCID',
@@ -178,15 +183,18 @@ export const defaultTemplate = {
           },
           {
             name: 'Address',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Department',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Funding',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           }
         ]
       },
@@ -283,15 +291,18 @@ export const defaultTemplate = {
           },
           {
             name: 'Type',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Issn',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'DOI',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           }
         ]
       }
