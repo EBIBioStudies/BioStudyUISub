@@ -163,15 +163,18 @@ export const euToxRiskTemplate = {
           },
           {
             name: 'Address',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Department',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Funding',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           }
         ]
       },
@@ -193,11 +196,13 @@ export const euToxRiskTemplate = {
           },
           {
             name: 'Type',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Readout method',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           }
         ]
       },
@@ -216,47 +221,58 @@ export const euToxRiskTemplate = {
           },
           {
             name: 'CAS number',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'SMILES',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Supplier',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Order number',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Lot number',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Compound form',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Storage temp',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Stock solvent',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Stock conc',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Stock aliquot storage',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Other info',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           }
         ]
       },
@@ -348,15 +364,18 @@ export const euToxRiskTemplate = {
           },
           {
             name: 'Type',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'Issn',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           },
           {
             name: 'DOI',
-            valueType: { name: 'text' }
+            valueType: { name: 'text' },
+            display: 'optional'
           }
         ]
       }
