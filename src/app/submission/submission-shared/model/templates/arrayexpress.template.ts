@@ -16,7 +16,6 @@ export const arrayExpressTemplate = {
       {
         name: 'Title',
         icon: 'fa-heading',
-        display: 'readonly',
         valueType: {
           name: 'largetext'
         }
@@ -34,7 +33,6 @@ export const arrayExpressTemplate = {
       {
         name: 'Study type',
         icon: 'fa-tag',
-        display: 'readonly',
         valueType: {
           name: 'text'
         }
@@ -42,7 +40,6 @@ export const arrayExpressTemplate = {
       {
         name: 'Organism',
         icon: 'fa-tag',
-        display: 'readonly',
         valueType: {
           name: 'text'
         }
@@ -50,7 +47,6 @@ export const arrayExpressTemplate = {
       {
         name: 'Description',
         icon: 'fa-tag',
-        display: 'readonly',
         valueType: {
           name: 'largetext'
         }
