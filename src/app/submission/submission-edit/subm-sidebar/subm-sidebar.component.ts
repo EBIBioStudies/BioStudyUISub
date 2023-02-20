@@ -90,7 +90,7 @@ export class SubmSidebarComponent implements OnDestroy {
 
   private updateInvalidControls(): void {
     this.invalidControls = this.controls
-      .map((g) => g.filter((c) => !c.valid && !c.pending))
+      .map((g) => g.filter((c) => c.enabled && !c.valid && !c.pending))
       .filter((g) => !isArrayEmpty(g));
     this.numInvalid = flatMap(this.invalidControls, (c) => c).length;
     this.changeDetectorRef.detectChanges();
