@@ -17,7 +17,7 @@ const SUBMISSION_TEMPLATES = [
   euToxRiskTemplate,
   hecatosTemplate,
   emptyTemplate,
-  bia.biaTemplateV0,
+  bia.biaDefaultTemplate,
   bia.biaTemplateV1,
   bia.biaTemplateV2,
   bia.biaTemplateV3,

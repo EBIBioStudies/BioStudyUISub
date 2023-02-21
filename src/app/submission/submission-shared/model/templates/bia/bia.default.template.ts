@@ -1,5 +1,5 @@
-export const biaTemplateV0 = {
-  name: 'BioImages.v0',
+export const biaDefaultTemplate = {
+  name: 'BioImages',
   title: 'BioImages',
   description: 'SUPER-USER FORM for REMBI submissions',
   sectionType: {
@@ -13,7 +13,7 @@ export const biaTemplateV0 = {
       backgroundColor: '#038392',
       contactUs: {
         text:
-          'SUPER-USER FORM for a BioImage Archive REMBI submission. YOU MAY BREAK YOUR SUBMISSION by using this template for anything other than fixing typos, as all validations/helpers are bypassed. Please use the REMBI submission generation scripts, or contact ',
+          'SUPER-USER FORM for a BioImage Archive REMBI submission. YOU MAY BREAK YOUR SUBMISSION by using this template for anything other than fixing typos, as all validations/helpers are bypassed. Consider using the REMBI submission generation scripts, or contact ',
         email: 'bioimage-archive@ebi.ac.uk'
       }
     },
