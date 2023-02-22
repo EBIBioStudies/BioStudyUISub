@@ -23,5 +23,5 @@ const processMessage = (message: ConsumeMessage | null) => {
 };
 
 export const processSubmStatus = () => {
-  return listenToQueue(queueName, processMessage);
+  listenToQueue(queueName, processMessage);
 };
