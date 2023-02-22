@@ -33,6 +33,7 @@ export interface TemplateDetail {
   name: string;
   collection?: string;
   displayName: string;
+  icon: string;
 }
 
 interface TemplateVersion {
@@ -59,14 +60,16 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
       description: template.description,
       name: template.name,
       collection,
-      displayName: collection
+      displayName: collection,
+      icon: 'images/template-icons/' + collection + '.png'
     };
   });
 
   const defaultTemplateItem = {
     description: defaultTemplate.description,
     name: defaultTemplate.name,
-    displayName: defaultTemplate.name
+    displayName: defaultTemplate.name,
+    icon: 'images/template-icons/Default.png'
   };
 
   return [...templateDetail, defaultTemplateItem];

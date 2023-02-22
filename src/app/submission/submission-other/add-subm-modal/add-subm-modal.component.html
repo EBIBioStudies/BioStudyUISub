@@ -7,22 +7,33 @@
   </div>
   <div class="modal-body">
     <p>
-      To create a new submission, please select from the list of BioStudies collections available to you - e.g., to
-      submit an imaging dataset, choose "BioImages".<br />
+      Please select a BioStudies collection that you are submitting to.
     </p>
+    <p>
+      Imaging datasets must be submitted using the "BioImages" template. Submissions that do not do so may have their
+      release delayed.
+      For further details please see the <a
+      href="https://www.ebi.ac.uk/bioimage-archive/help-images-at-ebi" target="_blank"> EMBL-EBI policy on imaging data
+      submissions</a>.</p>
+
     <fieldset>
-      <ng-container *ngFor="let tmpl of templates; index as i" >
-        <div class="form-check">
+      <ng-container *ngFor="let tmpl of templates; index as i">
+        <div class="form-check template-button">
           <input id="template_{{i}}" type="radio" class="form-check-input" name="template" [value]="tmpl.name"
-                 [checked]="tmpl.displayName === 'Default'" (change)="changeTemplate(tmpl)">
-          <label class="form-check-label" for="template_{{i}}" [tooltip]="tmpl.description"
-            placement="right">{{tmpl.displayName}}</label>
+                 (change)="changeTemplate(tmpl)">
+          <label class="form-check-label" for="template_{{i}}" placement="right">
+            <div class="icon">
+              <img [src]="tmpl.icon" (error)="$event.target.src='images/template-icons/Default.png'" />
+            </div>
+            <div class="description">
+              <div class="collection-name">{{tmpl.displayName}}</div>{{tmpl.description}}</div>
+          </label>
         </div>
       </ng-container>
     </fieldset>
   </div>
   <div class="modal-footer">
-    <button type="submit" class="btn btn-primary btn-sm">Add</button>
+    <button type="submit" class="btn btn-primary btn-sm" [disabled]="selectedTemplate == undefined">Add</button>
     <button type="button" class="btn btn-default btn-sm" (click)="hide()">Cancel</button>
   </div>
 </form>
