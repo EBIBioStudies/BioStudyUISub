@@ -1,7 +1,7 @@
 export const defaultTemplate = {
   name: 'Default',
   title: 'Default',
-  description: 'Generic submission',
+  description: 'General submission',
   sectionType: {
     name: 'Study',
     tableGroups: [['Link', 'File']],
