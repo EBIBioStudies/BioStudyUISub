@@ -4,12 +4,13 @@ import { TemplateDetail } from 'app/submission/submission-shared/model/templates
 
 @Component({
   selector: 'st-add-subm-modal',
-  templateUrl: './add-subm-modal.component.html'
+  templateUrl: './add-subm-modal.component.html',
+  styleUrls: ['./add-subm-modal.component.scss']
 })
 export class AddSubmModalComponent {
   onOk?: (collection?: string, template?: string) => void;
   selectedCollection?: string;
-  selectedTemplate: string = 'Default';
+  selectedTemplate?: string;
   templates?: TemplateDetail[] = [];
 
   constructor(public bsModalRef: BsModalRef) {}

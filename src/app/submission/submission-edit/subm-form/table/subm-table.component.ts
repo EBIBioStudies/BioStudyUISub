@@ -110,6 +110,7 @@ export class SubmTableComponent implements OnInit, DoCheck {
       .subscribe((hasConfirmed) => {
         if (hasConfirmed) {
           this.tableForm.reset();
+          this.tableForm.form.disable();
         }
       });
   }
