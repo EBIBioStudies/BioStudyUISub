@@ -1,0 +1,74 @@
+input[type=radio] {
+  display: none;
+}
+
+.template-button {
+  padding: 0 2em 1em;
+}
+
+label {
+  cursor: pointer;
+  border: 1pt solid #dddddd;
+  display: block;
+  border-radius: 5pt;
+}
+
+.icon {
+  min-width: 75pt;
+  height: 75pt;
+  border-radius: 4pt 0 0 4pt;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  padding: 5pt;
+  cursor: pointer;
+  background-color: #f0f0f0;
+}
+
+.icon img {
+  width: 40pt;
+}
+
+.icon span {
+  display: block;
+  margin-top: 4pt;
+}
+
+.form-check-input + label:hover {
+  border-color: #3b6fb6;
+}
+
+.form-check-input:checked + label {
+  border-color: #3b6fb6;
+}
+
+
+.form-check-input:checked + label .icon {
+  color: white;
+  border-color: #3b6fb6;
+  background-color: #3b6fb6;
+}
+
+.form-check-input:checked + label .description {
+  border-color: #3b6fb6;
+  background-color: #3b6fb611;
+}
+
+.description {
+  display: table-cell;
+  margin: 1em;
+  cursor: pointer;
+  padding: 5pt;
+  vertical-align: middle;
+  border-left: 1px solid #dddddd;
+  width: 100%;
+}
+
+.collection-logo {
+  width: 40pt;
+}
+
+.collection-name {
+  font-weight: bold;
+}

@@ -44,6 +44,7 @@ export class NewSubmissionButtonDirective {
 
   private selectTemplate(templates: TemplateDetail[]): void {
     this.modalService.show(AddSubmModalComponent, {
+      class: 'modal-lg',
       initialState: {
         templates,
         onOk: (collection: string, template: string) => this.onOk(collection, template)
