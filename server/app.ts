@@ -66,5 +66,5 @@ app.use(express.json({ limit: '20GB' }));
 app.listen(port, hostname, () => {
   logger.info(`Proxy running on: ${protocol}://${hostname}:${port}${context}`);
 
-  return processSubmStatus();
+  processSubmStatus();
 });
