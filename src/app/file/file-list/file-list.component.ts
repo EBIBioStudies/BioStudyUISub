@@ -11,6 +11,7 @@ import { FileActionsCellComponent } from './ag-grid/file-actions-cell.component'
 import { FileTypeCellComponent } from './ag-grid/file-type-cell.component';
 import { FileUpload, FileUploadList } from 'app/file/shared/file-upload-list.service';
 import { ProgressCellComponent } from './ag-grid/upload-progress-cell.component';
+import { isDefinedAndNotEmpty } from '../../utils/validation.utils';
 
 @Component({
   selector: 'st-file-list',
@@ -160,7 +161,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     this.sideBarCollapsed = !this.sideBarCollapsed;
   }
 
-  onUploadFilesSelect(files: FileList): void {
+  onUploadFilesSelect(files: FileList, isFolder: boolean = false): void {
     const totalSize = Array.from(files).reduce((totalSize, file) => totalSize + file.size, 0);
     const allowedSize = this.appConfig.maxUploadFolderSize / (1000 * 1000);
     (totalSize > this.appConfig.maxUploadFolderSize || files.length > this.appConfig.maxUploadFiles
@@ -179,8 +180,10 @@ export class FileListComponent implements OnInit, OnDestroy {
         const uploadedFileNames = this.rowData.map((file) => file.name);
         const filesToUpload = Array.from(files).map((file) => file.name);
         const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
+        let fullPath = this.fileService.getFullPath(files[0]);
+        const isFolderBeingUpdated = isDefinedAndNotEmpty(fullPath) && fullPath.indexOf('/') > 0 && isFolder;
 
-        (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
+        (overlap.length > 0 || isFolderBeingUpdated ? this.confirmOverwrite(overlap, isFolder) : of(true))
           .pipe(takeUntil(this.ngUnsubscribe))
           .subscribe(() => this.upload(files));
       });
@@ -193,12 +196,14 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
   }
 
-  private confirmOverwrite(overlap): Observable<boolean> {
+  private confirmOverwrite(overlap, isFolder): Observable<boolean> {
     const overlapString =
       overlap.length === 1 ? overlap[0] + '?' : overlap.length + ' files? (' + overlap.join(', ') + ')';
 
     return this.modalService.whenConfirmed(
-      `Do you want to overwrite ${overlapString}`,
+      isFolder
+        ? 'This may overwrite existing files in the folder. Do you want to go ahead?'
+        : `Do you want to overwrite ${overlapString}`,
       'Overwrite files?',
       'Overwrite'
     );

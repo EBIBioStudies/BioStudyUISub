@@ -20,7 +20,7 @@
           </div>
           <div class="col-4 pr-1 pl-1">
             <st-file-upload-button [multiple]="false" [isDirOnly]="true" title="Upload folder"
-              (fileUploadSelect)="onUploadFilesSelect($event)" tooltip="Select a folder to upload" placement="bottom" #fileEl>
+              (fileUploadSelect)="onUploadFilesSelect($event, true)" tooltip="Select a folder to upload" placement="bottom" #fileEl>
             </st-file-upload-button>
           </div>
           <div class="col pl-1">
