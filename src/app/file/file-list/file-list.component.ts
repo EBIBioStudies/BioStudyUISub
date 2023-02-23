@@ -163,26 +163,27 @@ export class FileListComponent implements OnInit, OnDestroy {
   onUploadFilesSelect(files: FileList): void {
     const totalSize = Array.from(files).reduce((totalSize, file) => totalSize + file.size, 0);
     const allowedSize = this.appConfig.maxUploadFolderSize / (1000 * 1000);
-    totalSize > this.appConfig.maxUploadFolderSize || files.length > this.appConfig.maxUploadFiles
+    (totalSize > this.appConfig.maxUploadFolderSize || files.length > this.appConfig.maxUploadFiles
       ? this.modalService.confirm(
           `For uploading a folder larger than ${allowedSize} MB or more than ${this.appConfig.maxUploadFiles} files, using FTP/Aspera is recommended. Do you still want to continue?`,
           `Folder upload`,
           `Yes`
         )
       : of(true)
-          .pipe(takeUntil(this.ngUnsubscribe))
-          .subscribe((isConfirmed: boolean) => {
-            if (!isConfirmed) {
-              return;
-            }
-            const uploadedFileNames = this.rowData.map((file) => file.name);
-            const filesToUpload = Array.from(files).map((file) => file.name);
-            const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
+    )
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((isConfirmed: boolean) => {
+        if (!isConfirmed) {
+          return;
+        }
+        const uploadedFileNames = this.rowData.map((file) => file.name);
+        const filesToUpload = Array.from(files).map((file) => file.name);
+        const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
 
-            (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
-              .pipe(takeUntil(this.ngUnsubscribe))
-              .subscribe(() => this.upload(files));
-          });
+        (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
+          .pipe(takeUntil(this.ngUnsubscribe))
+          .subscribe(() => this.upload(files));
+      });
   }
 
   updateDataRows(rows): void {
@@ -292,7 +293,6 @@ export class FileListComponent implements OnInit, OnDestroy {
     const uploadPath: Path = new Path(this.absolutePath, '');
     const upload: FileUpload = this.fileUploadList.upload(uploadPath, Array.from(files));
     const decoratedRows = this.decorateUploads([upload]);
-
     this.updateDataRows([...this.rowData, ...decoratedRows]);
   }
 }
