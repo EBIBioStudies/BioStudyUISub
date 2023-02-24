@@ -62,4 +62,8 @@ export class FileService {
       })
     );
   }
+
+  getFullPath(file: File): string {
+    return (file as FullPathFile)?.webkitRelativePath;
+  }
 }

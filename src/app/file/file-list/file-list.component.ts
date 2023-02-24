@@ -11,6 +11,7 @@ import { FileActionsCellComponent } from './ag-grid/file-actions-cell.component'
 import { FileTypeCellComponent } from './ag-grid/file-type-cell.component';
 import { FileUpload, FileUploadList } from 'app/file/shared/file-upload-list.service';
 import { ProgressCellComponent } from './ag-grid/upload-progress-cell.component';
+import { isDefinedAndNotEmpty } from '../../utils/validation.utils';
 
 @Component({
   selector: 'st-file-list',
@@ -160,14 +161,32 @@ export class FileListComponent implements OnInit, OnDestroy {
     this.sideBarCollapsed = !this.sideBarCollapsed;
   }
 
-  onUploadFilesSelect(files: FileList): void {
-    const uploadedFileNames = this.rowData.map((file) => file.name);
-    const filesToUpload = Array.from(files).map((file) => file.name);
-    const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
-
-    (overlap.length > 0 ? this.confirmOverwrite(overlap) : of(true))
+  onUploadFilesSelect(files: FileList, isFolder: boolean = false): void {
+    const totalSize = Array.from(files).reduce((totalSize, file) => totalSize + file.size, 0);
+    const allowedSize = this.appConfig.maxUploadFolderSize / (1000 * 1000);
+    (totalSize > this.appConfig.maxUploadFolderSize || files.length > this.appConfig.maxUploadFiles
+      ? this.modalService.confirm(
+          `For uploading a folder larger than ${allowedSize} MB or more than ${this.appConfig.maxUploadFiles} files, using FTP/Aspera is recommended. Do you still want to continue?`,
+          `Folder upload`,
+          `Yes`
+        )
+      : of(true)
+    )
       .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(() => this.upload(files));
+      .subscribe((isConfirmed: boolean) => {
+        if (!isConfirmed) {
+          return;
+        }
+        const uploadedFileNames = this.rowData.map((file) => file.name);
+        const filesToUpload = Array.from(files).map((file) => file.name);
+        const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
+        let fullPath = this.fileService.getFullPath(files[0]);
+        const isFolderBeingUpdated = isDefinedAndNotEmpty(fullPath) && fullPath.indexOf('/') > 0 && isFolder;
+
+        (overlap.length > 0 || isFolderBeingUpdated ? this.confirmOverwrite(overlap, isFolder) : of(true))
+          .pipe(takeUntil(this.ngUnsubscribe))
+          .subscribe(() => this.upload(files));
+      });
   }
 
   updateDataRows(rows): void {
@@ -177,12 +196,14 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
   }
 
-  private confirmOverwrite(overlap): Observable<boolean> {
+  private confirmOverwrite(overlap, isFolder): Observable<boolean> {
     const overlapString =
       overlap.length === 1 ? overlap[0] + '?' : overlap.length + ' files? (' + overlap.join(', ') + ')';
 
     return this.modalService.whenConfirmed(
-      `Do you want to overwrite ${overlapString}`,
+      isFolder
+        ? 'This may overwrite existing files in the folder. Do you want to go ahead?'
+        : `Do you want to overwrite ${overlapString}`,
       'Overwrite files?',
       'Overwrite'
     );
@@ -277,7 +298,6 @@ export class FileListComponent implements OnInit, OnDestroy {
     const uploadPath: Path = new Path(this.absolutePath, '');
     const upload: FileUpload = this.fileUploadList.upload(uploadPath, Array.from(files));
     const decoratedRows = this.decorateUploads([upload]);
-
     this.updateDataRows([...this.rowData, ...decoratedRows]);
   }
 }

@@ -123,6 +123,20 @@ export class AppConfig {
   }
 
   /**
+   * Maximum allowed size of a folder being uploaded
+   */
+  get maxUploadFolderSize(): number {
+    return this.config.MAX_UPLOAD_FOLDER_SIZE;
+  }
+
+  /**
+   * Maximum number of files in a folder being uploaded
+   */
+  get maxUploadFiles(): number {
+    return this.config.MAX_UPLOAD_FILES;
+  }
+
+  /**
    * Uses promises exclusively to fetch the JSON file specifying the app's configuration options.
    * NOTE: URL data may be included in those options. To ensure that correct URLs are generated, this
    * method has to be called before anything else, during app initialisation. Angular provides a mechanism
