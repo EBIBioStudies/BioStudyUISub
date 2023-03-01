@@ -1,5 +1,5 @@
-export const biaDefaultTemplate = {
-  name: 'BioImages',
+export const biaImplicitTemplateV0 = {
+  name: 'BioImages.implicit.v0',
   title: 'BioImages - Minor modifications form',
   description: 'BioImage Archive Study',
   sectionType: {
