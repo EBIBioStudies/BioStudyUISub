@@ -55,10 +55,9 @@ export class PageTabToSubmissionService {
       const attachToAttributes: PtAttribute[] = findAttribute(pageTab, AttributeNames.ATTACH_TO);
       const attachToValue: string[] = attachToAttributes.map((attribute) => (attribute.value as string) || '');
 
-      if(attachToValue.length && attachToValue[0] === 'BioImages') {
-        templateName = "BioImages.implicit.v0";
-      }
-      else {
+      if (attachToValue.length && attachToValue[0] === 'BioImages') {
+        templateName = 'BioImages.implicit.v0';
+      } else {
         templateName = attachToValue.length === 0 ? DEFAULT_TEMPLATE_NAME : attachToValue[0];
       }
     }
@@ -106,7 +105,9 @@ export class PageTabToSubmissionService {
     attrs: PtAttribute[],
     sectionType: SectionType | null
   ): AttributeData[] {
-    if (sectionType === null) return this.pageTabAttributesToAttributeData(attrs);
+    if (sectionType === null) {
+      return this.pageTabAttributesToAttributeData(attrs);
+    }
 
     const attributesData: AttributeData[] = [];
 
