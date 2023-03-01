@@ -55,7 +55,7 @@ export class PageTabToSubmissionService {
       const attachToAttributes: PtAttribute[] = findAttribute(pageTab, AttributeNames.ATTACH_TO);
       const attachToValue: string[] = attachToAttributes.map((attribute) => (attribute.value as string) || '');
 
-      if(attachToValue.length && attachToValue[0] == "BioImages") {
+      if(attachToValue.length && attachToValue[0] === 'BioImages') {
         templateName = "BioImages.implicit.v0";
       }
       else {
