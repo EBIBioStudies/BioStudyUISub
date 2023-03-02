@@ -24,8 +24,6 @@ import { ActivationLinkSuccessComponent } from './activate/activation-link-succe
 import { ImpersonateModalComponent } from './impersonate/impersonate-modal.component';
 
 test('is is possible to sign in, sign up, reset password and activate account', async () => {
-  jest.setTimeout(10*1000);
-
   const { navigate } = await render(AuthComponent, {
     imports: [
       CommonModule,
@@ -144,4 +142,4 @@ test('is is possible to sign in, sign up, reset password and activate account', 
 
   userEvent.click(submitButton);
   expect(await screen.findByRole('alert')).toBeInTheDocument();
-});
+}, 10000);
