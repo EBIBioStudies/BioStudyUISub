@@ -162,7 +162,7 @@ export class FileListComponent implements OnInit, OnDestroy {
   }
 
   onUploadFilesSelect(files: FileList, isFolder: boolean = false): void {
-    const totalSize = Array.from(files).reduce((totalSize, file) => totalSize + file.size, 0);
+    const totalSize = Array.from(files).reduce((total, file) => total + file.size, 0);
     const allowedSize = this.appConfig.maxUploadFolderSize / (1000 * 1000);
     (totalSize > this.appConfig.maxUploadFolderSize || files.length > this.appConfig.maxUploadFiles
       ? this.modalService.confirm(
@@ -180,7 +180,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         const uploadedFileNames = this.rowData.map((file) => file.name);
         const filesToUpload = Array.from(files).map((file) => file.name);
         const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
-        let fullPath = this.fileService.getFullPath(files[0]);
+        const fullPath = this.fileService.getFullPath(files[0]);
         const isFolderBeingUpdated = isDefinedAndNotEmpty(fullPath) && fullPath.indexOf('/') > 0 && isFolder;
 
         (overlap.length > 0 || isFolderBeingUpdated ? this.confirmOverwrite(overlap, isFolder) : of(true))
