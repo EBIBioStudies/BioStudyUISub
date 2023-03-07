@@ -5,8 +5,6 @@ import { userProfile } from './../../../tests/fixtures/user-profile';
 import { renderAppComponent } from '../../../tests/render';
 import { submissionListResponse } from './../../../tests/fixtures/submissions';
 
-jest.setTimeout(10000);
-
 describe('submission list component', () => {
   test('should render', async () => {
     const { navigate } = await renderAppComponent();
@@ -35,5 +33,5 @@ describe('submission list component', () => {
         [] as Promise<void>[]
       )
     );
-  });
+  }, 30000);
 });

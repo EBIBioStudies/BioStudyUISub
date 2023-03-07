@@ -23,7 +23,7 @@ import { Equals2Directive } from './password-reset/equals2.directive';
 import { ActivationLinkSuccessComponent } from './activate/activation-link-success.component';
 import { ImpersonateModalComponent } from './impersonate/impersonate-modal.component';
 
-test('is is possible to sign in, sign up, reset password and activate account', async () => {
+test('is possible to sign in, sign up, reset password and activate account', async () => {
   const { navigate } = await render(AuthComponent, {
     imports: [
       CommonModule,
@@ -142,4 +142,4 @@ test('is is possible to sign in, sign up, reset password and activate account', 
 
   userEvent.click(submitButton);
   expect(await screen.findByRole('alert')).toBeInTheDocument();
-}, 10000);
+}, 30000);

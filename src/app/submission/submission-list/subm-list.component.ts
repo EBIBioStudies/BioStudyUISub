@@ -330,7 +330,7 @@ export class SubmListComponent implements OnDestroy, OnInit {
   private canDeleteRow(row): boolean {
     return (
       (['S-', 'TMP_'].some((prefix) => row.accno.indexOf(prefix) >= 0) &&
-        new Date(row.rtime).getTime() > Date.now() &&
+        (window.location.pathname.endsWith('/draft') || new Date(row.rtime).getTime() > Date.now()) &&
         !this.isProcessingRowSubmission(row)) ||
       this.userSession.isSuperUser()
     );
