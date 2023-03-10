@@ -94,15 +94,24 @@ export const biaTemplateV4 = {
         uniqueValues: false,
         defaultValue: 'CC0',
         valueType: {
-          name: 'select',
-          values: ['CC0', 'CC BY 4.0'],
+          name: 'selectvalquals',
+          values: [
+            {
+              value: 'CC0',
+              valqual: [{ name: 'URL', value: 'https://creativecommons.org/publicdomain/zero/1.0/legalcode' }]
+            },
+            {
+              value: 'CC BY 4.0',
+              valqual: [{ name: 'URL', value: 'https://creativecommons.org/licenses/by/4.0/legalcode' }]
+            }
+          ],
           enableValueAdd: false
         },
         helpContextual: {
           description: 'The license under which the data are available.',
           examplesHtml: [
-            'Full text for the <a href="https://creativecommons.org/share-your-work/public-domain/cc0/" target="_blank" >CC0</a> license',
-            'Full text for the <a href="https://creativecommons.org/licenses/by/4.0/legalcode" target="_blank">CC BY 4.0</a> license'
+            '<a href="https://creativecommons.org/publicdomain/zero/1.0/legalcode" target="_blank" >CC0</a>',
+            '<a href="https://creativecommons.org/licenses/by/4.0/legalcode" target="_blank">CC BY 4.0</a>'
           ]
         }
       },

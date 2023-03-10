@@ -1,9 +1,9 @@
 import { Observable, Subscription } from 'rxjs';
 import { ControlRef } from '../control-reference';
 import { CustomFormControl } from './custom-form-control.model';
-import { Field, FieldType } from 'app/submission/submission-shared/model';
+import { Field, FieldType, ValueTypeName } from 'app/submission/submission-shared/model';
 import { FormValueValidator } from '../field-value-validators';
-import { SubmFormValidators, ErrorMessages } from '../form-validators';
+import { ErrorMessages, SubmFormValidators } from '../form-validators';
 import { SubmissionService } from 'app/submission/submission-shared/submission.service';
 import { AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 
@@ -34,7 +34,12 @@ export class FieldControl {
     ).withRef(this.ref);
 
     this.controlValueSubscription = this.control.valueChanges.subscribe((value) => {
-      field.value = value;
+      if (field.valueType.is(ValueTypeName.selectvalquals)) {
+        field.value = value.value;
+        field.valqual = value.valqual;
+      } else {
+        field.value = value;
+      }
     });
   }
 

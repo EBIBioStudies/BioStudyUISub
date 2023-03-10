@@ -54,6 +54,14 @@
     [isInputGroup]="isInputGroup">
   </st-select-input>
 
+  <st-select-valquals-input *ngSwitchCase="valueTypeNameEnum.selectvalquals"
+     [inputId]="inputId"
+     [formControl]="formControl"
+     [values]="valueType.values"
+     [readonly]="readonly"
+     [isInputGroup]="isInputGroup">
+  </st-select-valquals-input>
+
   <st-date-input *ngSwitchCase="valueTypeNameEnum.date"
       [inputId]="inputId"
       [isSmall]="isSmall"

@@ -1,0 +1,19 @@
+<ng-select class="select-input"
+  (change)="onChange"
+  (change)="onSelectChange($event)"
+  (close)="onClose()"
+  (focus)="onTouched"
+  (search)="onSearch($event)"
+  [(ngModel)]="selectedValue"
+  [inputAttrs]="{'class': inputId}"
+  [labelForId]="inputId"
+  [markFirst]="false"
+  [multiple]="false"
+  [ngClass]="{'is-grouped': isInputGroup, 'is-invalid': formControl.invalid && formControl.touched}"
+  [readonly]="readonly"
+  [selectOnTab]="false"
+  appendTo="body"
+  placeholder="Please select or enter"
+  >
+  <ng-option *ngFor="let option of values" [value]="option">{{option.value}} <span class="url">(will link to {{urlOf(option)}})</span></ng-option>
+</ng-select>

@@ -3,6 +3,7 @@ import { isStringDefined, isStringEmpty } from 'app/utils/validation.utils';
 import { isArrayEmpty } from 'app/utils/validation.utils';
 import { LowerCaseSectionNames } from 'app/submission/utils/constants';
 import { DocItem } from '../../../submission-edit/field-docs-modal/field-docs-modal.component';
+import { NameAndValue } from '../model.common';
 
 /*
  *  Type scopes are used to check if the types with a given name already exists in the scope
@@ -191,7 +192,8 @@ export enum ValueTypeName {
   pubmedid,
   dna,
   protein,
-  org
+  org,
+  selectvalquals
 }
 
 export abstract class ValueType {
@@ -249,6 +251,28 @@ export class SelectValueType extends ValueType {
   }
 }
 
+export interface SelectValueOptionType {
+  value: string;
+  valqual: NameAndValue[];
+}
+
+export class SelectValQualsValueType extends ValueType {
+  values: SelectValueOptionType[];
+  multiple: boolean = false;
+  enableValueAdd: boolean = true;
+
+  constructor(data: Partial<SelectValQualsValueType> = {}) {
+    super(ValueTypeName.selectvalquals);
+    this.values = data.values || [];
+    this.multiple = data.multiple || false;
+    this.enableValueAdd = data.enableValueAdd !== false;
+  }
+
+  valqualsOf(value: string): NameAndValue[] {
+    return this.values.find((option) => option.value === value)?.valqual || [];
+  }
+}
+
 export class OrgSelectValueType extends ValueType {
   multiple: boolean = false;
 
@@ -277,6 +301,8 @@ export class ValueTypeFactory {
         return new DateValueType(data);
       case ValueTypeName.select:
         return new SelectValueType(data);
+      case ValueTypeName.selectvalquals:
+        return new SelectValQualsValueType(data);
       case ValueTypeName.org:
         return new OrgSelectValueType(data);
       case ValueTypeName.file:

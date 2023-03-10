@@ -64,7 +64,7 @@ export class SelectInputComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  writeValue(value: string | string[]): void {
+  writeValue(value: any): void {
     const filterEmptyValues = (collection) => collection.filter((item) => !isNotDefinedOrEmpty(item));
     const formattedValue = Array.isArray(value) ? filterEmptyValues(value) : value;
 
