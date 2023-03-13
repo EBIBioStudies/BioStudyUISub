@@ -7,7 +7,11 @@ export function filterAndFormatDraftSubmissions(drafts): SubmissionListItem[] {
       key,
       content: { attributes = [] }
     } = draft;
-    const titleAttribute = attributes.find((attribute) => attribute.name === 'Title') || {};
+
+    const titleAttribute =
+      attributes.find((attribute) => attribute.name === 'Title') ||
+      draft?.content?.section?.attributes.find((attribute) => attribute.name === 'Title') ||
+      {};
     const releaseDateAttribute = attributes.find((attribute) => attribute.name === 'ReleaseDate') || {};
     const title = titleAttribute.value;
     const release = releaseDateAttribute.value;
