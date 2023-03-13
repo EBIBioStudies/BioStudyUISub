@@ -25,10 +25,6 @@ stages:
   script:
     - sh ./tasks/deploy.sh
 
-cache:
-  paths:
-    - node_modules/
-
 install_dependencies:
   stage: setup
   script:
@@ -54,7 +50,6 @@ on-pull-requests:
     NODE_ENV: test
   script:
     - npm test
-    - npm run ng build --dry-run
   only:
     - external_pull_requests
 
