@@ -2,7 +2,6 @@ image: node:14.17.5
 variables:
   DOCKER_TLS_CERTDIR: ''
 stages:
-  - setup
   - test
   - build
   - deploy
@@ -25,39 +24,14 @@ stages:
   script:
     - sh ./tasks/deploy.sh
 
-cache:
-  paths:
-    - node_modules/
-
-install_dependencies:
-  stage: setup
-  script:
-    - npm install
-  artifacts:
-    paths:
-      - node_modules/
-    expire_in: 2 days
-
 test:
   stage: test
-  dependencies:
-    - install_dependencies
   variables:
     NODE_ENV: test
   script:
+    - npm install
     - npm test
     - npm run ng build --dry-run
-
-on-pull-requests:
-  dependencies:
-    - install_dependencies
-  variables:
-    NODE_ENV: test
-  script:
-    - npm test
-    - npm run ng build --dry-run
-  only:
-    - external_pull_requests
 
 # Build per environment
 build:dev:
