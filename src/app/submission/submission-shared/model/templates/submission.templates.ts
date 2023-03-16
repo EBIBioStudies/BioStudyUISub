@@ -1,5 +1,5 @@
 import { readonlyTemplate } from './readonly.template';
-import { bioRamanTemplate } from './bioRaman.template';
+import { microbioRamanTemplate } from './microbioRaman.template';
 import { defaultTemplate } from './default.template';
 import { emptyTemplate } from './empty.template';
 import { euToxRiskTemplate } from './eutoxrisk.template';
@@ -22,7 +22,7 @@ const SUBMISSION_TEMPLATES = [
   bia.biaTemplateV2,
   bia.biaTemplateV3,
   bia.biaTemplateV4,
-  bioRamanTemplate,
+  microbioRamanTemplate,
   readonlyTemplate,
   proteinDesignsTemplate
 ];
@@ -68,11 +68,18 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
   const defaultTemplateItem = {
     description: defaultTemplate.description,
     name: defaultTemplate.name,
+    collection: '',
     displayName: defaultTemplate.name,
     icon: 'images/template-icons/Default.png'
   };
 
-  return [...templateDetail, defaultTemplateItem];
+  templateDetail.sort((a, b) =>
+    a.displayName.toLowerCase() === 'bioimages'
+      ? -10
+      : a.displayName.toLowerCase().localeCompare(b.displayName.toLowerCase())
+  );
+
+  return [templateDetail[0], defaultTemplateItem, ...templateDetail.splice(1)];
 }
 
 export function findTemplateByName(name: string): any {
