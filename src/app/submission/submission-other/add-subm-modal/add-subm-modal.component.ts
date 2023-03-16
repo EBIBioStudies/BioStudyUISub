@@ -33,7 +33,7 @@ export class AddSubmModalComponent {
     this.selectedCollection = tmpl.collection;
   }
 
-  showMore() {
+  showMore(): void {
     this.moreIsPressed = true;
   }
 }
