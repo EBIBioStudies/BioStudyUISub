@@ -11,9 +11,12 @@ export class AddSubmModalComponent {
   onOk?: (collection?: string, template?: string) => void;
   selectedCollection?: string;
   selectedTemplate?: string;
-  templates?: TemplateDetail[] = [];
+  templates: TemplateDetail[] = [];
+  moreIsPressed: boolean = false;
 
-  constructor(public bsModalRef: BsModalRef) {}
+  constructor(public bsModalRef: BsModalRef) {
+    this.moreIsPressed = this.templates?.length > 2;
+  }
 
   hide(): void {
     this.bsModalRef.hide();
@@ -28,5 +31,9 @@ export class AddSubmModalComponent {
   changeTemplate(tmpl: any): void {
     this.selectedTemplate = tmpl.name;
     this.selectedCollection = tmpl.collection;
+  }
+
+  showMore() {
+    this.moreIsPressed = true;
   }
 }

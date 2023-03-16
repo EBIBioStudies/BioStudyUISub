@@ -1,7 +1,7 @@
-export const bioRamanTemplate = {
-  name: 'BioRaman',
-  title: 'BioRaman',
-  description: 'Raman Spectroscopy Study',
+export const microbioRamanTemplate = {
+  name: 'MicrobioRaman',
+  title: 'MicrobioRaman',
+  description: 'Microbiological  Raman Spectroscopy Data',
   sectionType: {
     display: 'required',
     displayAnnotations: false,

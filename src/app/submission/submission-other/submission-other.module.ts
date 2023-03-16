@@ -13,6 +13,7 @@ import { NewSubmissionButtonDirective } from './new-submission-button/new-submis
 import { UniqueSubmissionWarningComponent } from './unique-submission-warning/unique-submission-warning.component';
 import { UniqueSubmissionModalComponent } from './unique-submission-modal/unique-submission-modal.component';
 import { FieldErrorsComponent } from './field-errors/field-errors.component';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { FieldErrorsComponent } from './field-errors/field-errors.component';
     TooltipModule,
     SubmissionSharedModule,
     AuthModule,
-    BsDropdownModule
+    BsDropdownModule,
+    CollapseModule
   ],
   providers: [],
   declarations: [
