@@ -15,5 +15,5 @@
   appendTo="body"
   placeholder="Please select or enter"
   >
-  <ng-option *ngFor="let option of values" [value]="option">{{option.value}} <span class="url">(will link to {{urlOf(option)}})</span></ng-option>
+  <ng-option *ngFor="let option of values" [value]="option">{{option.value}} <span class="url">({{urlOf(option)}})</span></ng-option>
 </ng-select>
