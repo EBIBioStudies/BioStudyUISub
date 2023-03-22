@@ -508,7 +508,7 @@ export class Section implements SubmissionSection {
     this.data = data;
     this.tables = new Tables(type, data.tables, isTemp);
     this.sections = new Sections(type, data.sections, isTemp, isNewSubmission);
-    this.subsections = new Sections(type, data.subsections, isTemp);
+    this.subsections = new Sections(type, data.subsections, isTemp, isNewSubmission);
 
     if (this.displayAnnotations) {
       // Any attribute names from the server that do not match top-level field names are added as annotations.
@@ -660,6 +660,7 @@ export class Submission {
    * @see {@link PageTab}
    * @param type Type definitions object
    * @param data Submission data in PageTab format.
+   * @param isNewSubmission Flag set to true only during the creation of a new draft
    */
   constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData, isNewSubmission: boolean = false) {
     this.tags = Tags.create(data);
