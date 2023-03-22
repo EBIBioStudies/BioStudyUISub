@@ -498,7 +498,7 @@ export class Section implements SubmissionSection {
     data: SectionData = {} as SectionData,
     accno: string = '',
     isTemp: boolean = false,
-    isNewSubmission: boolean = false
+    isNewDraft: boolean = false
   ) {
     this.tags = Tags.create(data);
     this.id = `section_${nextId()}`;
@@ -507,8 +507,8 @@ export class Section implements SubmissionSection {
     this.fields = new Fields(type, data.attributes);
     this.data = data;
     this.tables = new Tables(type, data.tables, isTemp);
-    this.sections = new Sections(type, data.sections, isTemp, isNewSubmission);
-    this.subsections = new Sections(type, data.subsections, isTemp, isNewSubmission);
+    this.sections = new Sections(type, data.sections, isTemp, isNewDraft);
+    this.subsections = new Sections(type, data.subsections, isTemp, isNewDraft);
 
     if (this.displayAnnotations) {
       // Any attribute names from the server that do not match top-level field names are added as annotations.
@@ -572,7 +572,7 @@ export class Sections {
   private isTemp: boolean;
 
   /* Fills in existed data if given. Data with types defined in the template goes first. */
-  constructor(type: SectionType, sections: Array<SectionData> = [], isTemp: boolean = false, isNewSubmission = false) {
+  constructor(type: SectionType, sections: Array<SectionData> = [], isTemp: boolean = false, isNewDraft = false) {
     this.sections = [];
     this.isTemp = isTemp;
 
@@ -584,7 +584,7 @@ export class Sections {
 
       if (st.displayType.isShownByDefault) {
         if (st.minRequired === 0 && !sd.length) {
-          if (isNewSubmission) {
+          if (isNewDraft) {
             /**
              * display: 'desirable' sections should be rendered initially,
              *  but if the user decides to delete them, they shouldn't be re-added
@@ -660,15 +660,15 @@ export class Submission {
    * @see {@link PageTab}
    * @param type Type definitions object
    * @param data Submission data in PageTab format.
-   * @param isNewSubmission Flag set to true only during the creation of a new draft
+   * @param isNewDraft Flag set to true only during the creation of a new draft
    */
-  constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData, isNewSubmission: boolean = false) {
+  constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData, isNewDraft: boolean = false) {
     this.tags = Tags.create(data);
     this.type = type;
     this.accno = data.accno || null;
     this.attributes = data.attributes || [];
     this.isRevised = !this.isTemp && data.isRevised === true;
-    this.section = new Section(type.sectionType, data.section, undefined, this.isTemp, isNewSubmission);
+    this.section = new Section(type.sectionType, data.section, undefined, this.isTemp, isNewDraft);
   }
 
   /**
