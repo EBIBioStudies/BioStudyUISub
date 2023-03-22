@@ -493,7 +493,13 @@ export class Section implements SubmissionSection {
 
   private sectionAccno: string;
 
-  constructor(type: SectionType, data: SectionData = {} as SectionData, accno: string = '', isTemp: boolean = false, isRevised: boolean = false) {
+  constructor(
+    type: SectionType,
+    data: SectionData = {} as SectionData,
+    accno: string = '',
+    isTemp: boolean = false,
+    isRevised: boolean = false
+  ) {
     this.tags = Tags.create(data);
     this.id = `section_${nextId()}`;
     this.type = type;
@@ -578,7 +584,7 @@ export class Sections {
 
       if (st.displayType.isShownByDefault) {
         if (st.minRequired === 0 && !sd.length) {
-          if(isRevised) {
+          if (isRevised) {
             /**
              * display: 'desirable' sections should be rendered initially,
              *  but if the user decides to delete them, they shouldn't be re-added
