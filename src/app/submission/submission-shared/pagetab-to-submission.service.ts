@@ -25,11 +25,14 @@ import { AttributeNames } from './../utils/constants';
 
 @Injectable()
 export class PageTabToSubmissionService {
-  pageTab2Submission(pageTab: PageTab): Submission {
+  pageTab2Submission(pageTab: PageTab, setDefaults = false): Submission {
     const submissionTemplateName: string = this.findSubmissionTemplateName(pageTab);
     const type: SubmissionType = SubmissionType.fromTemplate(submissionTemplateName);
 
-    return new Submission(type, this.pageTabToSubmissionData(pageTab, type.sectionType));
+    const submData = this.pageTabToSubmissionData(pageTab, type.sectionType);
+    submData.isRevised = setDefaults;
+
+    return new Submission(type, submData);
   }
 
   pageTabToSubmissionData(pageTab: PageTab, sectionType: SectionType): SubmissionData {
