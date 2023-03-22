@@ -498,7 +498,7 @@ export class Section implements SubmissionSection {
     data: SectionData = {} as SectionData,
     accno: string = '',
     isTemp: boolean = false,
-    isRevised: boolean = false
+    isNewSubmission: boolean = false
   ) {
     this.tags = Tags.create(data);
     this.id = `section_${nextId()}`;
@@ -507,7 +507,7 @@ export class Section implements SubmissionSection {
     this.fields = new Fields(type, data.attributes);
     this.data = data;
     this.tables = new Tables(type, data.tables, isTemp);
-    this.sections = new Sections(type, data.sections, isTemp, isRevised);
+    this.sections = new Sections(type, data.sections, isTemp, isNewSubmission);
     this.subsections = new Sections(type, data.subsections, isTemp);
 
     if (this.displayAnnotations) {
@@ -572,7 +572,7 @@ export class Sections {
   private isTemp: boolean;
 
   /* Fills in existed data if given. Data with types defined in the template goes first. */
-  constructor(type: SectionType, sections: Array<SectionData> = [], isTemp: boolean = false, isRevised = false) {
+  constructor(type: SectionType, sections: Array<SectionData> = [], isTemp: boolean = false, isNewSubmission = false) {
     this.sections = [];
     this.isTemp = isTemp;
 
@@ -584,7 +584,7 @@ export class Sections {
 
       if (st.displayType.isShownByDefault) {
         if (st.minRequired === 0 && !sd.length) {
-          if (isRevised) {
+          if (isNewSubmission) {
             /**
              * display: 'desirable' sections should be rendered initially,
              *  but if the user decides to delete them, they shouldn't be re-added
@@ -661,13 +661,13 @@ export class Submission {
    * @param type Type definitions object
    * @param data Submission data in PageTab format.
    */
-  constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
+  constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData, isNewSubmission: boolean = false) {
     this.tags = Tags.create(data);
     this.type = type;
     this.accno = data.accno || null;
     this.attributes = data.attributes || [];
     this.isRevised = !this.isTemp && data.isRevised === true;
-    this.section = new Section(type.sectionType, data.section, undefined, this.isTemp, data.isRevised);
+    this.section = new Section(type.sectionType, data.section, undefined, this.isTemp, isNewSubmission);
   }
 
   /**
