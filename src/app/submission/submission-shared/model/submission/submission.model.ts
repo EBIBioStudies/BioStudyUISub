@@ -603,7 +603,7 @@ export class Sections {
   }
 
   add(type: SectionType, data?: SectionData, accno?: string): Section {
-    const s = new Section(type, data, accno || type.name + '-' + ++this.nextIdx, this.isTemp);
+    const s = new Section(type, data, accno || type.name + '-' + ++this.nextIdx, true);
     this.sections.push(s);
     return s;
   }
