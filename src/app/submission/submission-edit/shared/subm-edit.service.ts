@@ -278,7 +278,7 @@ export class SubmEditService {
   }
 
   private createForm(draftSubm: PageTab, accno: string = '', setDefaults: boolean = false): void {
-    this.submModel = this.pageTabToSubmService.pageTab2Submission(draftSubm);
+    this.submModel = this.pageTabToSubmService.pageTab2Submission(draftSubm, setDefaults);
 
     if (accno.length !== 0) {
       this.accno = accno;

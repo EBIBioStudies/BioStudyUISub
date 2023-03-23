@@ -493,7 +493,13 @@ export class Section implements SubmissionSection {
 
   private sectionAccno: string;
 
-  constructor(type: SectionType, data: SectionData = {} as SectionData, accno: string = '', isTemp: boolean = false) {
+  constructor(
+    type: SectionType,
+    data: SectionData = {} as SectionData,
+    accno: string = '',
+    isTemp: boolean = false,
+    isNewDraft: boolean = false
+  ) {
     this.tags = Tags.create(data);
     this.id = `section_${nextId()}`;
     this.type = type;
@@ -501,8 +507,8 @@ export class Section implements SubmissionSection {
     this.fields = new Fields(type, data.attributes);
     this.data = data;
     this.tables = new Tables(type, data.tables, isTemp);
-    this.sections = new Sections(type, data.sections, isTemp);
-    this.subsections = new Sections(type, data.subsections, isTemp);
+    this.sections = new Sections(type, data.sections, isTemp, isNewDraft);
+    this.subsections = new Sections(type, data.subsections, isTemp, isNewDraft);
 
     if (this.displayAnnotations) {
       // Any attribute names from the server that do not match top-level field names are added as annotations.
@@ -566,7 +572,7 @@ export class Sections {
   private isTemp: boolean;
 
   /* Fills in existed data if given. Data with types defined in the template goes first. */
-  constructor(type: SectionType, sections: Array<SectionData> = [], isTemp: boolean = false) {
+  constructor(type: SectionType, sections: Array<SectionData> = [], isTemp: boolean = false, isNewDraft = false) {
     this.sections = [];
     this.isTemp = isTemp;
 
@@ -578,9 +584,15 @@ export class Sections {
 
       if (st.displayType.isShownByDefault) {
         if (st.minRequired === 0 && !sd.length) {
-          // add sections that are not required but shown by default,
-          //  so the user has the option of deleting it if they don't want it
-          this.add(st, {});
+          if (isNewDraft) {
+            /**
+             * display: 'desirable' sections should be rendered initially,
+             *  but if the user decides to delete them, they shouldn't be re-added
+             * So only add 'empty data' sections when first rendering a draft, if the section is shown by default
+             *  otherwise just maintain the user's changes across different renders of the draft
+             */
+            this.add(st, {});
+          }
         } else {
           Array(Math.max(st.minRequired - sd.length, 0))
             .fill(0)
@@ -648,14 +660,15 @@ export class Submission {
    * @see {@link PageTab}
    * @param type Type definitions object
    * @param data Submission data in PageTab format.
+   * @param isNewDraft Flag set to true only during the creation of a new draft
    */
-  constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData) {
+  constructor(type: SubmissionType, data: SubmissionData = {} as SubmissionData, isNewDraft: boolean = false) {
     this.tags = Tags.create(data);
     this.type = type;
     this.accno = data.accno || null;
     this.attributes = data.attributes || [];
     this.isRevised = !this.isTemp && data.isRevised === true;
-    this.section = new Section(type.sectionType, data.section, undefined, this.isTemp);
+    this.section = new Section(type.sectionType, data.section, undefined, this.isTemp, isNewDraft);
   }
 
   /**
@@ -665,7 +678,6 @@ export class Submission {
   get isTemp(): boolean {
     return this.accno === null || this.accno.length === 0 || this.accno.indexOf('TMP') === 0;
   }
-
   sectionPath(id: string): Section[] {
     return this.section.sectionPath(id);
   }
