@@ -24,7 +24,7 @@
     </a>
     <ng-container *ngIf="sectionForm">
       <button *ngIf="!readonly && sectionForm.isRootSection"
-          [disabled]="isSaving"
+          [disabled]="isSaving || sectionForm.errorCount>0"
           class="btn btn-success btn-sm"
           tooltip="Send to the BioStudies database"
           placement="bottom"
