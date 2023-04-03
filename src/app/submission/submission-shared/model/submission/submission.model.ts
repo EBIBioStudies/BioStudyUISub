@@ -395,7 +395,7 @@ export class Tables {
 export class Field {
   readonly id: string;
   readonly type: FieldType;
-  readonly attributeData: AttributeData;
+  attributeData: AttributeData;
 
   constructor(type: FieldType, attributeData: AttributeData) {
     this.id = `field_${nextId()}`;
@@ -431,6 +431,10 @@ export class Field {
 
   get valqual(): NameAndValue[] {
     return this.attributeData?.valqual || [];
+  }
+
+  set valqual(valqual: NameAndValue[]) {
+    this.attributeData.valqual = valqual;
   }
 }
 
