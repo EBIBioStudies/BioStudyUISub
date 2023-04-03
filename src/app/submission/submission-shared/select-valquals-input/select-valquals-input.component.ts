@@ -40,13 +40,13 @@ export class SelectValqualsInputComponent implements ControlValueAccessor {
   }
 
   writeValue(option: any): void {
-    if (typeof option == 'string') {
-      option = this.values.find((value) => value.value == option);
+    if (typeof option === 'string') {
+      option = this.values.find((value) => value.value === option);
     }
     this.selectedValue = option;
   }
 
-  urlOf(option: SelectValueOptionType) {
+  urlOf(option: SelectValueOptionType): string {
     return option.valqual.find((vq) => vq.name.toLowerCase() === 'url')?.value || '';
   }
 
