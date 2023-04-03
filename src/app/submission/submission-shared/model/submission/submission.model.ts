@@ -573,6 +573,7 @@ export class Section implements SubmissionSection {
 export class Sections {
   private nextIdx: number = 0;
   private sections: Section[];
+  // @ts-ignore
   private isTemp: boolean;
 
   /* Fills in existed data if given. Data with types defined in the template goes first. */
