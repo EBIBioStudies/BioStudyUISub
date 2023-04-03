@@ -511,8 +511,8 @@ export class Section implements SubmissionSection {
     this.fields = new Fields(type, data.attributes);
     this.data = data;
     this.tables = new Tables(type, data.tables, isTemp);
-    this.sections = new Sections(type, data.sections, isTemp, isNewDraft);
-    this.subsections = new Sections(type, data.subsections, isTemp, isNewDraft);
+    this.sections = new Sections(type, data.sections, isNewDraft);
+    this.subsections = new Sections(type, data.subsections, isNewDraft);
 
     if (this.displayAnnotations) {
       // Any attribute names from the server that do not match top-level field names are added as annotations.
@@ -573,13 +573,10 @@ export class Section implements SubmissionSection {
 export class Sections {
   private nextIdx: number = 0;
   private sections: Section[];
-  // @ts-ignore
-  private isTemp: boolean;
 
   /* Fills in existed data if given. Data with types defined in the template goes first. */
-  constructor(type: SectionType, sections: Array<SectionData> = [], isTemp: boolean = false, isNewDraft = false) {
+  constructor(type: SectionType, sections: Array<SectionData> = [], isNewDraft = false) {
     this.sections = [];
-    this.isTemp = isTemp;
 
     type.sectionTypes.forEach((st) => {
       const sd = sections.filter((s) => s.type === st.name);
