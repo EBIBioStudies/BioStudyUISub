@@ -167,7 +167,6 @@ export const microbioRamanTemplate = {
       {
         display: 'required',
         displayAnnotations: false,
-        minRequired: 0,
         name: 'Sample',
         sectionExample: 'Name of cell or compound, source, composition, conditions, mounting substrate, etc.',
         fieldTypes: [
@@ -248,7 +247,6 @@ export const microbioRamanTemplate = {
       {
         display: 'required',
         displayAnnotations: false,
-        minRequired: 0,
         name: 'Setup',
         sectionExample: 'Information about setup of the system and lasers.',
         fieldTypes: [
@@ -351,9 +349,8 @@ export const microbioRamanTemplate = {
         ]
       },
       {
-        display: 'desirable',
+        display: 'required',
         displayAnnotations: false,
-        minRequired: 0,
         name: 'Treated spectrum',
         sectionExample: 'Final spectrum data (as CSV) with all treatments specified below',
         tableTypes: [
