@@ -218,11 +218,12 @@ export const microbioRamanTemplate = {
         ],
         tableTypes: [
           {
-            name: 'Image file',
+            name: 'File',
             display: 'desirable',
             description: 'Image file if spectra is part of a hyperspectral Raman image.',
             icon: 'fa-file-image',
             uniqueCols: true,
+            rowAsSection: true,
             allowImport: true,
             columnTypes: [
               {
@@ -272,17 +273,31 @@ export const microbioRamanTemplate = {
               ]
             },
             display: 'optional'
-          },
-          {
-            name: 'Raw spectrum',
-            icon: 'fa-wave-square',
-            valueType: { name: 'file', allowFolders: false },
-            description:
-              'Raw, untreated spectrum with wavenumbers, bins, and intensities at each bin; format as TSV,CSV or other universal file format.',
-            display: 'required'
           }
         ],
         tableTypes: [
+          {
+            name: 'File',
+            icon: 'fa-wave-square',
+            rowAsSection: true,
+            uniqueCols: true,
+            description:
+              'Raw, untreated spectrum with wavenumbers, bins, and intensities at each bin; format as TSV,CSV or other universal file format.',
+            display: 'required',
+            singleRow: true,
+            columnTypes: [
+              {
+                name: 'File',
+                valueType: { name: 'file', allowFolders: false },
+                display: 'required'
+              },
+              {
+                name: 'Type',
+                valueType: { name: 'text', defaultValue: 'Raw spectrum' },
+                display: 'required'
+              }
+            ]
+          },
           {
             name: 'Laser',
             display: 'desirable',
@@ -341,15 +356,27 @@ export const microbioRamanTemplate = {
         minRequired: 0,
         name: 'Treated spectrum',
         sectionExample: 'Final spectrum data (as CSV) with all treatments specified below',
-        fieldTypes: [
+        tableTypes: [
           {
             name: 'File',
             icon: 'fa-wave-square',
-            valueType: { name: 'file', allowFolders: false },
-            display: 'required'
-          }
-        ],
-        tableTypes: [
+            display: 'required',
+            rowAsSection: true,
+            uniqueCols: true,
+            singleRow: true,
+            columnTypes: [
+              {
+                name: 'File',
+                valueType: { name: 'file', allowFolders: false },
+                display: 'required'
+              },
+              {
+                name: 'Type',
+                valueType: { name: 'text', defaultValue: 'Treated spectrum' },
+                display: 'required'
+              }
+            ]
+          },
           {
             name: 'Data treatments',
             icon: 'fa-address-card',

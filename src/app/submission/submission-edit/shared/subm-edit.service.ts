@@ -1,15 +1,19 @@
 import {
   AttributeData,
+  DependencyTypeSection,
+  DependencyTypeTable,
+  getTemplatesForCollections,
+  PageTab,
   Section,
-  SubmValidationErrors,
+  SelectValQualsValueType,
+  SelectValueType,
   Submission,
   SubmissionValidator,
-  DependencyTypeTable,
-  DependencyTypeSection,
-  getTemplatesForCollections
+  SubmValidationErrors,
+  ValueTypeName,
+  ValueTypeWithDefault
 } from 'app/submission/submission-shared/model';
 import { BehaviorSubject, Observable, Subject, Subscription, throwError } from 'rxjs';
-import { PageTab, SelectValueType } from 'app/submission/submission-shared/model';
 import { SubmissionService, SubmitResponse } from '../../submission-shared/submission.service';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 
@@ -334,24 +338,45 @@ export class SubmEditService {
   }
 
   /* TODO: set defaults when submission object is created and not yet sent to the server (NOT HERE!!!)*/
-  private setDefaults(section: Section): void {
-    const subscr = this.userData.info$.subscribe((info) => {
-      const contactTable = section.tables.find('Contact', 'typeName');
-
-      if (contactTable) {
-        contactTable.add(this.asContactAttributes(info), 0);
-      }
-
-      setTimeout(() => subscr.unsubscribe(), 10);
-
-      this.save();
-    });
-
+  private setDefaults(section: Section, isRootSection: boolean = true): void {
+    // set fields to default value
     section.fields.list().forEach((field) => {
-      if (field.type.defaultValue) {
-        field.value = field.type.defaultValue;
+      if (field.valueType instanceof ValueTypeWithDefault && field.valueType.defaultValue) {
+        field.value = field.valueType.defaultValue;
+        if (field.valueType.is(ValueTypeName.selectvalquals)) {
+          const valqual = (<SelectValQualsValueType>field.valueType).values.find((val) => val.value == field.value)
+            ?.valqual;
+          if (valqual) field.valqual = valqual;
+        }
       }
     });
+
+    // set table columns to default value
+    section.tables.list().forEach((table) => {
+      table.columns.forEach((column) => {
+        const columnType = table.type.getColumnType(column.name);
+        if (columnType?.valueType.defaultValue) {
+          table.rows.forEach((row) => {
+            row.update(column.id, columnType.valueType.defaultValue || '', row.valueFor(column.name).valqual);
+          });
+        }
+      });
+    });
+
+    // recurse down to each subsection
+    section.sections.list().forEach((s) => this.setDefaults(s, false));
+
+    // base case for recursion: once defaults are set, set contact info and save
+    if (isRootSection) {
+      const subscr = this.userData.info$.subscribe((info) => {
+        const contactTable = section.tables.find('Contact', 'typeName');
+        if (contactTable) {
+          contactTable.add(this.asContactAttributes(info), 0);
+        }
+        setTimeout(() => subscr.unsubscribe(), 100);
+        this.save();
+      });
+    }
   }
 
   private subscribeToFormChanges(sectionForm: SectionForm): void {
