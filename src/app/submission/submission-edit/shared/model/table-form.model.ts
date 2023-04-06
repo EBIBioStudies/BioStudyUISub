@@ -1,11 +1,17 @@
 import { CustomFormControl } from './custom-form-control.model';
-import { Subject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import pluralize from 'pluralize';
-import { FormGroup, FormArray } from '@angular/forms';
-import { Attribute, ColumnType, Table, TableType, ValueMap } from 'app/submission/submission-shared/model';
-import { isStringEmpty } from 'app/utils/validation.utils';
+import { FormArray, FormGroup } from '@angular/forms';
+import {
+  Attribute,
+  ColumnType,
+  Table,
+  TableType,
+  ValueMap,
+  ValueTypeName
+} from 'app/submission/submission-shared/model';
+import { isArrayEmpty, isStringEmpty } from 'app/utils/validation.utils';
 import { arrayUniqueValues } from 'app/utils/array.utils';
-import { isArrayEmpty } from 'app/utils/validation.utils';
 import { FormBase } from './form-base.model';
 import { ColumnControl } from './column-control.model';
 import { RowForm } from './row-form.model';
@@ -65,6 +71,10 @@ export class TableForm extends FormBase {
 
   get hasUniqueColumns(): boolean {
     return this.table.type.uniqueCols;
+  }
+
+  get hasFileColumns(): boolean {
+    return this.table.type.columnTypes.some((ct) => ct.valueType.is(ValueTypeName.file));
   }
 
   get columnTypes(): ColumnType[] {
@@ -208,7 +218,7 @@ export class TableForm extends FormBase {
   }
 
   canAddRow(): boolean {
-    return !this.isReadonly && this.table.canAddRow();
+    return !this.isReadonly && this.table.canAddRow() && !this.tableType.singleRow;
   }
 
   canHaveMoreColumns(): boolean {

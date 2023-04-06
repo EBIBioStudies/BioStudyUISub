@@ -182,7 +182,7 @@
                 <button type="button"
                   *ngIf="!readonly && !sectionForm.isTypeReadonly && sectionForm.isSectionRemovable(subsectionForm)"
                   class="btn btn-danger"
-                  tooltip="Delete page &quot;{{subsectionForm.typeName}}&quot;" container="body" placement="left"
+                  tooltip="Delete section &quot;{{subsectionForm.typeName}}&quot;" container="body" placement="left"
                   (click)="$event.stopPropagation(); onSectionDeleteClick(subsectionForm)">
                   <i class="fas fa-trash-alt fa-fw"></i>
                 </button>

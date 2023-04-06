@@ -84,7 +84,11 @@ export class PageTabToSubmissionService {
       'Image correlation',
       'Image analysis',
       'MINSEQE Score',
-      'MIAME Score'
+      'MIAME Score',
+      'Sample',
+      'Setup',
+      'Treated spectrum',
+      'Instrument metadata'
     ].map((el) => el.toLowerCase());
     const hasSectionType = pagetabSectionTypes.includes(section.type!.toLowerCase());
 

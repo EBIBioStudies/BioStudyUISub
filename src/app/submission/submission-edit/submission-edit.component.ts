@@ -161,7 +161,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
     }
     confirmMsg += '. This operation cannot be undone.';
 
-    this.confirmPageDelete(confirmMsg)
+    this.confirmSectionDelete(confirmMsg)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(() => {
         this.sectionForm!.removeSection(sectionForm.id);
@@ -265,8 +265,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
       );
   }
 
-  private confirmPageDelete(message: string): Observable<boolean> {
-    return this.modalService.whenConfirmed(message, 'Delete page', 'Delete');
+  private confirmSectionDelete(message: string): Observable<boolean> {
+    return this.modalService.whenConfirmed(message, 'Delete section', 'Delete');
   }
 
   private confirmReleaseDateOverride(): Observable<boolean> {

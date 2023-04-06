@@ -63,12 +63,14 @@ export class SubmNavBarComponent implements OnChanges {
     }
   }
 
-  // TODO: a temporary workaround
+  get canSubmit(): boolean {
+    return !this.isSaving && this.sectionForm != undefined && this.sectionForm.valid;
+  }
+
   get isTemp(): boolean {
     return this.accno.startsWith('TMP_');
   }
 
-  // TODO: a temporary workaround
   get isRevised(): boolean {
     return true;
   }

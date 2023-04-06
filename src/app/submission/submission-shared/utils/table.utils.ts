@@ -36,10 +36,10 @@ export function tableToPtTable(tables: Table[], isSanitise): PageTabSection[][] 
   const tableSections: PageTabSection[] = rowsAsSections(tables, isSanitise);
   const sections = protocolsToSection(tableSections);
 
-  const ptTablesMap = {};
+  const ptTablesMap = new Map();
   sections.forEach((section) => {
     if (section.type) {
-      ptTablesMap[section.type] = [section, ...(ptTablesMap[section.type] ?? [])];
+      ptTablesMap[section.type] = [...(ptTablesMap[section.type] ?? []), section];
     }
   });
 

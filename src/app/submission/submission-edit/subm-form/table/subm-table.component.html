@@ -8,11 +8,11 @@
             {{tableForm.prettyName | lowercase | titlecase}}
           </h5>
           <span class="badge rounded-pill bg-aluminum ml-2"
-            *ngIf="!readonly && !tableForm.isRequired && !tableForm.isReadonly && !tableForm.hasRequiredGroups">
+                *ngIf="!readonly && !tableForm.isRequired && !tableForm.isReadonly && !tableForm.hasRequiredGroups">
             Optional
           </span>
           <span class="badge rounded-pill bg-aluminum ml-2"
-            *ngIf="!readonly && !tableForm.isRequired && !tableForm.isReadonly && tableForm.hasRequiredGroups">
+                *ngIf="!readonly && !tableForm.isRequired && !tableForm.isReadonly && tableForm.hasRequiredGroups">
             Required at least one {{tableForm.requiredGroups.join(' or ')}}
           </span>
         </div>
@@ -28,7 +28,8 @@
     >
       <i class="fas fa-paste"></i> Paste
     </button>
-    <button *ngIf="canRemove" type="button" class="btn btn-link text-danger" tooltip="Delete section" (click)="onRemoveSection()">
+    <button *ngIf="canRemove" type="button" class="btn btn-link text-danger" tooltip="Delete section"
+            (click)="onRemoveSection()">
       <i class="fas fa-trash"></i> Delete
     </button>
   </div>
@@ -36,7 +37,7 @@
   <div class="card-body">
     <div class="d-flex align-items-center justify-content-end pb-2">
       <h6 class="card-subtitle text-muted flex-grow-1"
-        *ngIf="tableForm.columnNamesAvailableCached.length && userData.isPrivileged && !readonly && !tableForm.isReadonly">
+          *ngIf="tableForm.columnNamesAvailableCached.length && userData.isPrivileged && !readonly && !tableForm.isReadonly">
         <strong>{{tableForm.hasUniqueColumns ? 'More' : 'Available'}}
           {{tableForm.canHaveMultipleRows ? 'column' : 'key'}}s</strong>:
         <i>{{tableForm.columnNamesAvailableCached.join(', ')}}.</i>
@@ -45,8 +46,9 @@
         error{{tableForm.errorCount > 1 ? 's' : ''}}</div>
     </div>
 
-    <st-table *ngIf="tableForm.canHaveMultipleRows; else singleColumnTable" [tableForm]="tableForm"
-      [readonly]="readonly">
+    <st-table *ngIf="tableForm.canHaveMultipleRows || tableForm.hasFileColumns; else singleColumnTable"
+              [tableForm]="tableForm"
+              [readonly]="readonly">
     </st-table>
     <ng-template #singleColumnTable>
       <st-single-column-table [tableForm]="tableForm" [readonly]="readonly">

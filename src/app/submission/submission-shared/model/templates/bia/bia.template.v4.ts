@@ -92,9 +92,9 @@ export const biaTemplateV4 = {
         display: 'required',
         name: 'License',
         uniqueValues: false,
-        defaultValue: 'CC0',
         valueType: {
           name: 'selectvalquals',
+          defaultValue: 'CC0',
           values: [
             {
               value: 'CC0',

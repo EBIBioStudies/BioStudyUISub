@@ -126,7 +126,8 @@ export class SubmissionToPageTabService {
 
     return tableRowToSections<PtFile>(
       (rows) => [attributesAsFile(rows)],
-      (attr) => isDefinedAndNotEmpty(attr.path),
+      (attr) =>
+        isDefinedAndNotEmpty(attr.path) || (attr.attributes || [])?.some((at) => !isPtAttributeValueEmpty(at.value)),
       isSanitise,
       table
     );

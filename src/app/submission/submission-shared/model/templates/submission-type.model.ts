@@ -212,13 +212,20 @@ export abstract class ValueType {
   }
 }
 
-export class TextValueType extends ValueType {
+export class ValueTypeWithDefault extends ValueType {
+  readonly defaultValue?: string;
+  constructor(data: Partial<ValueTypeWithDefault> = {}, valueTypeName?: ValueTypeName) {
+    super(valueTypeName || ValueTypeName.text);
+    this.defaultValue = data.defaultValue;
+  }
+}
+export class TextValueType extends ValueTypeWithDefault {
   readonly maxlength: number;
   readonly minlength: number;
   readonly placeholder: string;
 
   constructor(data: Partial<TextValueType> = {}, valueTypeName?: ValueTypeName) {
-    super(valueTypeName || ValueTypeName.text);
+    super(data, valueTypeName || ValueTypeName.text);
     this.minlength = data.minlength || -1;
     this.maxlength = data.maxlength || -1;
     this.placeholder = data.placeholder || '';
@@ -234,13 +241,13 @@ export class DateValueType extends ValueType {
   }
 }
 
-export class SelectValueType extends ValueType {
+export class SelectValueType extends ValueTypeWithDefault {
   values: string[];
   multiple: boolean = false;
   enableValueAdd: boolean = true;
 
   constructor(data: Partial<SelectValueType> = {}) {
-    super(ValueTypeName.select);
+    super(data, ValueTypeName.select);
     this.values = data.values || [];
     this.multiple = data.multiple || false;
     this.enableValueAdd = data.enableValueAdd !== false;
@@ -256,13 +263,13 @@ export interface SelectValueOptionType {
   valqual: NameAndValue[];
 }
 
-export class SelectValQualsValueType extends ValueType {
+export class SelectValQualsValueType extends ValueTypeWithDefault {
   values: SelectValueOptionType[];
   multiple: boolean = false;
   enableValueAdd: boolean = true;
 
   constructor(data: Partial<SelectValQualsValueType> = {}) {
-    super(ValueTypeName.selectvalquals);
+    super(data, ValueTypeName.selectvalquals);
     this.values = data.values || [];
     this.multiple = data.multiple || false;
     this.enableValueAdd = data.enableValueAdd !== false;
@@ -322,7 +329,6 @@ export class FieldType extends TypeBase {
   readonly valueType: ValueType;
   readonly asyncValueValidatorName: string | null;
   readonly helpContextual?: DocItem;
-  readonly defaultValue?: string;
 
   constructor(
     name: string,
@@ -346,7 +352,6 @@ export class FieldType extends TypeBase {
           ...data.helpContextual
         }
       : undefined;
-    this.defaultValue = data.defaultValue;
   }
 }
 
@@ -440,7 +445,7 @@ export class ColumnType extends TypeBase {
   readonly display: string;
   readonly displayType: DisplayType;
   readonly uniqueValues: boolean;
-  readonly valueType: ValueType;
+  readonly valueType: ValueTypeWithDefault;
   readonly helpText: string;
   readonly helpLink: string;
   readonly helpContextual?: DocItem;
