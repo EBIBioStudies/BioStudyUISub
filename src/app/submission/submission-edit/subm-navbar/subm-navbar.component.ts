@@ -64,7 +64,7 @@ export class SubmNavBarComponent implements OnChanges {
   }
 
   get canSubmit(): boolean {
-    return !this.isSaving && this.sectionForm != undefined && this.sectionForm.valid;
+    return !this.isSaving && this.sectionForm !== undefined && this.sectionForm.valid;
   }
 
   get isTemp(): boolean {

@@ -344,7 +344,7 @@ export class SubmEditService {
       if (field.valueType instanceof ValueTypeWithDefault && field.valueType.defaultValue) {
         field.value = field.valueType.defaultValue;
         if (field.valueType.is(ValueTypeName.selectvalquals)) {
-          const valqual = (<SelectValQualsValueType>field.valueType).values.find((val) => val.value == field.value)
+          const valqual = (field.valueType as SelectValQualsValueType).values.find((val) => val.value === field.value)
             ?.valqual;
           if (valqual) field.valqual = valqual;
         }
