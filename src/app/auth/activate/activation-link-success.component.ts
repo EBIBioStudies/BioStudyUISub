@@ -13,7 +13,7 @@ export class ActivationLinkSuccessComponent implements AfterViewInit {
   private activationCodeRef!: ElementRef;
 
   ngAfterViewInit(): void {
-    this.activationCodeRef.nativeElement.focus();
+    if (this.activationCodeRef) this.activationCodeRef.nativeElement.focus();
   }
 
   get isActivationCodeEmpty(): boolean {
