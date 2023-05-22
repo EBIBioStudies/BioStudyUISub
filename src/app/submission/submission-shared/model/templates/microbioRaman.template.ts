@@ -177,7 +177,7 @@ export const microbioRamanTemplate = {
               name: 'text',
               placeholder: 'Description of what is being assayed. Sample names from publications can also go here.'
             },
-            display: 'optional'
+            display: 'required'
           },
           {
             name: 'Source',
@@ -349,8 +349,9 @@ export const microbioRamanTemplate = {
         ]
       },
       {
-        display: 'optional',
+        display: 'desirable',
         displayAnnotations: false,
+        minRequired: 0,
         name: 'Treated spectrum',
         sectionExample: 'Final spectrum data (as CSV) with all treatments specified below',
         tableTypes: [
@@ -393,6 +394,7 @@ export const microbioRamanTemplate = {
       {
         name: 'Instrument metadata',
         displayAnnotations: true,
+        minRequired: 0,
         icon: 'fa-file-invoice',
         description: 'Magnification and numerical aperture (NA) of an objective, grating, pinhole size, etc.',
         display: 'desirable',

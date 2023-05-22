@@ -14,7 +14,7 @@ describe('submission list component', () => {
     userSession.create(userProfile);
 
     await navigate('/');
-    expect(screen.getByRole('tab', { name: /submissions/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /studies/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /drafts/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'New Submission' })).toBeInTheDocument();
 
