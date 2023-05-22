@@ -349,7 +349,7 @@ export const microbioRamanTemplate = {
         ]
       },
       {
-        display: 'required',
+        display: 'optional',
         displayAnnotations: false,
         name: 'Treated spectrum',
         sectionExample: 'Final spectrum data (as CSV) with all treatments specified below',

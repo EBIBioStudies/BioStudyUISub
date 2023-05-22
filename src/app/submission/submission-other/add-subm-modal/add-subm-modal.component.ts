@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { TemplateDetail } from 'app/submission/submission-shared/model/templates/submission.templates';
 
@@ -7,16 +7,15 @@ import { TemplateDetail } from 'app/submission/submission-shared/model/templates
   templateUrl: './add-subm-modal.component.html',
   styleUrls: ['./add-subm-modal.component.scss']
 })
-export class AddSubmModalComponent {
+export class AddSubmModalComponent implements AfterViewInit {
   onOk?: (collection?: string, template?: string) => void;
   selectedCollection?: string;
   selectedTemplate?: string;
   templates: TemplateDetail[] = [];
-  moreIsPressed: boolean = false;
+  showMoreWasPressed: boolean = false;
+  showMoreIsShown: boolean = false;
 
-  constructor(public bsModalRef: BsModalRef) {
-    this.moreIsPressed = this.templates?.length > 2;
-  }
+  constructor(public bsModalRef: BsModalRef) {}
 
   hide(): void {
     this.bsModalRef.hide();
@@ -34,6 +33,10 @@ export class AddSubmModalComponent {
   }
 
   showMore(): void {
-    this.moreIsPressed = true;
+    this.showMoreWasPressed = true;
+  }
+
+  ngAfterViewInit(): void {
+    this.showMoreIsShown = this.templates?.length > 3;
   }
 }

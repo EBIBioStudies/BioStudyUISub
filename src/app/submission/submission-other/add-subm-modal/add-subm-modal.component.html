@@ -18,7 +18,7 @@
 
     <fieldset>
       <ng-container *ngFor="let tmpl of templates; index as i">
-        <div class="form-check template-button" [collapse]="i>=2 && !moreIsPressed">
+        <div class="form-check template-button" [collapse]="i>=3 && !showMoreWasPressed">
           <input id="template_{{i}}" type="radio" class="form-check-input" name="template" [value]="tmpl.name"
                  (change)="changeTemplate(tmpl)">
           <label class="form-check-label" for="template_{{i}}" placement="right">
@@ -30,7 +30,7 @@
           </label>
         </div>
       </ng-container>
-      <button type="button" class="btn btn-link mx-auto" [collapse]="moreIsPressed" (click)="showMore()" >show more collections...</button>
+      <button type="button" class="btn btn-link mx-auto" [collapse]="!showMoreIsShown || showMoreWasPressed" (click)="showMore()" >show more collections...</button>
     </fieldset>
   </div>
   <div class="modal-footer">
