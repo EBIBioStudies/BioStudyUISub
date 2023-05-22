@@ -65,21 +65,28 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
     };
   });
 
-  const defaultTemplateItem = {
+  templateDetail.push({
     description: defaultTemplate.description,
     name: defaultTemplate.name,
     collection: '',
     displayName: defaultTemplate.name,
     icon: 'images/template-icons/Default.png'
-  };
+  });
 
-  templateDetail.sort((a, b) =>
-    a.displayName.toLowerCase() === 'bioimages'
-      ? -10
-      : a.displayName.toLowerCase().localeCompare(b.displayName.toLowerCase())
-  );
+  const weights = ['bioimages', 'default', 'microbioraman'];
+  templateDetail.sort((a, b) => {
+    const aName = a.displayName.toLowerCase();
+    const bName = b.displayName.toLowerCase();
+    let result;
+    if (weights.indexOf(aName) >= 0) {
+      result = weights.indexOf(bName) >= 0 ? (weights.indexOf(aName) < weights.indexOf(bName) ? -1 : 1) : -1;
+    } else {
+      result = aName.localeCompare(bName);
+    }
+    return result;
+  });
 
-  return [templateDetail[0], defaultTemplateItem, ...templateDetail.splice(1)];
+  return templateDetail;
 }
 
 export function findTemplateByName(name: string): any {
