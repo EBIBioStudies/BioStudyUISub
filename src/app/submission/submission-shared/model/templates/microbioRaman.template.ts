@@ -187,7 +187,7 @@ export const microbioRamanTemplate = {
               placeholder:
                 'Source of the sample, such as a strain collection, chemical supplier, or the environment or tissue sample was taken from.'
             },
-            display: 'optional'
+            display: 'required'
           },
           {
             name: 'Composition',
@@ -197,7 +197,7 @@ export const microbioRamanTemplate = {
               placeholder:
                 'Entities are contained in the sample,  including not just the cells of interest, but the media, and well as any extraneous materials such as tissue, debris, biofilm matrix, or soil.'
             },
-            display: 'optional'
+            display: 'required'
           },
           {
             name: 'Sample condition',
@@ -206,13 +206,13 @@ export const microbioRamanTemplate = {
               name: 'largetext',
               placeholder: 'Are the cells dry or wet, are they fixed or unfixed, and what are they suspended in. '
             },
-            display: 'optional'
+            display: 'required'
           },
           {
             name: 'Mounting substrate',
             icon: 'fa-layer-group',
             valueType: { name: 'text', placeholder: 'Glass coverslip, aluminum slide, CaF2 Slide' },
-            display: 'optional'
+            display: 'required'
           }
         ],
         tableTypes: [
@@ -254,7 +254,7 @@ export const microbioRamanTemplate = {
             name: 'Raman system used',
             icon: 'fa-microscope',
             valueType: { name: 'text', placeholder: 'Manufacturer and model of scope used' },
-            display: 'optional'
+            display: 'required'
           },
           {
             name: 'Measurement type',
@@ -270,7 +270,7 @@ export const microbioRamanTemplate = {
                 'Surface-enhanced Raman Scattering (SERS)'
               ]
             },
-            display: 'optional'
+            display: 'required'
           }
         ],
         tableTypes: [
@@ -298,7 +298,7 @@ export const microbioRamanTemplate = {
           },
           {
             name: 'Laser',
-            display: 'desirable',
+            display: 'required',
             description: 'Wavelength of laser (nm); Power of excitation laser (mW); Neutral density filter (%).',
             icon: 'fa-grip-lines',
             uniqueCols: true,
@@ -358,7 +358,7 @@ export const microbioRamanTemplate = {
           {
             name: 'File',
             icon: 'fa-wave-square',
-            display: 'required',
+            display: 'desirable',
             rowAsSection: true,
             uniqueCols: true,
             singleRow: true,
