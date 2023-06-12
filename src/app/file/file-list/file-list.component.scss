@@ -10,3 +10,7 @@
   height: var(--page-navbar-height);
   top: var(--header-height);
 }
+
+.ag-right-aligned-cell {
+  justify-content: flex-end;
+}
