@@ -12,6 +12,7 @@ import { FileTypeCellComponent } from './ag-grid/file-type-cell.component';
 import { FileUpload, FileUploadList } from 'app/file/shared/file-upload-list.service';
 import { ProgressCellComponent } from './ag-grid/upload-progress-cell.component';
 import { isDefinedAndNotEmpty } from '../../utils/validation.utils';
+import { formatNumber } from '@angular/common';
 
 @Component({
   selector: 'st-file-list',
@@ -88,6 +89,7 @@ export class FileListComponent implements OnInit, OnDestroy {
   decorateFiles(files: any[] | undefined): any[] {
     return (files || []).map((f) => ({
       name: f.name,
+      size: f.size,
       type: f.type,
       files: this.decorateFiles(f.files),
       onRemove: () => {
@@ -223,6 +225,13 @@ export class FileListComponent implements OnInit, OnDestroy {
       {
         field: 'name',
         headerName: 'Name'
+      },
+      {
+        field: 'size',
+        headerName: 'Size (in bytes)',
+        maxWidth: 200,
+        valueFormatter: (params) => formatNumber(params.value, 'en-gb'),
+        type: 'numericColumn'
       },
       {
         cellRendererFramework: ProgressCellComponent,
