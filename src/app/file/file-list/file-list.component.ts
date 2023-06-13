@@ -230,7 +230,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         field: 'size',
         headerName: 'Size (in bytes)',
         maxWidth: 200,
-        valueFormatter: (params) => formatNumber(params.value, 'en-gb'),
+        valueFormatter: (params) => (params?.data?.type === 'DIR' ? '' : formatNumber(params.value, 'en-gb')),
         type: 'numericColumn'
       },
       {
