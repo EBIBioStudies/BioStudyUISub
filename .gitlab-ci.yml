@@ -58,13 +58,13 @@ build:dev:
   <<: *build_template
   environment: DEV
   only:
-    - dev@ndiaz/BioStudyUISub
+    - dev
 
 build:beta:
   <<: *build_template
   environment: BETA
   only:
-    - beta@ndiaz/BioStudyUISub
+    - beta
 
 build:sandbox:
   <<: *build_template
@@ -74,13 +74,13 @@ build:sandbox:
   tags:
     - sandbox_runner
   only:
-    - master@ndiaz/BioStudyUISub
+    - master
 
 build:prod:
   <<: *build_template
   environment: PROD
   only:
-    - master@ndiaz/BioStudyUISub
+    - master
 
 # Deploy per environment
 deploy:dev:
@@ -89,7 +89,7 @@ deploy:dev:
   dependencies:
     - build:dev
   only:
-    - dev@ndiaz/BioStudyUISub
+    - dev
 
 deploy:beta:
   <<: *deploy_definition
@@ -97,7 +97,7 @@ deploy:beta:
   dependencies:
     - build:beta
   only:
-    - beta@ndiaz/BioStudyUISub
+    - beta
   when: manual
 
 deploy:prod:
@@ -106,7 +106,7 @@ deploy:prod:
   dependencies:
     - build:prod
   only:
-    - master@ndiaz/BioStudyUISub
+    - master
   when: manual
 
 deploy:sandbox:
@@ -122,7 +122,7 @@ deploy:sandbox:
   tags:
     - sandbox_runner
   only:
-    - master@ndiaz/BioStudyUISub
+    - master
   dependencies:
     - build:sandbox
   when: manual

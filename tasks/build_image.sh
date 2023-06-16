@@ -23,10 +23,10 @@ rm ./dist/public/config.json
 docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 # Build Docker image
-docker build -t $CI_REGISTRY/ndiaz/biostudyuisub:latest .
+docker build -t ${CI_REGISTRY_IMAGE}:latest .
 
 # Push image to docker registry
-docker push $CI_REGISTRY/ndiaz/biostudyuisub:latest
+docker push ${CI_REGISTRY_IMAGE}:latest
 
 # Logout from the registry
 docker logout $CI_REGISTRY
