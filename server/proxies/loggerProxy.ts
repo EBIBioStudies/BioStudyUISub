@@ -10,7 +10,7 @@ export const loggerProxy = (path: string, router: Router) => {
   router.use(path, async (req, res) => {
     if (logsWebhookUrl.length > 0 && !isDevelopment) {
       const { message, userEmail, stackTrace } = req.body;
-      const attachments = [];
+      const attachments: object[] = [];
 
       if (stackTrace) {
         attachments.push({

@@ -6,7 +6,7 @@ import { isDefinedAndNotEmpty } from 'app/utils/validation.utils';
 
 @Injectable()
 export class ContextPathInterceptorService implements HttpInterceptor {
-  private paths: string[] = ['/api', '/log', '/identifiers', '/organizations'];
+  private paths: string[] = ['/api', '/log', '/identifiers', '/organizations', '/file-list'];
 
   constructor(private appConfig: AppConfig) {}
 

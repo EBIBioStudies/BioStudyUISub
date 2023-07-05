@@ -97,6 +97,9 @@ export class FileListComponent implements OnInit, OnDestroy {
       },
       onDownload: () => {
         this.downloadFile(f.path, f.name);
+      },
+      onDownloadFileList: () => {
+        this.downloadFileList(`/${f.path}/${f.name}`);
       }
     }));
   }
@@ -236,7 +239,7 @@ export class FileListComponent implements OnInit, OnDestroy {
       {
         cellRendererFramework: ProgressCellComponent,
         headerName: 'Progress',
-        maxWidth: 200
+        maxWidth: 100
       },
       {
         cellRendererFramework: FileActionsCellComponent,
@@ -255,6 +258,16 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     link.href = downloadPath;
 
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  private downloadFileList(filePath: string): void {
+    const contextPath: string = this.appConfig.contextPath;
+    const downloadPath = `${contextPath}/file-list/${filePath}`;
+    const link = document.createElement('a');
+    link.href = downloadPath;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

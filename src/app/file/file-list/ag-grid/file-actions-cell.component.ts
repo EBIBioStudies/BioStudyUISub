@@ -5,11 +5,29 @@ import { FileUpload } from '../../shared/file-upload-list.service';
 @Component({
   selector: 'st-file-actions-cell',
   template: `
-    <div class="btn-group btn-group-sm" role="group" attr.aria-label="File actions">
+    <style>
+      button {
+        min-width: 32pt;
+      }
+    </style>
+    <div class="btn-group" role="group" attr.aria-label="File actions">
+      <button
+        *ngIf="canDownloadFileList"
+        type="button"
+        class="btn btn-link"
+        tooltip="Download File List"
+        container="body"
+        placement="left"
+        (click)="onFileList($event)"
+        attr.aria-label="Download File List"
+        title="Download File List"
+      >
+        <i aria-hidden="true" class="fa-regular fa-file-lines"></i>
+      </button>
       <button
         *ngIf="canDownload"
         type="button"
-        class="btn btn-primary"
+        class="btn btn-link"
         tooltip="Download"
         container="body"
         placement="left"
@@ -17,12 +35,12 @@ import { FileUpload } from '../../shared/file-upload-list.service';
         attr.aria-label="Download file"
         title="Download file"
       >
-        <i aria-hidden="true" class="fas fa-download fa-fw"></i>
+        <i aria-hidden="true" class="fa-solid fa-download"></i>
       </button>
       <button
         *ngIf="canRemove"
         type="button"
-        class="btn btn-danger"
+        class="btn btn-link"
         tooltip="Delete"
         container="body"
         placement="left"
@@ -35,7 +53,7 @@ import { FileUpload } from '../../shared/file-upload-list.service';
       <button
         *ngIf="canCancel"
         type="button"
-        class="btn btn-warning"
+        class="btn btn-link"
         tooltip="Cancel"
         container="body"
         placement="left"
@@ -51,6 +69,7 @@ import { FileUpload } from '../../shared/file-upload-list.service';
 export class FileActionsCellComponent implements AgRendererComponent {
   readonly canDeleteTypes = ['FILE', 'ARCHIVE', 'DIR'];
   private onDownload;
+  private onDownloadFileList;
   private onRemove;
   private type?: string;
   private upload?: FileUpload;
@@ -60,6 +79,7 @@ export class FileActionsCellComponent implements AgRendererComponent {
     this.upload = params.data.upload;
     this.onRemove = params.data.onRemove || (() => {});
     this.onDownload = params.data.onDownload || (() => {});
+    this.onDownloadFileList = params.data.onDownloadFileList || (() => {});
   }
 
   get canRemove(): boolean {
@@ -74,6 +94,10 @@ export class FileActionsCellComponent implements AgRendererComponent {
     return Boolean(this.type === 'FILE' && !this.upload?.isUploading());
   }
 
+  get canDownloadFileList(): boolean {
+    return Boolean(this.type !== 'FILE' && !this.upload?.isUploading());
+  }
+
   get hasFailed(): boolean {
     return this.upload?.isFailed() || false;
   }
@@ -83,6 +107,11 @@ export class FileActionsCellComponent implements AgRendererComponent {
     if (this.upload) {
       this.upload.cancel();
     }
+  }
+
+  onFileList(event): void {
+    event.preventDefault();
+    this.onDownloadFileList();
   }
 
   onFileDownload(event): void {

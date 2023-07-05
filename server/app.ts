@@ -15,6 +15,8 @@ import { organizationProxy } from './proxies/organizationProxy';
 import { submStatusController } from './submission-status/submission-status-controller';
 import { processSubmStatus } from './submission-status/submission-status-processor';
 import { logger } from './logger';
+import cookieParser from 'cookie-parser';
+import { fileListController } from './files/file-list-controller';
 
 export interface ExpressUri {
   context: string;
@@ -31,11 +33,12 @@ const app = express();
 const router = express.Router();
 app.use(helmet());
 app.use(compression());
-
+app.use(cookieParser());
 router.use(express.static(staticPath));
 
 // Controllers
 submStatusController('/subm-status', router);
+fileListController('/file-list/*', router);
 
 // Proxies
 submitterProxy('*/api', router);
@@ -47,11 +50,11 @@ loggerProxy('/log', router);
 // In DEV mode this service only proxies requests to the backend.
 // In PROD it serves the Angular static files as well.
 if (process.env.NODE_ENV === 'production') {
-  router.get('/thor-integration', (req, res) => {
+  router.get('/thor-integration', (_, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'thor-integration.html'));
   });
 
-  router.get('/*', (req, res) => {
+  router.get('/*', (_, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
   });
 }
