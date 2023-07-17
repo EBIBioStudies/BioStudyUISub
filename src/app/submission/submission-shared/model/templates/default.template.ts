@@ -102,6 +102,26 @@ export const defaultTemplate = {
             'Zea mays (corn)'
           ]
         }
+      },
+      {
+        display: 'readonly',
+        name: 'License',
+        uniqueValues: false,
+        valueType: {
+          name: 'selectvalquals',
+          defaultValue: 'CC0',
+          values: [
+            {
+              value: 'CC0',
+              valqual: [{ name: 'URL', value: 'https://creativecommons.org/publicdomain/zero/1.0/legalcode' }]
+            },
+            {
+              value: 'CC BY 4.0',
+              valqual: [{ name: 'URL', value: 'https://creativecommons.org/licenses/by/4.0/legalcode' }]
+            }
+          ],
+          enableValueAdd: false
+        }
       }
     ],
     annotationsType: {
