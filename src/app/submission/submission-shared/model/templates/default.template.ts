@@ -107,6 +107,7 @@ export const defaultTemplate = {
         display: 'readonly',
         name: 'License',
         uniqueValues: false,
+        helpLink: 'help#license',
         valueType: {
           name: 'selectvalquals',
           defaultValue: 'CC0',
