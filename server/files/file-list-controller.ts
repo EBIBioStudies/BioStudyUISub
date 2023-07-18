@@ -9,6 +9,8 @@ export const fileListController = (path: string, router: Router) => {
       'Content-Disposition': `attachment; filename= ${folder.startsWith('user/') ? folder.substr(5) : folder}.tsv`,
       'Content-Type': 'text/tab-separated-values'
     });
+
+    res.write('Files\n');
     processFolder(folder, req, res).then(() => res.send());
   });
 
@@ -25,7 +27,6 @@ export const fileListController = (path: string, router: Router) => {
             resolve();
             return;
           }
-          res.write('Files\n');
           response.body.forEach((node: PathInfo) => {
             if (node.type === 'FILE') {
               res.write(`${node.path.startsWith('user/') ? node.path.substr(5) : node.path}/${node.name}\n`);
