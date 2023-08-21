@@ -1,4 +1,4 @@
-<div *ngIf="isUploading && value >= 0" class="progress" style="min-width: 150px;">
+<div *ngIf="isUploading && value >= 0" class="progress text-center" style="min-width: 10px;">
   <div class="progress-bar bg-info" role="progressbar" [ngStyle]="{ 'width': value + '%'}"
     [attr.aria-valuenow]="value" aria-valuemin="0%" aria-valuemax="100%">
     <span>{{value}}%</span>
