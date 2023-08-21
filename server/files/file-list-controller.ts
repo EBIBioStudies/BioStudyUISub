@@ -1,6 +1,5 @@
 import { Request, Response, Router } from 'express';
 import needle from 'needle';
-import { PathInfo } from '../../src/app/file/shared/file-rest.model';
 
 export const fileListController = (path: string, router: Router) => {
   router.get(path, async (req: Request, res: Response) => {
@@ -18,16 +17,16 @@ export const fileListController = (path: string, router: Router) => {
     const url = `${req.get('host')}/api/files/user/${folder}`;
     const headers = { 'X-Session-Token': req?.cookies['BioStudiesToken'] || '' };
 
-    return new Promise((resolve) => {
+    return new Promise((resolve: any) => {
       needle('get', url, { headers: headers })
-        .then((response) => {
+        .then((response: any) => {
           const folders: string[] = [];
           if (response.statusCode != 200) {
             res.sendStatus(response.status);
             resolve();
             return;
           }
-          response.body.forEach((node: PathInfo) => {
+          response.body.forEach((node: any) => {
             if (node.type === 'FILE') {
               res.write(`${node.path.startsWith('user/') ? node.path.substr(5) : node.path}/${node.name}\n`);
             } else {
@@ -36,7 +35,7 @@ export const fileListController = (path: string, router: Router) => {
           });
           Promise.all(folders.sort().map((folder) => processFolder(folder, req, res))).then(() => resolve());
         })
-        .catch(function (err) {
+        .catch(function (err: any) {
           res.sendStatus(err?.status || 500);
           resolve();
           return;
