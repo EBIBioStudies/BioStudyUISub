@@ -14,7 +14,7 @@ export const fileListController = (path: string, router: Router) => {
   });
 
   function processFolder(folder: string, req: Request, res: Response) {
-    const url = `${req.get('host')}/api/files/user/${folder}`;
+    const url = `${req.get('host')}/api/files/${folder.startsWith('user') ? '' : 'user/'}/${folder}`;
     const headers = { 'X-Session-Token': req?.cookies['BioStudiesToken'] || '' };
 
     return new Promise((resolve: any) => {
