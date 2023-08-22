@@ -5,16 +5,14 @@ export const fileListController = (path: string, router: Router) => {
   router.get(path, async (req: Request, res: Response) => {
     const folder = req.url.substr('/file-list/'.length);
     res.set({
-      'Content-Disposition': `attachment; filename= ${folder.startsWith('user/') ? folder.substr(5) : folder}.tsv`,
+      'Content-Disposition': `attachment; filename=${folder.substring(folder.lastIndexOf('/') + 1)}.tsv`,
       'Content-Type': 'text/tab-separated-values'
     });
-
-    res.write('Files\n');
     processFolder(folder, req, res).then(() => res.send());
   });
 
   function processFolder(folder: string, req: Request, res: Response) {
-    const url = `${req.get('host')}/api/files/${folder.startsWith('user') ? '' : 'user/'}/${folder}`;
+    const url = `${req.get('host')}/api/files${folder.startsWith('user') ? '/' : '/user/'}${folder}`;
     const headers = { 'X-Session-Token': req?.cookies['BioStudiesToken'] || '' };
 
     return new Promise((resolve: any) => {
