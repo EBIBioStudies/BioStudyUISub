@@ -99,7 +99,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.downloadFile(f.path, f.name);
       },
       onDownloadFileList: () => {
-        this.downloadFileList(`/${f.path}/${f.name}`);
+        this.downloadFileList(`${f.path}/${f.name}`);
       }
     }));
   }
