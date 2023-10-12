@@ -1,7 +1,7 @@
 export const microbioRamanTemplate = {
   name: 'MicrobioRaman',
   title: 'MicrobioRaman',
-  description: 'Microbiological  Raman Spectroscopy Data',
+  description: 'Microbiological Raman Spectroscopy Data',
   sectionType: {
     display: 'required',
     displayAnnotations: false,
@@ -31,6 +31,15 @@ export const microbioRamanTemplate = {
         name: 'Description',
         icon: 'fa-comment',
         valueType: { name: 'largetext' }
+      },
+      {
+        name: 'Software',
+        icon: 'fa-briefcase',
+        valueType: {
+          name: 'text',
+          placeholder: 'If a commercial Raman system was used for measurement, the name and version of software'
+        },
+        display: 'optional'
       }
     ],
     tableTypes: [
@@ -161,6 +170,27 @@ export const microbioRamanTemplate = {
             display: 'optional'
           }
         ]
+      },
+      {
+        name: 'File',
+        icon: 'fa-wave-square',
+        rowAsSection: true,
+        uniqueCols: true,
+        description:
+          'Unprocessed raw Raman data composed of wavenumbers and corresponding Raman intensities; format as TSV, CSV or other universal file format',
+        display: 'required',
+        columnTypes: [
+          {
+            name: 'File',
+            valueType: { name: 'file', allowFolders: false },
+            display: 'required'
+          },
+          {
+            name: 'Type',
+            valueType: { name: 'text', defaultValue: 'Raw spectrum' },
+            display: 'required'
+          }
+        ]
       }
     ],
     sectionTypes: [
@@ -168,14 +198,14 @@ export const microbioRamanTemplate = {
         display: 'required',
         displayAnnotations: false,
         name: 'Sample',
-        sectionExample: 'Name of cell or compound, source, composition, conditions, mounting substrate, etc.',
+        sectionExample: 'The biological context and treatment',
         fieldTypes: [
           {
             name: 'Name of cell or compound',
             icon: 'fa-file-invoice',
             valueType: {
               name: 'text',
-              placeholder: 'Description of what is being assayed. Sample names from publications can also go here.'
+              placeholder: 'Sample names'
             },
             display: 'required'
           },
@@ -185,7 +215,7 @@ export const microbioRamanTemplate = {
             valueType: {
               name: 'text',
               placeholder:
-                'Source of the sample, such as a strain collection, chemical supplier, or the environment or tissue sample was taken from.'
+                'Source of a sample, such as a strain collection, a chemical supplier, or the environment or tissue from which a sample was obtained'
             },
             display: 'required'
           },
@@ -195,23 +225,24 @@ export const microbioRamanTemplate = {
             valueType: {
               name: 'largetext',
               placeholder:
-                'Entities are contained in the sample,  including not just the cells of interest, but the media, and well as any extraneous materials such as tissue, debris, biofilm matrix, or soil.'
+                'Entities contained in the sample, including not just the cells of interest, but also the medium, as well as any extraneous materials such as tissue, debris, biofilm matrix, or soil'
             },
             display: 'required'
           },
           {
-            name: 'Sample condition',
+            name: 'Preparation',
             icon: 'fa-temperature-low',
             valueType: {
               name: 'largetext',
-              placeholder: 'Are the cells dry or wet, are they fixed or unfixed, and what are they suspended in. '
+              placeholder:
+                'E.g., preservation after sampling, culturing condition (e.g., sample volume, medium, light condition/diel cycle, pH, temperature, antibiotics, oxic/anoxic), sample age, fixed or unfixed, whether the cells were dry or wet for Raman measurement'
             },
             display: 'required'
           },
           {
             name: 'Mounting substrate',
             icon: 'fa-layer-group',
-            valueType: { name: 'text', placeholder: 'Glass coverslip, aluminum slide, CaF2 Slide' },
+            valueType: { name: 'text', placeholder: 'E.g., glass coverslip, aluminum slide, CaF2 slide, quartz slide' },
             display: 'required'
           }
         ],
@@ -219,7 +250,7 @@ export const microbioRamanTemplate = {
           {
             name: 'File',
             display: 'desirable',
-            description: 'Image file if spectra is part of a hyperspectral Raman image.',
+            description: 'Image files from Raman imaging',
             icon: 'fa-file-image',
             uniqueCols: true,
             rowAsSection: true,
@@ -231,14 +262,9 @@ export const microbioRamanTemplate = {
                 display: 'required'
               },
               {
-                name: 'Coordinates',
-                valueType: { name: 'text', placeholder: 'coordinate value of spectra' },
-                display: 'desirable'
-              },
-              {
-                name: 'Spot size/spacing',
-                valueType: { name: 'text', placeholder: 'Pixel size and spacing of spectra' },
-                display: 'desirable'
+                name: 'Type',
+                valueType: { name: 'text', defaultValue: 'Image file' },
+                display: 'required'
               }
             ]
           }
@@ -248,12 +274,12 @@ export const microbioRamanTemplate = {
         display: 'required',
         displayAnnotations: false,
         name: 'Setup',
-        sectionExample: 'Information about setup of the system and lasers.',
+        sectionExample: 'Experimental conditions',
         fieldTypes: [
           {
-            name: 'Raman system used',
+            name: 'Raman system',
             icon: 'fa-microscope',
-            valueType: { name: 'text', placeholder: 'Manufacturer and model of scope used' },
+            valueType: { name: 'text', placeholder: 'Manufacturer and model of the scope' },
             display: 'required'
           },
           {
@@ -262,44 +288,33 @@ export const microbioRamanTemplate = {
             valueType: {
               name: 'select',
               values: [
-                'Spontaneous Raman Scattering',
-                'Resonance Raman Scattering (RR)',
-                'Coherent Anti-Stokes Raman Scattering (CARS)',
-                'Stimulated Raman Scattering (SRS)',
-                'Hyper Raman Scattering (HRS)',
-                'Surface-enhanced Raman Scattering (SERS)'
+                'normal Raman scattering',
+                'resonance Raman scattering',
+                'coherent anti-Stokes Raman scattering (CARS)',
+                'stimulated Raman scattering (SRS)',
+                'hyper Raman scattering (HRS)',
+                'surface-enhanced Raman scattering (SERS)',
+                'spatially offset Raman spectroscopy (SORS)',
+                'polarized Raman spectroscopy',
+                'tip-enhanced Raman scattering (TERS)',
+                'time-gated (TG) Raman spectroscopy'
               ]
             },
             display: 'required'
+          },
+          {
+            name: 'Lasers and connected components/parameters',
+            icon: 'fa-microscope',
+            valueType: { name: 'text', placeholder: 'Manufacturer and model of lasers' },
+            display: 'optional'
           }
         ],
         tableTypes: [
           {
-            name: 'File',
-            icon: 'fa-wave-square',
-            rowAsSection: true,
-            uniqueCols: true,
-            description:
-              'Raw, untreated spectrum with wavenumbers, bins, and intensities at each bin; format as TSV,CSV or other universal file format.',
-            display: 'required',
-            singleRow: true,
-            columnTypes: [
-              {
-                name: 'File',
-                valueType: { name: 'file', allowFolders: false },
-                display: 'required'
-              },
-              {
-                name: 'Type',
-                valueType: { name: 'text', defaultValue: 'Raw spectrum' },
-                display: 'required'
-              }
-            ]
-          },
-          {
             name: 'Laser',
             display: 'required',
-            description: 'Wavelength of laser (nm); Power of excitation laser (mW); Neutral density filter (%).',
+            description:
+              'Wavelength of laser (nm), power of excitation laser (mW), neutral density filter (%) and other characteristics',
             icon: 'fa-grip-lines',
             uniqueCols: true,
             allowImport: true,
@@ -310,39 +325,69 @@ export const microbioRamanTemplate = {
                 display: 'desirable'
               },
               {
-                name: 'Wavelength of laser (nm)',
-                valueType: { name: 'text', placeholder: 'Laser wavelength in nanometers' },
+                name: 'Wavelength (nm)',
+                valueType: { name: 'text' },
                 display: 'required'
               },
               {
-                name: 'Power of excitation laser (mW)',
-                valueType: { name: 'text', placeholder: 'Laser power in milliwatts, prior to ND filter' },
+                name: 'Power (mW)',
+                valueType: { name: 'text' },
+                display: 'required'
+              },
+              {
+                name: 'Continuous wave or pulsed',
+                valueType: { name: 'text', placeholder: 'If pulsed, pulse duration and repetition rate' },
+                display: 'required'
+              },
+              {
+                name: 'Excitation intensity',
+                valueType: { name: 'text', placeholder: 'For nonlinear Raman spectroscopy (e.g., CARS/SRS)' },
+                display: 'desirable'
+              },
+              {
+                name: 'Polarization state',
+                valueType: { name: 'text', placeholder: 'For polarized Raman spectroscopy' },
+                display: 'desirable'
+              },
+              {
+                name: 'Laser spot shape',
+                valueType: { name: 'select', values: ['circular', 'elliptical', 'torus', 'square', 'rectangular'] },
+                display: 'required'
+              },
+              {
+                name: 'Illumination spot size ',
+                valueType: { name: 'text', placeholder: 'E.g., diameter for a circular shape' },
                 display: 'required'
               },
               {
                 name: 'Neutral density filter (%)',
-                valueType: { name: 'text', placeholder: 'ND filter percentage, if applicable' },
-                display: 'desirable'
+                valueType: { name: 'text', placeholder: '100% if not used' },
+                display: 'required'
+              },
+              {
+                name: 'Grating',
+                valueType: { name: 'text', placeholder: '0 if not used' },
+                display: 'required'
               },
               {
                 name: 'Acquisition time (sec)',
                 display: 'required',
-                valueType: { name: 'text', placeholder: 'Acquisition time of a single reading in seconds' }
+                valueType: { name: 'text' }
               },
               {
-                name: 'Number of acquisitions (for average)',
+                name: 'Accumulation number',
                 display: 'required',
-                valueType: { name: 'text', placeholder: 'Number of averaged or accumulated acquisitions' }
+                valueType: { name: 'text', placeholder: 'For averaging' }
               },
               {
-                name: 'Measurement window (cm⁻¹)',
+                name: 'Spectral window (cm⁻¹)',
                 display: 'required',
-                valueType: { name: 'text', placeholder: 'Start and end of measurement range in cm⁻¹' }
+                valueType: { name: 'text' }
               },
               {
                 name: 'Resolution (cm⁻¹)',
                 display: 'required',
-                valueType: { name: 'text', placeholder: 'Resolution of the spectrum in cm⁻¹' }
+                valueType: { name: 'text' }
               }
             ]
           }
@@ -353,7 +398,7 @@ export const microbioRamanTemplate = {
         displayAnnotations: false,
         minRequired: 0,
         name: 'Treated spectrum',
-        sectionExample: 'Final spectrum data (as CSV) with all treatments specified below',
+        sectionExample: 'Data processing',
         tableTypes: [
           {
             name: 'File',
@@ -361,7 +406,6 @@ export const microbioRamanTemplate = {
             display: 'desirable',
             rowAsSection: true,
             uniqueCols: true,
-            singleRow: true,
             columnTypes: [
               {
                 name: 'File',
@@ -370,24 +414,32 @@ export const microbioRamanTemplate = {
               },
               {
                 name: 'Type',
-                valueType: { name: 'text', defaultValue: 'Treated spectrum' },
+                valueType: { name: 'text', defaultValue: 'Processed Raman data' },
                 display: 'required'
               }
             ]
           },
           {
             name: 'Data treatments',
-            icon: 'fa-address-card',
-            description:
-              'Add data treatments, one per line e.g. De-noising applied, baseline subtraction methods used, any type of normalization applied to the spectrum',
+            icon: 'fa-list',
+            description: 'List of computational algorithms and their parameters and sources used for data processing',
             display: 'desirable',
             columnTypes: [
               {
                 name: 'Treatment',
                 valueType: { name: 'text', placeholder: 'Treatment description' },
-                display: 'desirable'
+                display: 'required'
               }
             ]
+          },
+          {
+            name: 'Software',
+            icon: 'fa-comment',
+            valueType: {
+              name: 'text',
+              placeholder: 'If manufacturer’s software was used for data processing, the name and version of software.'
+            },
+            display: 'optional'
           }
         ]
       },
@@ -396,20 +448,49 @@ export const microbioRamanTemplate = {
         displayAnnotations: true,
         minRequired: 0,
         icon: 'fa-file-invoice',
-        description: 'Magnification and numerical aperture (NA) of an objective, grating, pinhole size, etc.',
+        sectionExample: 'Additional instrument information that could help users to reproduce the measurements',
         display: 'desirable',
-        columnTypes: [
-          {
-            name: 'Key',
-            valueType: { name: 'text' },
-            display: 'desirable'
-          },
-          {
-            name: 'Value',
-            valueType: { name: 'text' },
-            display: 'desirable'
-          }
-        ]
+        annotationsType: {
+          title: 'Additional instrument details',
+          description:
+            'Provide any additional details that could help users to reproduce the measurements. Select from the list, or add your own.',
+          icon: 'fa-tag',
+          display: 'desirable',
+          singleRow: true,
+          allowImport: false,
+          columnTypes: [
+            {
+              name: 'Type of spike filter',
+              valueType: { name: 'text' },
+              display: 'optional'
+            },
+            {
+              name: 'Detector specifications',
+              valueType: { name: 'text' },
+              display: 'optional'
+            },
+            {
+              name: 'Details of a microscope objective',
+              valueType: { name: 'text' },
+              display: 'optional'
+            },
+            {
+              name: 'Details of a focusing lens',
+              valueType: { name: 'text' },
+              display: 'optional'
+            },
+            {
+              name: 'Confocality',
+              valueType: { name: 'text' },
+              display: 'optional'
+            },
+            {
+              name: 'Confocality',
+              valueType: { name: 'text' },
+              display: 'Binning'
+            }
+          ]
+        }
       }
     ]
   }
