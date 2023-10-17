@@ -12,7 +12,8 @@ export const microbioRamanTemplate = {
         name: 'Title',
         icon: 'fa-heading',
         valueType: {
-          name: 'largetext'
+          name: 'largetext',
+          placeholder: 'Project title'
         },
         display: 'required',
         asyncValueValidatorName: 'forStudyTitle'
@@ -25,12 +26,15 @@ export const microbioRamanTemplate = {
         valueType: {
           name: 'date',
           allowPast: false
+        },
+        helpContextual: {
+          description: 'Desired release date, for example, to ensure compliance with a publication embargo'
         }
       },
       {
         name: 'Description',
         icon: 'fa-comment',
-        valueType: { name: 'largetext' }
+        valueType: { name: 'largetext', placeholder: 'Brief description of the project' }
       },
       {
         name: 'Software',
@@ -173,6 +177,7 @@ export const microbioRamanTemplate = {
       },
       {
         name: 'File',
+        title: 'Raw Data File',
         icon: 'fa-wave-square',
         rowAsSection: true,
         uniqueCols: true,
@@ -249,6 +254,7 @@ export const microbioRamanTemplate = {
         tableTypes: [
           {
             name: 'File',
+            title: 'Image File',
             display: 'desirable',
             description: 'Image files from Raman imaging',
             icon: 'fa-file-image',
@@ -288,30 +294,24 @@ export const microbioRamanTemplate = {
             valueType: {
               name: 'select',
               values: [
-                'normal Raman scattering',
-                'resonance Raman scattering',
                 'coherent anti-Stokes Raman scattering (CARS)',
-                'stimulated Raman scattering (SRS)',
                 'hyper Raman scattering (HRS)',
-                'surface-enhanced Raman scattering (SERS)',
-                'spatially offset Raman spectroscopy (SORS)',
+                'normal Raman scattering',
                 'polarized Raman spectroscopy',
-                'tip-enhanced Raman scattering (TERS)',
-                'time-gated (TG) Raman spectroscopy'
+                'resonance Raman scattering',
+                'spatially offset Raman spectroscopy (SORS)',
+                'stimulated Raman scattering (SRS)',
+                'surface-enhanced Raman scattering (SERS)',
+                'time-gated (TG) Raman spectroscopy',
+                'tip-enhanced Raman scattering (TERS)'
               ]
             },
             display: 'required'
-          },
-          {
-            name: 'Lasers and connected components/parameters',
-            icon: 'fa-microscope',
-            valueType: { name: 'text', placeholder: 'Manufacturer and model of lasers' },
-            display: 'optional'
           }
         ],
         tableTypes: [
           {
-            name: 'Laser',
+            name: 'Lasers and connected components/parameter',
             display: 'required',
             description:
               'Wavelength of laser (nm), power of excitation laser (mW), neutral density filter (%) and other characteristics',
@@ -321,6 +321,11 @@ export const microbioRamanTemplate = {
             columnTypes: [
               {
                 name: 'Description',
+                valueType: { name: 'text' },
+                display: 'desirable'
+              },
+              {
+                name: 'Manufacturer and model',
                 valueType: { name: 'text' },
                 display: 'desirable'
               },
@@ -355,7 +360,7 @@ export const microbioRamanTemplate = {
                 display: 'required'
               },
               {
-                name: 'Illumination spot size ',
+                name: 'Laser illumination spot size',
                 valueType: { name: 'text', placeholder: 'E.g., diameter for a circular shape' },
                 display: 'required'
               },
@@ -399,9 +404,21 @@ export const microbioRamanTemplate = {
         minRequired: 0,
         name: 'Treated spectrum',
         sectionExample: 'Data processing',
+        fieldTypes: [
+          {
+            name: 'Software',
+            icon: 'fa-briefcase',
+            valueType: {
+              name: 'text',
+              placeholder: 'If manufacturer’s software was used for data processing, the name and version of software'
+            },
+            display: 'desirable'
+          }
+        ],
         tableTypes: [
           {
             name: 'File',
+            title: 'Processed Data File',
             icon: 'fa-wave-square',
             display: 'desirable',
             rowAsSection: true,
@@ -470,12 +487,7 @@ export const microbioRamanTemplate = {
               display: 'optional'
             },
             {
-              name: 'Details of a microscope objective',
-              valueType: { name: 'text' },
-              display: 'optional'
-            },
-            {
-              name: 'Details of a focusing lens',
+              name: 'Details of a microscope objective or a focusing lens',
               valueType: { name: 'text' },
               display: 'optional'
             },
@@ -485,9 +497,9 @@ export const microbioRamanTemplate = {
               display: 'optional'
             },
             {
-              name: 'Confocality',
+              name: 'Binning',
               valueType: { name: 'text' },
-              display: 'Binning'
+              display: 'optional'
             }
           ]
         }
