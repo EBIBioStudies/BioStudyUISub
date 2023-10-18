@@ -41,7 +41,9 @@ export class SubmissionToPageTabService {
       tags: subm.tags.tags,
       accessTags: subm.tags.accessTags,
       attributes: mergeAttributes(
-        subm.attributes.map((at) => this.attributeDataToPtAttribute(at)),
+        subm.attributes
+          .filter((at) => !AttrExceptions.editableAndRootOnly.includes(at.name))
+          .map((at) => this.attributeDataToPtAttribute(at)),
         rootSectionAttributes
       )
     } as PageTab;

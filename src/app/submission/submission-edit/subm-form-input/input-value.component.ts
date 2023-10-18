@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
   DateValueType,
+  FieldType,
   SelectValueType,
   ValueType,
   ValueTypeFactory,
@@ -33,6 +34,7 @@ export class InputValueComponent implements ControlValueAccessor {
   @Input() readonly: boolean = false;
   @Input() suggestThreshold: number = 0;
   @Input() valueType: ValueType = ValueTypeFactory.DEFAULT;
+  @Input() fieldType?: FieldType;
   @Output() inputValueSelect = new EventEmitter<{ [key: string]: string }>();
   suggestLength: number;
   readonly valueTypeNameEnum = ValueTypeName;
