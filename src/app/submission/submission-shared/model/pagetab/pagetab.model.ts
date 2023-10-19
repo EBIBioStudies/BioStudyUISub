@@ -23,7 +23,8 @@ export class AttrExceptions {
     { name: 'AccNoPattern', rootLevel: true, studyLevel: false, systemOnly: true, unique: true },
     { name: 'AccNoTemplate', rootLevel: true, studyLevel: false, systemOnly: true, unique: true },
     { name: 'Template', rootLevel: true, studyLevel: false, systemOnly: true, unique: true },
-    { name: 'Title', rootLevel: true, studyLevel: true, systemOnly: false, unique: true }
+    { name: 'Title', rootLevel: true, studyLevel: true, systemOnly: false, unique: true },
+    { name: 'DOI', rootLevel: true, studyLevel: false, systemOnly: false, unique: true }
   ];
 
   private static editableAttr: Array<string> = AttrExceptions.allAttrs
