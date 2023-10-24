@@ -182,7 +182,7 @@ export const microbioRamanTemplate = {
         rowAsSection: true,
         uniqueCols: true,
         description:
-          'Unprocessed raw Raman data composed of wavenumbers and corresponding Raman intensities; format as TSV, CSV or other universal file format',
+          'Unprocessed raw Raman data (composed of wavenumbers and corresponding Raman intensities) and data labels; format as TSV, CSV or other universal file format',
         display: 'required',
         columnTypes: [
           {
