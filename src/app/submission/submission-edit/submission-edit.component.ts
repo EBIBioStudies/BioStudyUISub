@@ -238,7 +238,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
           const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
 
           if (releaseDateCtrl) {
-            const [year, month, date] = releaseDateCtrl.control.value.split('-').map((s) => parseInt(s));
+            const [year, month, date] = releaseDateCtrl.control.value.split('-').map((s) => parseInt(s, 10));
             if (Date.UTC(year, month - 1, date) <= new Date().valueOf()) {
               releaseDateCtrl.type.displayType = DisplayType.READONLY;
             }
