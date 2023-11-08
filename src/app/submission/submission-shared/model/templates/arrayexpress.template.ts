@@ -28,6 +28,10 @@ export const arrayExpressTemplate = {
         valueType: {
           name: 'date',
           allowPast: false
+        },
+        helpContextual: {
+          description:
+            'The date (GMT) at which your dataset should become publicly visible. This can be changed after submission if needed.'
         }
       },
       {

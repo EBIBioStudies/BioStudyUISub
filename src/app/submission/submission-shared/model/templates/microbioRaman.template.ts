@@ -28,7 +28,7 @@ export const microbioRamanTemplate = {
           allowPast: false
         },
         helpContextual: {
-          description: 'Desired release date, for example, to ensure compliance with a publication embargo'
+          description: 'Desired release date (GMT), for example, to ensure compliance with a publication embargo'
         }
       },
       {

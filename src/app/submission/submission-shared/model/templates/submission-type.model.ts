@@ -321,8 +321,8 @@ export class ValueTypeFactory {
 }
 
 export class FieldType extends TypeBase {
-  readonly display: string;
-  readonly displayType: DisplayType;
+  display: string;
+  displayType: DisplayType;
   readonly helpText: string;
   readonly helpLink: string;
   readonly icon: string;

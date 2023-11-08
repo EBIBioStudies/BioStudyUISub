@@ -48,7 +48,7 @@ export const biaTemplateV4 = {
         },
         helpContextual: {
           description:
-            'The date at which your dataset should become publicly visible. This can be changed after submission if needed.'
+            'The date (GMT) at which your dataset should become publicly visible. This can be changed after submission if needed.'
         }
       },
       {

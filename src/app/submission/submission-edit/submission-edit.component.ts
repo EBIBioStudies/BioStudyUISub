@@ -8,7 +8,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { ErrorService } from 'app/core/errors/error.service';
 import { Location } from '@angular/common';
 import { ModalService } from 'app/shared/modal/modal.service';
-import { BannerType, PageTabSubmission } from 'app/submission/submission-shared/model';
+import { BannerType, DisplayType, PageTabSubmission } from 'app/submission/submission-shared/model';
 import { SectionForm } from './shared/model/section-form.model';
 import { SubmEditService } from './shared/subm-edit.service';
 import { SubmErrorModalComponent } from '../submission-results/subm-error-modal.component';
@@ -53,8 +53,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   submNotFoundMessage: string = '';
 
   private accno?: string;
-  private newReleaseDate: Date = new Date();
-  private oldReleaseDate: Date = new Date();
   private unsubscribe: Subject<void> = new Subject<void>();
   private collection?: string;
 
@@ -184,7 +182,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     this.submEditService.switchSection(this.rootSection);
 
-    this.confirmReleaseDateOverride()
+    of(true)
       .pipe(
         switchMap(() => this.submEditService.submit(onlyMetadataUpdate)),
         takeUntil(this.unsubscribe)
@@ -240,17 +238,10 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
           const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
 
           if (releaseDateCtrl) {
-            const currentControlDate: string = releaseDateCtrl.control.value;
-            const currentDate: Date = currentControlDate ? new Date(Date.parse(currentControlDate)) : new Date();
-            this.oldReleaseDate = currentDate;
-            this.newReleaseDate = currentDate;
-            this.oldReleaseDate.setHours(0, 0, 0, 0);
-            this.newReleaseDate.setHours(0, 0, 0, 0);
-
-            releaseDateCtrl.control.valueChanges.subscribe((value) => {
-              this.newReleaseDate = new Date(Date.parse(value));
-              this.newReleaseDate.setHours(0, 0, 0, 0);
-            });
+            const [year, month, date] = releaseDateCtrl.control.value.split('-').map((s) => parseInt(s));
+            if (Date.UTC(year, month - 1, date) <= new Date().valueOf()) {
+              releaseDateCtrl.type.displayType = DisplayType.READONLY;
+            }
           }
         },
         (error) => {
@@ -267,21 +258,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
   private confirmSectionDelete(message: string): Observable<boolean> {
     return this.modalService.whenConfirmed(message, 'Delete section', 'Delete');
-  }
-
-  private confirmReleaseDateOverride(): Observable<boolean> {
-    const today: Date = new Date();
-    today.setHours(0, 0, 0, 0);
-    const isDateOverride: boolean = this.oldReleaseDate < today && this.newReleaseDate >= today;
-
-    return isDateOverride
-      ? this.modalService.whenConfirmed(
-          'This study has already been released and resetting the release date may make it ' +
-            'unavailable to the public. Are you sure you want to continue?',
-          'Submit the study',
-          'OK'
-        )
-      : of(true);
   }
 
   private confirmRevert(): Observable<boolean> {

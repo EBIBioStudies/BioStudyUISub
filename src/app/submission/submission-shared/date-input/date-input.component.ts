@@ -173,7 +173,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
       this.datepicker.bsValue = dateObj;
 
       // Formats to ISO as backend expect such format.
-      const formattedDate = dateObj.toISOString();
+      const formattedDate = dateObj.toISOString().substr(0, 10);
 
       // Propagates the date change through the DOM if so wished.
       if (isChange) {
