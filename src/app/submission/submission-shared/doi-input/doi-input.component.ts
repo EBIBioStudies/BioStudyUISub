@@ -3,26 +3,29 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/f
 import { FieldType } from '../model';
 
 @Component({
-  selector: 'st-checkbox-input',
-  templateUrl: './checkbox-input.component.html',
+  selector: 'st-doi-input',
+  templateUrl: './doi-input.component.html',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => CheckboxInputComponent),
+      useExisting: forwardRef(() => DoiInputComponent),
       multi: true
     }
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class CheckboxInputComponent implements ControlValueAccessor, OnInit {
+export class DoiInputComponent implements ControlValueAccessor, OnInit {
   @Input() formControl!: FormControl;
   @Input() fieldType?: FieldType;
   @Input() readonly: boolean = false;
+  @Input() value!: string;
   isChecked: boolean = false;
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isChecked = this?.value?.toLowerCase() === 'true';
+  }
 
   writeValue(value: string): void {
     this.isChecked = value.toLowerCase() === 'true';

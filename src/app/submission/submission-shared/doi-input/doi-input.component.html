@@ -1,6 +1,7 @@
-<div class="input-group-append">
+<div *ngIf="!readonly" class="form-control input-group-append">
   <label role="button">
     <input type="checkbox" [disabled]="readonly" [(ngModel)]="isChecked"  (change)="onChange(isChecked?'true':'')"   >
     {{fieldType?.description}}
   </label>
 </div>
+<span *ngIf="readonly" class="input-group input-group-text">{{value}}</span>

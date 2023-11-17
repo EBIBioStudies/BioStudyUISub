@@ -194,7 +194,7 @@ export enum ValueTypeName {
   protein,
   org,
   selectvalquals,
-  checkbox
+  doi
 }
 
 export abstract class ValueType {

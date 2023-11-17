@@ -16,7 +16,7 @@ import { DateInputComponent } from './date-input/date-input.component';
 import { OrgInputComponent } from './org-input/org-input.component';
 import { OrgService } from './org-input/org.service';
 import { SelectValqualsInputComponent } from './select-valquals-input/select-valquals-input.component';
-import { CheckboxInputComponent } from './checkbox-input/checkbox-input.component';
+import { DoiInputComponent } from './doi-input/doi-input.component';
 
 @NgModule({
   imports: [
@@ -42,7 +42,7 @@ import { CheckboxInputComponent } from './checkbox-input/checkbox-input.componen
     DateInputComponent,
     OrgInputComponent,
     SelectValqualsInputComponent,
-    CheckboxInputComponent
+    DoiInputComponent
   ],
   exports: [
     DNAInputComponent,
@@ -52,7 +52,7 @@ import { CheckboxInputComponent } from './checkbox-input/checkbox-input.componen
     OrgInputComponent,
     BsDatepickerModule,
     SelectValqualsInputComponent,
-    CheckboxInputComponent
+    DoiInputComponent
   ]
 })
 export class SubmissionSharedModule {}

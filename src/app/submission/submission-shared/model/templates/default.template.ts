@@ -129,7 +129,7 @@ export const defaultTemplate = {
         name: 'DOI',
         icon: 'fa-fingerprint',
         valueType: {
-          name: 'checkbox'
+          name: 'doi'
         },
         uniqueValues: true,
         description: 'Tick here to have a Crossref DOI assigned to this submission'

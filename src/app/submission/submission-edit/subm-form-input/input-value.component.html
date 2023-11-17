@@ -37,14 +37,15 @@
       stBootstrapValidation>
   </textarea>
 
-  <st-checkbox-input *ngSwitchCase="valueTypeNameEnum.checkbox"
+  <st-doi-input *ngSwitchCase="valueTypeNameEnum.doi"
          id="{{inputId}}"
-         class="form-control {{inputId}}"
+         class="{{inputId}}"
          [formControl]="formControl"
          [readonly]="readonly"
          [ngClass]="{'input-sm': isSmall, 'group-element': isInputGroup}"
          [fieldType]="fieldType"
-         ></st-checkbox-input>
+         [value]="value"
+         ></st-doi-input>
 
   <st-org-input *ngSwitchCase="valueTypeNameEnum.org"
     [inputId]="inputId"
