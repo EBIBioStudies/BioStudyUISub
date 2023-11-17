@@ -16,6 +16,7 @@ import { DateInputComponent } from './date-input/date-input.component';
 import { OrgInputComponent } from './org-input/org-input.component';
 import { OrgService } from './org-input/org.service';
 import { SelectValqualsInputComponent } from './select-valquals-input/select-valquals-input.component';
+import { DoiInputComponent } from './doi-input/doi-input.component';
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import { SelectValqualsInputComponent } from './select-valquals-input/select-val
     SelectInputComponent,
     DateInputComponent,
     OrgInputComponent,
-    SelectValqualsInputComponent
+    SelectValqualsInputComponent,
+    DoiInputComponent
   ],
   exports: [
     DNAInputComponent,
@@ -49,7 +51,8 @@ import { SelectValqualsInputComponent } from './select-valquals-input/select-val
     DateInputComponent,
     OrgInputComponent,
     BsDatepickerModule,
-    SelectValqualsInputComponent
+    SelectValqualsInputComponent,
+    DoiInputComponent
   ]
 })
 export class SubmissionSharedModule {}

@@ -28,7 +28,8 @@ export const AttributeNames = {
   TITLE: 'Title',
   TEMPLATE: 'Template',
   RORID: 'RORID',
-  ADDRESS: 'Address'
+  ADDRESS: 'Address',
+  DOI: 'DOI'
 };
 
 export const SectionTypes = {

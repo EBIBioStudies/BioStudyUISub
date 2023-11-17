@@ -193,7 +193,8 @@ export enum ValueTypeName {
   dna,
   protein,
   org,
-  selectvalquals
+  selectvalquals,
+  doi
 }
 
 export abstract class ValueType {
@@ -329,6 +330,7 @@ export class FieldType extends TypeBase {
   readonly valueType: ValueType;
   readonly asyncValueValidatorName: string | null;
   readonly helpContextual?: DocItem;
+  readonly description: string;
 
   constructor(
     name: string,
@@ -352,6 +354,7 @@ export class FieldType extends TypeBase {
           ...data.helpContextual
         }
       : undefined;
+    this.description = data.description || '';
   }
 }
 

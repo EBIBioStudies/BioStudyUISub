@@ -1,4 +1,5 @@
 <ng-container [ngSwitch]="valueType.name">
+
   <label for="{{inputId}}" class="sr-only">Enter {{inputDisplayName}}</label>
 
   <input *ngSwitchCase="valueTypeNameEnum.text"
@@ -35,6 +36,16 @@
       (blur)="onBlur()"
       stBootstrapValidation>
   </textarea>
+
+  <st-doi-input *ngSwitchCase="valueTypeNameEnum.doi"
+         id="{{inputId}}"
+         class="{{inputId}}"
+         [formControl]="formControl"
+         [readonly]="readonly"
+         [ngClass]="{'input-sm': isSmall, 'group-element': isInputGroup}"
+         [fieldType]="fieldType"
+         [value]="value"
+         ></st-doi-input>
 
   <st-org-input *ngSwitchCase="valueTypeNameEnum.org"
     [inputId]="inputId"

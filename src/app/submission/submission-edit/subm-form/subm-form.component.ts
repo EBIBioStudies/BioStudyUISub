@@ -8,6 +8,6 @@ import { SectionForm } from '../shared/model/section-form.model';
 export class SubmFormComponent {
   @Input() readonly?: boolean = false;
   @Input() sectionForm?: SectionForm;
-
+  @Input() isTemp: boolean = false;
   constructor() {}
 }

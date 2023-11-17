@@ -1,6 +1,6 @@
 <form *ngIf="sectionForm" class="needs-validation mt-4" [formGroup]="sectionForm.form" (ngSubmit)="onSubmit($event)" novalidate>
   <ng-container *ngFor="let fieldControl of sectionForm.fieldControls">
-    <st-subm-field [fieldControl]="fieldControl" [readonly]="readonly"></st-subm-field>
+    <st-subm-field [fieldControl]="fieldControl" [readonly]="readonly || (!isTemp && fieldControl.name.toLowerCase()==='doi' ) "></st-subm-field>
   </ng-container>
 
   <ng-container *ngFor="let tableForm of sectionForm.tableForms">
