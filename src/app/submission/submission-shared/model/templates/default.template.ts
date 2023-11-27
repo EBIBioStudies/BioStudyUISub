@@ -129,14 +129,14 @@ export const defaultTemplate = {
         }
       },
       {
-        display: 'optional',
+        display: 'readonly',
         name: 'DOI',
         icon: 'fa-fingerprint',
         valueType: {
-          name: 'doi'
+          name: 'doi',
+          defaultValue: 'true'
         },
-        uniqueValues: true,
-        description: 'Tick here to have a Crossref DOI assigned to this submission'
+        description: 'A Crossref DOI will be assigned after submission automatically.'
       }
     ],
     annotationsType: {

@@ -24,7 +24,7 @@ export const fileListController = (path: string, router: Router) => {
 
     return new Promise((resolve: any) => {
       needle('get', url, { headers: headers })
-        .then((response: any) => {
+        .then(async (response: any) => {
           const folders: string[] = [];
           if (response.statusCode != 200) {
             res.sendStatus(response.status);
@@ -38,7 +38,12 @@ export const fileListController = (path: string, router: Router) => {
               folders.push(`${node.path}/${node.name}`);
             }
           });
-          Promise.all(folders.sort().map((folder) => processFolder(folder, req, res))).then(() => resolve());
+          for (const subFolder of folders.sort()) {
+            await processFolder(subFolder, req, res);
+            res.flush();
+          }
+
+          resolve();
         })
         .catch(function (err: any) {
           res.sendStatus(err?.status || 500);

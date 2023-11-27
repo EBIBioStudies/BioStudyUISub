@@ -39,7 +39,7 @@
 
   <st-doi-input *ngSwitchCase="valueTypeNameEnum.doi"
          id="{{inputId}}"
-         class="{{inputId}}"
+         class="{{inputId}} form-control input-group-text"
          [formControl]="formControl"
          [readonly]="readonly"
          [ngClass]="{'input-sm': isSmall, 'group-element': isInputGroup}"

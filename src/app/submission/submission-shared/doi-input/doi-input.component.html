@@ -1,7 +1,5 @@
-<div *ngIf="!readonly" class="form-control input-group-append">
-  <label role="button">
-    <input type="checkbox" [disabled]="readonly" [(ngModel)]="isChecked"  (change)="onChange(isChecked?'true':'')"   >
-    {{fieldType?.description}}
-  </label>
+<div class="input-group-append">
+  <input type="checkbox" style="display: none" [disabled]="readonly" [(ngModel)]="isChecked" (change)="onChange(true)">
+  <span>{{ value.toLowerCase()==='true' ? fieldType?.description : value}}</span>
 </div>
-<span *ngIf="readonly" class="input-group input-group-text">{{value}}</span>
+

@@ -239,7 +239,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
           if (releaseDateCtrl) {
             const [year, month, date] = releaseDateCtrl.control.value.split('-').map((s) => parseInt(s, 10));
-            if (Date.UTC(year, month - 1, date) <= new Date().valueOf()) {
+            if (Date.UTC(year, month - 1, date) <= new Date().valueOf() && !this.isTemp) {
               releaseDateCtrl.type.displayType = DisplayType.READONLY;
             }
           }

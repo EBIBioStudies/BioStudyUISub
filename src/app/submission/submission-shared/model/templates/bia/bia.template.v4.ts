@@ -126,6 +126,16 @@ export const biaTemplateV4 = {
         helpContextual: {
           description: 'A description of how the data generation was funded.'
         }
+      },
+      {
+        display: 'readonly',
+        name: 'DOI',
+        icon: 'fa-fingerprint',
+        valueType: {
+          name: 'doi',
+          defaultValue: 'true'
+        },
+        description: 'A Crossref DOI will be assigned after submission automatically.'
       }
     ],
     tableTypes: [

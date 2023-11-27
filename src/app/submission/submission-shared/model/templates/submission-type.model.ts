@@ -233,6 +233,12 @@ export class TextValueType extends ValueTypeWithDefault {
   }
 }
 
+export class DoiValueType extends ValueTypeWithDefault {
+  constructor(data: Partial<ValueTypeWithDefault> = {}) {
+    super(data, ValueTypeName.doi);
+  }
+}
+
 export class DateValueType extends ValueType {
   readonly allowPast: boolean;
 
