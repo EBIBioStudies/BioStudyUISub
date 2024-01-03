@@ -183,11 +183,14 @@ export class FileListComponent implements OnInit, OnDestroy {
           return;
         }
         const uploadedFileNames = this.rowData.map((file) => file.name);
-        const filesToUpload = Array.from(files).map((file) => file.name);
+        const filesToUpload = Array.from(files).map((file) => this.fileService.getFullPath(file) || file.name);
         const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
         const fullPath = this.fileService.getFullPath(files[0]);
-        const isFolderBeingUpdated = isDefinedAndNotEmpty(fullPath) && fullPath.indexOf('/') > 0 && isFolder;
-
+        const isFolderBeingUpdated =
+          isDefinedAndNotEmpty(fullPath) &&
+          fullPath.indexOf('/') > 0 &&
+          isFolder &&
+          uploadedFileNames.includes(fullPath.substr(0, fullPath.indexOf('/'))); // folder is already present;
         (overlap.length > 0 || isFolderBeingUpdated ? this.confirmOverwrite(overlap, isFolder) : of(true))
           .pipe(takeUntil(this.ngUnsubscribe))
           .subscribe(() => this.upload(files));
