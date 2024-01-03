@@ -121,5 +121,8 @@
     "@schematics/angular:directive": {
       "prefix": "st"
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
