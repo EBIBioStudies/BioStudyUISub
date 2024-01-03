@@ -124,7 +124,7 @@ export const biaTemplateV4 = {
         },
         display: 'desirable',
         helpContextual: {
-          description: 'A description of how the data generation was funded.'
+          descriptionHtml: 'A description of how the data generation was funded. <p> For <b>Horizon Europe</b> grants, please ensure the <a href="https://www.ebi.ac.uk/bioimage-archive/help-faq/#how-should-i-acknowledge-my-funder-when-submitting-data" target=”_blank”>required fields</a> are present. </p>'
         }
       },
       {
@@ -308,7 +308,7 @@ export const biaTemplateV4 = {
       {
         name: 'Funding',
         icon: '',
-        description: 'List of individual grants funding data acquisition.',
+        description: 'List of individual grants funding data acquisition. For <b>Horizon Europe</b> grants, please ensure the <a href="https://www.ebi.ac.uk/bioimage-archive/help-faq/#how-should-i-acknowledge-my-funder-when-submitting-data" target=”_blank”>required fields</a> are present.',
         uniqueCols: true,
         rowAsSection: true,
         columnTypes: [
