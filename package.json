@@ -15,7 +15,7 @@
     "dev": "run-p node:dev ng:start",
     "pretest": "npm run lint",
     "postinstall": "ngcc",
-    "preinstall": "git config core.hooksPath hooks",
+    "git:hooks": "git config core.hooksPath hooks",
     "test": "jest --ci"
   },
   "jest": {
