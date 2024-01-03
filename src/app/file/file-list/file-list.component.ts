@@ -183,7 +183,7 @@ export class FileListComponent implements OnInit, OnDestroy {
           return;
         }
         const uploadedFileNames = this.rowData.map((file) => file.name);
-        const filesToUpload = Array.from(files).map((file) => file.webkitRelativePath || file.name);
+        const filesToUpload = Array.from(files).map((file) => this.fileService.getFullPath(file) || file.name);
         const overlap = filesToUpload.filter((fileToUpload) => uploadedFileNames.includes(fileToUpload));
         const fullPath = this.fileService.getFullPath(files[0]);
         const isFolderBeingUpdated =
