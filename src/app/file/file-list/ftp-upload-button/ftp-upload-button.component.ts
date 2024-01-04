@@ -23,21 +23,21 @@ export class FTPUploadButtonComponent {
       displayName: 'Windows',
       link:
         'https://www.ibm.com/support/fixcentral/swg/selectFixes' +
-        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+CLI&release=All&platform=Windows&function=all'
+        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=3.11.2&platform=Windows&function=all'
     },
     {
       name: 'Mac',
       displayName: 'Mac OS',
       link:
         'https://www.ibm.com/support/fixcentral/swg/selectFixes' +
-        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+CLI&release=All&platform=Mac+OSX&function=all'
+        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=3.11.2&platform=Mac+OSX&function=all'
     },
     {
       name: 'Linux',
       displayName: 'Linux',
       link:
         'https://www.ibm.com/support/fixcentral/swg/selectFixes' +
-        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+CLI&release=All&platform=Linux&function=all'
+        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=3.11.2&platform=Linux&function=all'
     }
   ];
   secretId: string = '1234';
