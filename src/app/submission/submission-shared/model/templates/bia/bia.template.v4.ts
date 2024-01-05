@@ -324,7 +324,7 @@ export const biaTemplateV4 = {
             },
             display: 'desirable',
             helpContextual: {
-              description: 'The funding body provididing support.'
+              description: 'The funding body providing support.'
             }
           },
           {
