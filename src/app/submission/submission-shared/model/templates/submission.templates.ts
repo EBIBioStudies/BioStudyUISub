@@ -80,17 +80,26 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
     icon: 'images/template-icons/Default.png'
   });
 
-  const weights = ['bioimages', 'default', 'microbioraman'];
+  const weights = ['bioimages', 'microbioraman', 'bioimages.mifa', 'default'];
   templateDetail.sort((a, b) => {
-    const aName = a.displayName.toLowerCase();
-    const bName = b.displayName.toLowerCase();
-    let result;
-    if (weights.indexOf(aName) >= 0) {
-      result = weights.indexOf(bName) >= 0 ? (weights.indexOf(aName) < weights.indexOf(bName) ? -1 : 1) : -1;
-    } else {
-      result = aName.localeCompare(bName);
+    const aName = a.name.toLowerCase();
+    const bName = b.name.toLowerCase();
+
+    const aMatches = weights.map((w, idx) => aName.includes(w) ? idx : -1);
+    const aBestMatchWeight = Math.max(...aMatches);
+
+    const bMatches = weights.map((w, idx) => bName.includes(w) ? idx : -1);
+    const bBestMatchWeight = Math.max(...bMatches);
+
+    if (aBestMatchWeight < bBestMatchWeight) {
+      return -1;
     }
-    return result;
+    else if (aBestMatchWeight > bBestMatchWeight) {
+      return 1;
+    }
+    else {
+      return aName.localeCompare(bName);
+    }
   });
 
   return templateDetail;

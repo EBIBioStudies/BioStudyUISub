@@ -1,7 +1,7 @@
 export const biaMifaTemplateV1 = {
   name: 'BioImages.MIFA.v1',
   title: 'BioImages - MIFA',
-  description: 'BioImage Archive Annotations Submission',
+  description: 'BioImage Archive Annotations Submission (for Image Annotations only)',
   sectionType: {
     display: 'required',
     displayAnnotations: false,
