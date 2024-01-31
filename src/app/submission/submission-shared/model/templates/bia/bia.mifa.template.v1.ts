@@ -23,13 +23,20 @@ export const biaMifaTemplateV1 = {
         asyncValueValidatorName: 'forStudyTitle',
         display: 'required',
         helpContextual: {
+          description: 'This will be displayed when search results including your data are shown.',
+          examples: []
+        }
+      },
+      {
+        name: 'Description',
+        icon: 'fa-comment',
+        valueType: {
+          name: 'largetext'
+        },
+        display: 'required',
+        helpContextual: {
           description:
-            'The title for your dataset. This will be displayed when search results including your data are shown. Often this will be the same as an associated publication.',
-          examples: [
-            'Visualization of loop extrusion by DNA nanoscale tracing in single cells',
-            'SARS-COV-2 drug repurposing - Caco2 cell line',
-            'Large-scale electron microscopy database for human type 1 diabetes'
-          ]
+            'Use this field to describe your dataset. This can be the abstract to an accompanying publication.'
         }
       },
       {
@@ -47,18 +54,6 @@ export const biaMifaTemplateV1 = {
         }
       },
       {
-        name: 'Description',
-        icon: 'fa-comment',
-        valueType: {
-          name: 'largetext'
-        },
-        display: 'required',
-        helpContextual: {
-          description:
-            'Use this field to describe your dataset. This can be the abstract to an accompanying publication.'
-        }
-      },
-      {
         name: 'Keywords',
         icon: 'fa-address-card',
         description: 'Add keywords<br><a href="/bioimage-archive/help-submission-form/#keywords">Examples</a>',
@@ -69,7 +64,7 @@ export const biaMifaTemplateV1 = {
         },
         helpContextual: {
           description: 'Keywords describing your data that can be used to aid search and classification.',
-          examples: ['RNA localisation', 'CRISPR', 'Brain']
+          examples: []
         }
       },
       {
@@ -88,7 +83,7 @@ export const biaMifaTemplateV1 = {
       {
         name: 'Contact',
         icon: 'fa-address-card',
-        description: 'Add the contact details for the authors involved in the study.',
+        description: 'Add the contact details for the authors involved in the submission.',
         uniqueCols: true,
         rowAsSection: true,
         columnTypes: [
@@ -298,6 +293,7 @@ export const biaMifaTemplateV1 = {
             valueType: {
               name: 'text'
             },
+            description: 'Short descriptive summary indicating the type of annotation and how it was generated',
             display: 'desirable',
             helpContextual: {
               description: '',
@@ -311,8 +307,14 @@ export const biaMifaTemplateV1 = {
             },
             display: 'desirable',
             helpContextual: {
-              description: '',
-              examples: []
+              description: 'Description of how the annotations where created.',
+              examples: [
+                'crowdsourced',
+                'expertly annotated',
+                'produced by software - Which software',
+                'when were the annotations created',
+                'protocols used for consensus and quality assurance'
+              ]
             }
           },
           {
@@ -322,8 +324,12 @@ export const biaMifaTemplateV1 = {
             },
             display: 'desirable',
             helpContextual: {
-              description: '',
-              examples: []
+              description: 'Confidence on annotation accuracy',
+              examples: [
+                'self-reported confidence',
+                'variance among several annotators',
+                'number of years of experience of the annotator'
+              ]
             }
           },
           {
@@ -333,8 +339,8 @@ export const biaMifaTemplateV1 = {
             },
             display: 'desirable',
             helpContextual: {
-              description: '',
-              examples: []
+              description: 'Rules used to generate annotations',
+              examples: ['only nuclei in focus were segmented']
             }
           },
           {
@@ -344,7 +350,8 @@ export const biaMifaTemplateV1 = {
             },
             display: 'desirable',
             helpContextual: {
-              description: '',
+              description:
+                'If the dataset is not completely annotated, which images from the dataset were annotated, and what percentage of the data has been annotated from what is available?',
               examples: []
             }
           }
