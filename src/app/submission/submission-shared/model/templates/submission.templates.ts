@@ -85,19 +85,17 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
     const aName = a.name.toLowerCase();
     const bName = b.name.toLowerCase();
 
-    const aMatches = weights.map((w, idx) => aName.includes(w) ? idx : -1);
+    const aMatches = weights.map((w, idx) => (aName.includes(w) ? idx : -1));
     const aBestMatchWeight = Math.max(...aMatches);
 
-    const bMatches = weights.map((w, idx) => bName.includes(w) ? idx : -1);
+    const bMatches = weights.map((w, idx) => (bName.includes(w) ? idx : -1));
     const bBestMatchWeight = Math.max(...bMatches);
 
     if (aBestMatchWeight < bBestMatchWeight) {
       return -1;
-    }
-    else if (aBestMatchWeight > bBestMatchWeight) {
+    } else if (aBestMatchWeight > bBestMatchWeight) {
       return 1;
-    }
-    else {
+    } else {
       return aName.localeCompare(bName);
     }
   });
