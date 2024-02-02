@@ -1,4 +1,4 @@
-export const defaultTemplate = {
+export const v1 = {
   name: 'Default',
   title: 'Default',
   description: 'General submission',

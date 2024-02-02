@@ -1,12 +1,12 @@
 import { readonlyTemplate } from './readonly.template';
 import { microbioRamanTemplate } from './microbioRaman.template';
-import { defaultTemplate } from './default.template';
 import { emptyTemplate } from './empty.template';
 import { euToxRiskTemplate } from './eutoxrisk.template';
 import { hecatosTemplate } from './hecatos.template';
 import { arrayExpressTemplate } from './arrayexpress.template';
 import { proteinDesignsTemplate } from './proteindesigns.template';
 import * as bia from './bia';
+import * as defaultTemplates from './default';
 
 export const DEFAULT_TEMPLATE_NAME = 'Default';
 export const EMPTY_TEMPLATE_NAME = 'Empty';
@@ -26,7 +26,7 @@ const SUBMISSION_TEMPLATES = [
   readonlyTemplate,
   proteinDesignsTemplate
 ];
-const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplate];
+const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplates.v1, defaultTemplates.v2];
 
 export interface TemplateDetail {
   description: string;
@@ -54,7 +54,7 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
         }
       }
       return latest;
-    }, defaultTemplate);
+    }, defaultTemplates.v2);
 
     return {
       description: template.description,
@@ -66,10 +66,10 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
   });
 
   templateDetail.push({
-    description: defaultTemplate.description,
-    name: defaultTemplate.name,
+    description: defaultTemplates.v2.description,
+    name: defaultTemplates.v2.name,
     collection: '',
-    displayName: defaultTemplate.name,
+    displayName: defaultTemplates.v2.title,
     icon: 'images/template-icons/Default.png'
   });
 
@@ -95,7 +95,7 @@ export function findTemplateByName(name: string): any {
     (tmplItem) => tmplItem.name.toLowerCase() === tmplName
   );
 
-  return tmpl ? tmpl : defaultTemplate;
+  return tmpl ? tmpl : defaultTemplates.v2;
 }
 
 function parseTemplateName(templateName: string): TemplateVersion {
