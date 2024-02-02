@@ -91,6 +91,15 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
     const bMatches = weights.map((w, idx) => (bName.includes(w) ? idx : -1));
     const bBestMatchWeight = Math.max(...bMatches);
 
+    // one is in the special "top" part of the list, the other isn't
+    if (aBestMatchWeight === -1 && bBestMatchWeight !== -1) {
+      return 1;
+    }
+    if (bBestMatchWeight === -1 && aBestMatchWeight !== -1) {
+      return -1;
+    }
+
+    // neither a nor b is in the top list, or both are
     if (aBestMatchWeight < bBestMatchWeight) {
       return -1;
     } else if (aBestMatchWeight > bBestMatchWeight) {
