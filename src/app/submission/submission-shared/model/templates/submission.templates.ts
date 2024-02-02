@@ -80,7 +80,7 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
     icon: 'images/template-icons/Default.png'
   });
 
-  const weights = ['bioimages', 'microbioraman', 'bioimages.mifa', 'default'];
+  const weights = ['bioimages', 'default', 'microbioraman', 'bioimages.mifa'];
   templateDetail.sort((a, b) => {
     const aName = a.name.toLowerCase();
     const bName = b.name.toLowerCase();
@@ -122,7 +122,7 @@ function parseTemplateName(templateName: string): TemplateVersion {
   const templateVersion = {
     collection: 'Default',
     subtype: '',
-    version: 0
+    version: 2
   };
   if (!templateName.match(/^(.+?)(\..+?)?(\.v(\d+))?$/)) {
     return templateVersion;
