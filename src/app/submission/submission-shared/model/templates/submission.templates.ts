@@ -17,11 +17,11 @@ const SUBMISSION_TEMPLATES = [
   euToxRiskTemplate,
   hecatosTemplate,
   emptyTemplate,
-  bia.biaImplicitTemplateV0,
   bia.biaTemplateV1,
   bia.biaTemplateV2,
   bia.biaTemplateV3,
   bia.biaTemplateV4,
+  bia.biaMifaTemplateV1,
   microbioRamanTemplate,
   readonlyTemplate,
   proteinDesignsTemplate
@@ -38,30 +38,37 @@ export interface TemplateDetail {
 
 interface TemplateVersion {
   collection: string;
+  subtype: string;
   version: number;
 }
 
 export function getTemplatesForCollections(collections: Array<string> = []): Array<TemplateDetail> {
-  const templateDetail = collections.map((collection) => {
-    const template = SUBMISSION_TEMPLATES.reduce((latest, t) => {
-      const tInfo = parseTemplateName(t.name);
-      const latestInfo = parseTemplateName(latest.name);
-      if (tInfo.collection.toLowerCase() === collection.toLowerCase()) {
-        if (latestInfo.collection.toLowerCase() === collection.toLowerCase()) {
-          return tInfo.version > latestInfo.version ? t : latest;
-        } else {
-          return t;
-        }
-      }
-      return latest;
-    }, defaultTemplates.v2);
+  const latestTemplateByCollectionWithTemplateSubtype = {};
+  const collectionsLower = collections.map((c) => c.toLowerCase());
+
+  for (const submTemplate of SUBMISSION_TEMPLATES) {
+    const tInfo = parseTemplateName(submTemplate.name);
+    if (!collectionsLower.includes(tInfo.collection.toLowerCase())) {
+      continue;
+    }
+
+    const collectionWithSubtype = tInfo.collection.toLowerCase() + tInfo.subtype.toLowerCase();
+    const existing = latestTemplateByCollectionWithTemplateSubtype[collectionWithSubtype] || null;
+
+    if (!existing || parseTemplateName(existing.name).version < tInfo.version) {
+      latestTemplateByCollectionWithTemplateSubtype[collectionWithSubtype] = submTemplate;
+    }
+  }
+
+  const templateDetail = Object.values(latestTemplateByCollectionWithTemplateSubtype).map((t: any) => {
+    const tInfo = parseTemplateName(t.name);
 
     return {
-      description: template.description,
-      name: template.name,
-      collection,
-      displayName: collection,
-      icon: 'images/template-icons/' + collection + '.png'
+      description: t.description,
+      name: t.name,
+      collection: tInfo.collection,
+      displayName: tInfo.collection,
+      icon: 'images/template-icons/' + tInfo.collection + '.png'
     };
   });
 
@@ -73,17 +80,24 @@ export function getTemplatesForCollections(collections: Array<string> = []): Arr
     icon: 'images/template-icons/Default.png'
   });
 
-  const weights = ['bioimages', 'default', 'microbioraman'];
+  const weights = ['bioimages', 'default', 'microbioraman', 'bioimages.mifa'];
   templateDetail.sort((a, b) => {
-    const aName = a.displayName.toLowerCase();
-    const bName = b.displayName.toLowerCase();
-    let result;
-    if (weights.indexOf(aName) >= 0) {
-      result = weights.indexOf(bName) >= 0 ? (weights.indexOf(aName) < weights.indexOf(bName) ? -1 : 1) : -1;
+    const aName = a.name.toLowerCase();
+    const bName = b.name.toLowerCase();
+
+    const aMatches = weights.map((w, idx) => (aName.includes(w) ? idx : -1));
+    const aBestMatchWeight = Math.max(...aMatches);
+
+    const bMatches = weights.map((w, idx) => (bName.includes(w) ? idx : -1));
+    const bBestMatchWeight = Math.max(...bMatches);
+
+    if (aBestMatchWeight < bBestMatchWeight) {
+      return -1;
+    } else if (aBestMatchWeight > bBestMatchWeight) {
+      return 1;
     } else {
-      result = aName.localeCompare(bName);
+      return aName.localeCompare(bName);
     }
-    return result;
   });
 
   return templateDetail;
@@ -99,10 +113,32 @@ export function findTemplateByName(name: string): any {
 }
 
 function parseTemplateName(templateName: string): TemplateVersion {
-  const templateNameRe = /^(.+?)(?:\.v(\d+))?$/;
-  const matches = templateNameRe.exec(templateName) || [null, '', 0];
-  return {
-    collection: matches[1],
-    version: !!matches[2] ? Number(matches[2]) : 0
-  } as TemplateVersion;
+  /* Example names:
+  Default
+  BioImages.v123
+  BioImages.Mifa.v123
+  */
+
+  const templateVersion = {
+    collection: 'Default',
+    subtype: '',
+    version: 2
+  };
+  if (!templateName.match(/^(.+?)(\..+?)?(\.v(\d+))?$/)) {
+    return templateVersion;
+  }
+  // assume templateName is validated from here on
+
+  const templateNameParts = templateName.split('.');
+  templateVersion.collection = templateNameParts[0];
+
+  if (templateNameParts.length === 2) {
+    templateVersion.version = Number(templateNameParts[1]!.substring(1));
+  }
+  if (templateNameParts.length === 3) {
+    templateVersion.version = Number(templateNameParts[2]!.substring(1));
+    templateVersion.subtype = templateNameParts[1];
+  }
+
+  return templateVersion;
 }
