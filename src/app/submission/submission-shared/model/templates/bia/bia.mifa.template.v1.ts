@@ -330,7 +330,7 @@ export const biaMifaTemplateV1 = {
                 'derived_annotations: additional analytical data extracted from the images. For example, the image point spread function,the signal to noise ratio, focus information...',
                 'geometrical_annotations: polygons and shapes that outline a region of interest in the image. These can be geometrical primitives, 2D polygons, 3D meshes',
                 'graphs: graphical representations of the morphology, connectivity, or spatial arrangement of biological structures in an image. Graphs, such as skeletons or connectivity diagrams, typically consist of nodes and edges, where nodes represent individual elements or regions and edges represent the connections or interactions between them',
-                "point_annotations: X, Y, and Z coordinates of a point of interest in an image (for example an object\'s centroid  or landmarks)",
+                "point_annotations: X, Y, and Z coordinates of a point of interest in an image (for example an object's centroid  or landmarks)",
                 'segmentation_mask: an image, the same size as the source image, with the value of each pixel representing some biological identity or background region',
                 'tracks: annotations marking the movement or trajectory of objects within a sequence of bioimages',
                 'weak_annotations: rough imprecise annotations that are fast to generate. These annotations are used, for example,  to detect an object without providing accurate boundaries',
