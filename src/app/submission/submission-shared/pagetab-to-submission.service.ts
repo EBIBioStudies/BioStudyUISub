@@ -88,7 +88,8 @@ export class PageTabToSubmissionService {
       'Sample',
       'Setup',
       'Treated spectrum',
-      'Instrument metadata'
+      'Instrument metadata',
+      'Annotation'
     ].map((el) => el.toLowerCase());
     const hasSectionType = pagetabSectionTypes.includes(section.type!.toLowerCase());
 
