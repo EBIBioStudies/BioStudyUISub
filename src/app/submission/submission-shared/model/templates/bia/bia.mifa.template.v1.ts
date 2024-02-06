@@ -294,7 +294,7 @@ export const biaMifaTemplateV1 = {
               name: 'text'
             },
             description: 'Short descriptive summary indicating the type of annotation and how it was generated',
-            display: 'desirable',
+            display: 'required',
             helpContextual: {
               description: '',
               examples: []
@@ -305,7 +305,7 @@ export const biaMifaTemplateV1 = {
             valueType: {
               name: 'text'
             },
-            display: 'desirable',
+            display: 'required',
             helpContextual: {
               description: 'Description of how the annotations where created.',
               examples: [
@@ -354,6 +354,18 @@ export const biaMifaTemplateV1 = {
                 'If the dataset is not completely annotated, which images from the dataset were annotated, and what percentage of the data has been annotated from what is available?',
               examples: []
             }
+          },
+          {
+            name: 'File List',
+            icon: 'fa-file',
+            valueType: {
+              name: 'file',
+              allowFolders: false
+            },
+            display: 'required',
+            helpText: 'Examples',
+            helpLink: '/bioimage-archive/help-file-list/',
+            asyncValueValidatorName: 'forFileList'
           }
         ],
         tableTypes: [],
