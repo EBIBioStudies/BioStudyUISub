@@ -289,7 +289,19 @@ export const biaMifaTemplateV1 = {
         name: 'Annotations',
         fieldTypes: [
           {
-            name: 'Annotation overview',
+            name: 'Title',
+            valueType: {
+              name: 'text'
+            },
+            description: '',
+            display: 'required',
+            helpContextual: {
+              description: '',
+              examples: []
+            }
+          },
+          {
+            name: 'Annotation Overview',
             valueType: {
               name: 'text'
             },
@@ -301,7 +313,7 @@ export const biaMifaTemplateV1 = {
             }
           },
           {
-            name: 'Annotation type',
+            name: 'Annotation Type',
             description: 'Annotation type, for example class labels, segmentation masks, counts...',
             display: 'required',
             valueType: {
@@ -339,7 +351,7 @@ export const biaMifaTemplateV1 = {
             }
           },
           {
-            name: 'Annotation method',
+            name: 'Annotation Method',
             valueType: {
               name: 'text'
             },
@@ -356,7 +368,7 @@ export const biaMifaTemplateV1 = {
             }
           },
           {
-            name: 'Annotation confidence level',
+            name: 'Annotation Confidence Level',
             valueType: {
               name: 'text'
             },
@@ -371,7 +383,7 @@ export const biaMifaTemplateV1 = {
             }
           },
           {
-            name: 'Annotation criteria',
+            name: 'Annotation Criteria',
             valueType: {
               name: 'text'
             },
@@ -382,7 +394,7 @@ export const biaMifaTemplateV1 = {
             }
           },
           {
-            name: 'Annotation coverage',
+            name: 'Annotation Coverage',
             valueType: {
               name: 'text'
             },
