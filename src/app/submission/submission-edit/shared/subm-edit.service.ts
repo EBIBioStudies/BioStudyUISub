@@ -163,12 +163,10 @@ export class SubmEditService {
     return this.userData.collections$.pipe(
       switchMap((projectNames) => {
         const templates = getTemplatesForCollections(projectNames);
-        const templateInfo = templates.find(
-          ({ name }) => {
-            const matchRe = new RegExp(`^${templateName?.toLowerCase()}(\.v\\d+)?$`);
-            return name.toLowerCase().match(matchRe);
-          }
-        );
+        const templateInfo = templates.find(({ name }) => {
+          const matchRe = new RegExp(`^${templateName?.toLowerCase()}(\.v\\d+)?$`);
+          return name.toLowerCase().match(matchRe);
+        });
         if (templateInfo !== undefined) {
           const { name, collection } = templateInfo;
           return this.submService.createDraftSubmission(collection, name);
