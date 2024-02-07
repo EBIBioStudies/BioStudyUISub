@@ -164,7 +164,10 @@ export class SubmEditService {
       switchMap((projectNames) => {
         const templates = getTemplatesForCollections(projectNames);
         const templateInfo = templates.find(
-          ({ collection }) => collection?.toLowerCase() === templateName?.toLowerCase()
+          ({ name }) => {
+            const matchRe = new RegExp(`^${templateName?.toLowerCase()}(\.v\\d+)?$`);
+            return name.toLowerCase().match(matchRe);
+          }
         );
         if (templateInfo !== undefined) {
           const { name, collection } = templateInfo;
