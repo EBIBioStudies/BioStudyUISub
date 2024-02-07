@@ -125,7 +125,15 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
       this.accno = accno;
 
       if (accno === undefined) {
-        this.createEmptySubmission(template);
+        if (template === undefined) {
+          // try query params
+          this.route.queryParamMap.pipe(takeUntil(this.unsubscribe)).subscribe((params) => {
+            this.createEmptySubmission(params.get('template')!!);
+          });
+        } else {
+          // get from deprecated ;-separated params
+          this.createEmptySubmission(template);
+        }
       } else {
         this.loadSubmission(accno, isNewSubmission);
       }
