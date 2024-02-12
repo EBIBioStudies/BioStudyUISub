@@ -296,9 +296,7 @@ export const biaMifaTemplateV1 = {
             display: 'required',
             helpContextual: {
               description: 'A concise label for the metadata in this section.',
-              examples: [
-                'Segmentation masks'
-              ]
+              examples: ['Segmentation masks']
             }
           },
           {
@@ -332,18 +330,19 @@ export const biaMifaTemplateV1 = {
               ]
             },
             helpContextual: {
-              descriptionHtml: 'With values defined as follows:' + '<br>' +
-              '<b>class_labels</b>: tags that identify specific features, patterns or classes in images' + '<br>' +
-              '<b>bounding_boxes</b>: rectangles completely enclosing a structure of interest within an image' + '<br>' +
-              '<b>counts</b>: number of objects, such as cells, found in an image' + '<br>' +
-              '<b>derived_annotations</b>: additional analytical data extracted from the images. For example, the image point spread function,the signal to noise ratio, focus information...' + '<br>' +
-              '<b>geometrical_annotations</b>: polygons and shapes that outline a region of interest in the image. These can be geometrical primitives, 2D polygons, 3D meshes' + '<br>' +
-              '<b>graphs</b>: graphical representations of the morphology, connectivity, or spatial arrangement of biological structures in an image. Graphs, such as skeletons or connectivity diagrams, typically consist of nodes and edges, where nodes represent individual elements or regions and edges represent the connections or interactions between them' + '<br>' +
-              "<b>point_annotations</b>: X, Y, and Z coordinates of a point of interest in an image (for example an object's centroid  or landmarks)" + '<br>' +
-              '<b>segmentation_mask</b>: an image, the same size as the source image, with the value of each pixel representing some biological identity or background region' + '<br>' +
-              '<b>tracks</b>: annotations marking the movement or trajectory of objects within a sequence of bioimages' + '<br>' +
-              '<b>weak_annotations</b>: rough imprecise annotations that are fast to generate. These annotations are used, for example,  to detect an object without providing accurate boundaries' + '<br>' +
-              '<b>other</b>: other types of annotations, please specify in the annotation overview section' + '<br>'
+              descriptionHtml:
+                'With values defined as follows: <br>' +
+                '<b>class_labels</b>: tags that identify specific features, patterns or classes in images <br>' +
+                '<b>bounding_boxes</b>: rectangles completely enclosing a structure of interest within an image <br>' +
+                '<b>counts</b>: number of objects, such as cells, found in an image <br>' +
+                '<b>derived_annotations</b>: additional analytical data extracted from the images. For example, the image point spread function,the signal to noise ratio, focus information... <br>' +
+                '<b>geometrical_annotations</b>: polygons and shapes that outline a region of interest in the image. These can be geometrical primitives, 2D polygons, 3D meshes <br>' +
+                '<b>graphs</b>: graphical representations of the morphology, connectivity, or spatial arrangement of biological structures in an image. Graphs, such as skeletons or connectivity diagrams, typically consist of nodes and edges, where nodes represent individual elements or regions and edges represent the connections or interactions between them <br>' +
+                "<b>point_annotations</b>: X, Y, and Z coordinates of a point of interest in an image (for example an object's centroid  or landmarks) <br>" +
+                '<b>segmentation_mask</b>: an image, the same size as the source image, with the value of each pixel representing some biological identity or background region <br>' +
+                '<b>tracks</b>: annotations marking the movement or trajectory of objects within a sequence of bioimages <br>' +
+                '<b>weak_annotations</b>: rough imprecise annotations that are fast to generate. These annotations are used, for example,  to detect an object without providing accurate boundaries <br>' +
+                '<b>other</b>: other types of annotations, please specify in the annotation overview section <br>'
             }
           },
           {
@@ -353,7 +352,8 @@ export const biaMifaTemplateV1 = {
             },
             display: 'required',
             helpContextual: {
-              description: 'Description of how the annotations where created. Please include protocols used for consensus and quality assurance if applicable.',
+              description:
+                'Description of how the annotations where created. Please include protocols used for consensus and quality assurance if applicable.',
               examples: [
                 'crowdsourced',
                 'expertly annotated',
@@ -394,11 +394,8 @@ export const biaMifaTemplateV1 = {
             },
             display: 'desirable',
             helpContextual: {
-              description:
-                'The proportion of images from the dataset that were annotated.',
-              examples: [
-                'All data that satisfied the Annotation Criteria were annotated.'
-              ]
+              description: 'The proportion of images from the dataset that were annotated.',
+              examples: ['All data that satisfied the Annotation Criteria were annotated.']
             }
           },
           {
