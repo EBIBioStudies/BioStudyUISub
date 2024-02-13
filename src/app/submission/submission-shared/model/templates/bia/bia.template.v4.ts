@@ -783,6 +783,142 @@ export const biaTemplateV4 = {
       {
         displayAnnotations: false,
         tableGroups: [],
+        name: 'Annotations',
+        fieldTypes: [
+          {
+            name: 'Title',
+            valueType: {
+              name: 'text'
+            },
+            display: 'required',
+            helpContextual: {
+              description: 'A concise label for the metadata in this section.',
+              examples: ['Segmentation masks']
+            }
+          },
+          {
+            name: 'Annotation Overview',
+            valueType: {
+              name: 'text'
+            },
+            display: 'required',
+            helpContextual: {
+              description: 'Short descriptive summary indicating the type of annotation and how it was generated'
+            }
+          },
+          {
+            name: 'Annotation Type',
+            display: 'required',
+            valueType: {
+              name: 'select',
+              multiple: true,
+              values: [
+                'class_labels',
+                'bounding_boxes',
+                'counts',
+                'derived_annotations',
+                'geometrical_annotations',
+                'graphs',
+                'point_annotations',
+                'segmentation_mask',
+                'tracks',
+                'weak_annotations',
+                'other'
+              ]
+            },
+            helpContextual: {
+              descriptionHtml:
+                'With values defined as follows: <br>' +
+                '<table border=1 frame="void" rules="columns" cellpadding="5">' +
+                '<tr><td>class_labels</td> <td>tags that identify specific features, patterns or classes in images </td></tr>' +
+                '<tr><td>bounding_boxes</td> <td>rectangles completely enclosing a structure of interest within an image </td></tr>' +
+                '<tr><td>counts</td> <td>number of objects, such as cells, found in an image <br>' +
+                '<tr><td>derived_annotations</td> <td>additional analytical data extracted from the images. For example, the image point spread function,the signal to noise ratio, focus information... <br>' +
+                '<tr><td>geometrical_annotations</td> <td>polygons and shapes that outline a region of interest in the image. These can be geometrical primitives, 2D polygons, 3D meshes <br>' +
+                '<tr><td>graphs</td> <td>graphical representations of the morphology, connectivity, or spatial arrangement of biological structures in an image. Graphs, such as skeletons or connectivity diagrams, typically consist of nodes and edges, where nodes represent individual elements or regions and edges represent the connections or interactions between them <br>' +
+                "<tr><td>point_annotations</td> <td>X, Y, and Z coordinates of a point of interest in an image (for example an object's centroid  or landmarks) <br>" +
+                '<tr><td>segmentation_mask</td> <td>an image, the same size as the source image, with the value of each pixel representing some biological identity or background region <br>' +
+                '<tr><td>tracks</td> <td>annotations marking the movement or trajectory of objects within a sequence of bioimages <br>' +
+                '<tr><td>weak_annotations</td> <td>rough imprecise annotations that are fast to generate. These annotations are used, for example,  to detect an object without providing accurate boundaries <br>' +
+                '<tr><td>other</td> <td>other types of annotations, please specify in the annotation overview section <br>' +
+                '</table>'
+            }
+          },
+          {
+            name: 'Annotation Method',
+            valueType: {
+              name: 'text'
+            },
+            display: 'required',
+            helpContextual: {
+              description:
+                'Description of how the annotations where created. Including protocols used for consensus and quality assurance, if applicable.',
+              examples: [
+                'crowdsourced',
+                'expertly annotated',
+                'produced by CellPose, revision 4f0c43e, with all default parameters'
+              ]
+            }
+          },
+          {
+            name: 'Annotation Confidence Level',
+            valueType: {
+              name: 'text'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'Confidence on annotation accuracy',
+              examples: [
+                'self-reported confidence',
+                'more than 95% pixel consensus where multiple annotators independently segmented the same object',
+                'number of years of experience of the annotator'
+              ]
+            }
+          },
+          {
+            name: 'Annotation Criteria',
+            valueType: {
+              name: 'text'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'Rules used to generate annotations',
+              examples: ['only nuclei in focus were segmented']
+            }
+          },
+          {
+            name: 'Annotation Coverage',
+            valueType: {
+              name: 'text'
+            },
+            display: 'desirable',
+            helpContextual: {
+              description: 'The proportion of images from the dataset that were annotated.',
+              examples: ['All data that satisfied the Annotation Criteria were annotated.']
+            }
+          },
+          {
+            name: 'File List',
+            icon: 'fa-file',
+            valueType: {
+              name: 'file',
+              allowFolders: false
+            },
+            display: 'required',
+            helpText: 'Examples',
+            helpLink: '/bioimage-archive/help-file-list/',
+            asyncValueValidatorName: 'forFileList'
+          }
+        ],
+        tableTypes: [],
+        sectionTypes: [],
+        display: 'desirable',
+        minRequired: 0,
+        helpContextual: {}
+      },
+      {
+        displayAnnotations: false,
+        tableGroups: [],
         name: 'Study Component',
         fieldTypes: [
           {
