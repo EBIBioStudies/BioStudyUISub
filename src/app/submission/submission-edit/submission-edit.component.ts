@@ -15,6 +15,7 @@ import { SubmErrorModalComponent } from '../submission-results/subm-error-modal.
 import { SubmSidebarComponent } from './subm-sidebar/subm-sidebar.component';
 import { SubmValidationErrors } from '../submission-shared/model';
 import { scrollTop } from 'app/utils/scroll.utils';
+import { UserSession } from '../../auth/shared';
 
 class SubmitOperation {
   static CREATE = new SubmitOperation();
@@ -57,6 +58,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   private collection?: string;
 
   constructor(
+    private userSession: UserSession,
     private route: ActivatedRoute,
     private router: Router,
     private locService: Location,
@@ -247,7 +249,11 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
           if (releaseDateCtrl) {
             const [year, month, date] = releaseDateCtrl.control.value.split('-').map((s) => parseInt(s, 10));
-            if (Date.UTC(year, month - 1, date) <= new Date().valueOf() && !this.isTemp) {
+            if (
+              Date.UTC(year, month - 1, date) <= new Date().valueOf() &&
+              !this.isTemp &&
+              !this.userSession.isSuperUser()
+            ) {
               releaseDateCtrl.type.displayType = DisplayType.READONLY;
             }
           }
