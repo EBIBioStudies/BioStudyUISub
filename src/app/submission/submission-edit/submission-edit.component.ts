@@ -56,6 +56,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   private accno?: string;
   private unsubscribe: Subject<void> = new Subject<void>();
   private collection?: string;
+  isPublic: boolean = true;
 
   constructor(
     private userSession: UserSession,
@@ -192,7 +193,7 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
     this.submEditService.switchSection(this.rootSection);
 
-    of(true)
+    this.confirmReleaseDateOverride()
       .pipe(
         switchMap(() => this.submEditService.submit(onlyMetadataUpdate)),
         takeUntil(this.unsubscribe)
@@ -249,11 +250,8 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
           if (releaseDateCtrl) {
             const [year, month, date] = releaseDateCtrl.control.value.split('-').map((s) => parseInt(s, 10));
-            if (
-              Date.UTC(year, month - 1, date) <= new Date().valueOf() &&
-              !this.isTemp &&
-              !this.userSession.isSuperUser()
-            ) {
+            this.isPublic = Date.UTC(year, month - 1, date) <= new Date().valueOf();
+            if (this.isPublic && !this.isTemp && !this.userSession.isSuperUser()) {
               releaseDateCtrl.type.displayType = DisplayType.READONLY;
             }
           }
@@ -272,6 +270,27 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
 
   private confirmSectionDelete(message: string): Observable<boolean> {
     return this.modalService.whenConfirmed(message, 'Delete section', 'Delete');
+  }
+
+  private confirmReleaseDateOverride(): Observable<boolean> {
+    debugger;
+    let isDateOverride: boolean = true;
+    const today: Date = new Date();
+    today.setHours(0, 0, 0, 0);
+    const releaseDateCtrl = this.sectionForm!.findFieldControl('ReleaseDate');
+    if (releaseDateCtrl) {
+      const [year, month, date] = releaseDateCtrl.control.value.split('-').map((s) => parseInt(s, 10));
+      isDateOverride = this.isPublic && Date.UTC(year, month - 1, date) > today.valueOf();
+    }
+
+    return isDateOverride
+      ? this.modalService.whenConfirmed(
+          'This study has already been released and resetting the release date may make it ' +
+            'unavailable to the public. Are you sure you want to continue?',
+          'Submit the study',
+          'OK'
+        )
+      : of(true);
   }
 
   private confirmRevert(): Observable<boolean> {
