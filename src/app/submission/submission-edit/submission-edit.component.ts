@@ -273,7 +273,6 @@ export class SubmissionEditComponent implements OnInit, OnDestroy {
   }
 
   private confirmReleaseDateOverride(): Observable<boolean> {
-    debugger;
     let isDateOverride: boolean = true;
     const today: Date = new Date();
     today.setHours(0, 0, 0, 0);
