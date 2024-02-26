@@ -42,7 +42,7 @@ export const microbioRamanTemplate = {
       },
       {
         name: 'Peak identification',
-        icon: 'fa-briefcase',
+        icon: 'fa-chart-line',
         valueType: {
           name: 'text',
           placeholder:
