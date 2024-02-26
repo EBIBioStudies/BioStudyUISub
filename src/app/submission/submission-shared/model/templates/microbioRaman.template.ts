@@ -34,7 +34,21 @@ export const microbioRamanTemplate = {
       {
         name: 'Description',
         icon: 'fa-comment',
-        valueType: { name: 'largetext', placeholder: 'Brief description of the project' }
+        valueType: {
+          name: 'largetext',
+          placeholder:
+            'Brief description of the project; details if isotopes (e.g., stable isotope probing (SIP)) or fluorescent probes (e.g., fluorescence in situ hybridization (FISH) probes) were used'
+        }
+      },
+      {
+        name: 'Peak identification',
+        icon: 'fa-briefcase',
+        valueType: {
+          name: 'text',
+          placeholder:
+            'Identification of peaks and methods used for identification (e.g., literature, public or commercial databases); peak shifts if isotopes (e.g., SIP) were used'
+        },
+        display: 'optional'
       },
       {
         name: 'Software',
@@ -240,7 +254,7 @@ export const microbioRamanTemplate = {
             valueType: {
               name: 'largetext',
               placeholder:
-                'E.g., preservation after sampling, culturing condition (e.g., sample volume, medium, light condition/diel cycle, pH, temperature, antibiotics, oxic/anoxic), sample age, fixed or unfixed, whether the cells were dry or wet for Raman measurement'
+                'For example, preservation after sampling, culturing condition (e.g., sample volume, medium, light condition/diel cycle, pH, temperature, antibiotics, oxic/anoxic), sample age, fixed or unfixed, whether the cells were dry or wet for Raman measurement; whether isotopes (e.g., SIP) or fluorescent probes (e.g., FISH probes) were used'
             },
             display: 'required'
           },
@@ -256,7 +270,8 @@ export const microbioRamanTemplate = {
             name: 'File',
             title: 'Image File',
             display: 'desirable',
-            description: 'Image files from Raman imaging',
+            description:
+              'Image files from Raman imaging; image files from light or electron microscopy (e.g., bright-field or SEM images of a sample, fluorescence images for FISH)',
             icon: 'fa-file-image',
             uniqueCols: true,
             rowAsSection: true,
@@ -410,7 +425,8 @@ export const microbioRamanTemplate = {
             icon: 'fa-briefcase',
             valueType: {
               name: 'text',
-              placeholder: 'If manufacturer’s software was used for data processing, the name and version of software'
+              placeholder:
+                'If manufacturer’s software was used for data processing and analysis, the name and version of software'
             },
             display: 'desirable'
           }
@@ -431,7 +447,22 @@ export const microbioRamanTemplate = {
               },
               {
                 name: 'Type',
-                valueType: { name: 'text', defaultValue: 'Processed Raman data' },
+                valueType: {
+                  name: 'select',
+                  values: [
+                    'principal component analysis',
+                    'hierarchical cluster analysis',
+                    'linear discriminant analysis'
+                  ]
+                },
+                helpContextual: {
+                  description: 'Processed Raman data and data analysis',
+                  examples: [
+                    'principal component analysis',
+                    'hierarchical cluster analysis',
+                    'linear discriminant analysis'
+                  ]
+                },
                 display: 'required'
               }
             ]
@@ -439,7 +470,8 @@ export const microbioRamanTemplate = {
           {
             name: 'Data treatments',
             icon: 'fa-list',
-            description: 'List of computational algorithms and their parameters and sources used for data processing',
+            description:
+              'List of computational algorithms and their parameters and sources used for data processing and analysis',
             display: 'desirable',
             columnTypes: [
               {
@@ -497,7 +529,7 @@ export const microbioRamanTemplate = {
               display: 'optional'
             },
             {
-              name: 'Binning',
+              name: 'Spectral binning',
               valueType: { name: 'text' },
               display: 'optional'
             }
