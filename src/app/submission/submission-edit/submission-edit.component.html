@@ -29,12 +29,24 @@
         </div>
         <div *ngIf="sectionForm.isRootSection" class="card">
           <div class="card-body st-edit-status-message">
-            <ng-container *ngIf="isTemp && !readonly && !sectionForm.valid">
+            <ng-container *ngIf="isTemp && !readonly && !sectionForm.valid && (collection==null || collection!=='BioImages')">
               <h2 class="card-title">New {{collection}} submission</h2>
               <p class="card-text">
                 Please fill in the form below. The <span class="font-weight-bold">Validation</span> tab on the
                 left-hand side lists those fields still incomplete or incorrect. Use the
                 <span class="font-weight-bold">Add</span> tab to quickly add new rows or tables.
+              </p>
+              <div class="alert alert-warning mb-0" role="alert">
+                <strong>Please note:</strong> all fields are required unless they are marked as "<i>Optional</i>"
+              </div>
+            </ng-container>
+            <ng-container *ngIf="isTemp && !readonly && !sectionForm.valid  && (collection!=null || collection=='BioImages')">
+              <h2 class="card-title">New {{collection}} submission</h2>
+              <p class="card-text">
+                Please fill in the form below. The <span class="font-weight-bold">Validation</span> tab on the
+                left-hand side lists those fields still incomplete or incorrect. To add more Biosample, Specimen,
+                Study Component etc. please use the <span class="font-weight-bold">Add</span> tab on the top level of
+                the submission form.
               </p>
               <div class="alert alert-warning mb-0" role="alert">
                 <strong>Please note:</strong> all fields are required unless they are marked as "<i>Optional</i>"
