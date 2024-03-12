@@ -5,6 +5,7 @@ import { euToxRiskTemplate } from './eutoxrisk.template';
 import { hecatosTemplate } from './hecatos.template';
 import { arrayExpressTemplate } from './arrayexpress.template';
 import { proteinDesignsTemplate } from './proteindesigns.template';
+import { ontoxTemplate } from './ontox.template';
 import * as bia from './bia';
 import * as defaultTemplates from './default';
 
@@ -24,7 +25,8 @@ const SUBMISSION_TEMPLATES = [
   bia.biaMifaTemplateV1,
   microbioRamanTemplate,
   readonlyTemplate,
-  proteinDesignsTemplate
+  proteinDesignsTemplate,
+  ontoxTemplate
 ];
 const SUBMISSION_TEMPLATES_PUBLIC = [defaultTemplates.v1, defaultTemplates.v2];
 
