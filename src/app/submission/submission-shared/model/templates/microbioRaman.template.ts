@@ -48,7 +48,7 @@ export const microbioRamanTemplate = {
           placeholder:
             'Identification of peaks and methods used for identification (e.g., literature, public or commercial databases); peak shifts if isotopes (e.g., SIP) were used'
         },
-        display: 'optional'
+        display: 'required'
       },
       {
         name: 'Software',
