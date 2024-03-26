@@ -128,7 +128,7 @@
     "del": "4.1.1",
     "dotenv": "8.0.0",
     "eventsourcemock": "2.0.0",
-    "express": "4.17.1",
+    "express": "4.19.2",
     "express-http-proxy": "1.6.3",
     "express-winston": "4.0.3",
     "forever": "2.0.0",
