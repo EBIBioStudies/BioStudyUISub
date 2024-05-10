@@ -45,6 +45,6 @@ describe('activate component', () => {
     await renderComponent(paramMap);
 
     expect(screen.getByText('Activating')).toBeInTheDocument();
-    expect(await screen.findByText(errorMessage)).toBeInTheDocument();
+    expect(await screen.findByTitle(errorMessage)).toBeInTheDocument();
   });
 });

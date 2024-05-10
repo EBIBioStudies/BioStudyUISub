@@ -10,6 +10,7 @@ import { ServerError } from 'app/shared/server-error.handler';
 export class ActivateComponent implements OnInit {
   hasError: boolean = false;
   message: string = '';
+  errorMessage: string = '';
 
   constructor(private authService: AuthService, private activatedRoute: ActivatedRoute) {}
 
@@ -32,7 +33,7 @@ export class ActivateComponent implements OnInit {
         component.message = 'The activation was successful';
       },
       (error: ServerError) => {
-        console.log(error.data.message);
+        this.errorMessage = error.data.message;
         component.hasError = true;
         this.message =
           'Activation is in progress. Please try to log in after 10 minutes. Please contact us at <a href="mailto:biostudies@ebi.ac.uk?Subject=BioStudies Submission Tool error">biostudies@ebi.ac.uk</a> in case of any issues.';

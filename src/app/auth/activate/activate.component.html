@@ -5,8 +5,8 @@
     </div>
     <div *ngIf="message" class="card-body">
       <h5 class="card-subtitle mb-2 text-muted">
-        <i class="fa fa-exclamation-triangle"></i>&nbsp;
-        <span [innerHTML]="message"></span>
+        <i class="fa fa-exclamation-triangle" [title]="errorMessage"></i>&nbsp;
+        <span [title]="message" [innerHTML]="message"></span>
       </h5>
     </div>
     <div class="card-footer text-muted">
