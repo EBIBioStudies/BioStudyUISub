@@ -41,6 +41,8 @@ export class FTPUploadButtonComponent {
     }
   ];
   secretId: string = '1234';
+  ftpUser: string = 'bsftp';
+  ftpPassword: string = 'bsftp1';
 
   constructor(private userData: UserData, private modalService: BsModalService, private appConfig: AppConfig) {
     this.osOption = this.getCurrentOS();
@@ -59,8 +61,11 @@ export class FTPUploadButtonComponent {
   }
 
   openModal(template: TemplateRef<any>): void {
-    this.userData.secretId$.subscribe((secret) => {
-      this.secretId = (this.appConfig.frontendURL.startsWith('https://www.ebi.ac.uk') ? '' : '.beta/') + secret;
+    this.userData.info$.subscribe((extendedUserInfo) => {
+      this.secretId =
+        (this.appConfig.frontendURL.startsWith('https://www.ebi.ac.uk') ? '' : '.beta/') + extendedUserInfo.secret;
+      this.ftpUser = extendedUserInfo.uploadType === 'ftp' ? 'bs-upload' : 'bs-ftp';
+      this.ftpPassword = extendedUserInfo.uploadType === 'ftp' ? 'vsr5nW7Y' : 'bsftp1';
       this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
     });
   }
