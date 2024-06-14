@@ -64,7 +64,7 @@ export class FTPUploadButtonComponent {
     this.userData.info$.subscribe((extendedUserInfo) => {
       this.secretId =
         (this.appConfig.frontendURL.startsWith('https://www.ebi.ac.uk') ? '' : '.beta/') + extendedUserInfo.secret;
-      this.ftpUser = extendedUserInfo.uploadType === 'ftp' ? 'bs-upload' : 'bs-ftp';
+      this.ftpUser = extendedUserInfo.uploadType === 'ftp' ? 'bs-upload' : 'bsftp';
       this.ftpPassword = extendedUserInfo.uploadType === 'ftp' ? 'vsr5nW7Y' : 'bsftp1';
       this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
     });
