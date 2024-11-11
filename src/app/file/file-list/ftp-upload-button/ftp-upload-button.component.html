@@ -37,48 +37,68 @@
            </span>
           Upload using Aspera
         </div>
-        <div class="d-flex align-items-center justify-content-start">
-          <h4 class="m-0">Instructions for</h4>
-          <div class="pl-3">
-            <select class="custom-select" [ngModel]="osOption.name" (ngModelChange)="onOSChange($event)">
-              <option *ngFor="let option of osOptions"
-                [value]="option.name"
-                [selected]="option.name === osOption.name">
-                {{option.displayName}}
-              </option>
-            </select>
+          <div id="ftpUser" *ngIf="! isNewFtpUser">
+            <div class="d-flex align-items-center justify-content-start">
+              <h4 class="m-0">Instructions for</h4>
+              <div class="pl-3">
+                <select class="custom-select" [ngModel]="osOption.name" (ngModelChange)="onOSChange($event)">
+                  <option *ngFor="let option of osOptions"
+                    [value]="option.name"
+                    [selected]="option.name === osOption.name">
+                    {{option.displayName}}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <hr />
+            <p>
+              The <strong>Aspera</strong>&nbsp;<em>ascp</em> command line client is distributed as part of
+              <a target="_blank" [href]="osOption.link"><strong>IBM Aspera Connect (3.11.2)</strong></a>. You might
+              need to create a new IBMid for <a target="_blank" [href]="osOption.link">downloading</a>. After installation,
+              you can use the <em>ascp</em> tool, e.g.,
+            </p>
+
+            <markdown *ngIf="osOption.name === 'Mac'" class="code-block">```
+              $ ~/Applications/Aspera\ Connect.app/Contents/Resources/ascp -P33001
+              -i ~/Applications/Aspera\ Connect.app/Contents/Resources/asperaweb_id_dsa.openssh
+              -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:&lt;secret directory>
+           ```</markdown>
+            <markdown *ngIf="osOption.name === 'Linux'" class='code-block'>
+              `$ tar -zxvf ibm-aspera-connect-3.11.2.63-linux-g2.12-64.tar.gz`
+              `$ ./ibm-aspera-connect-3.11.2.63-linux-g2.12-64.sh`
+              `$ ~/.aspera/connect/bin/ascp -P33001 -i ~/.aspera/connect/etc/asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:&lt;secret directory>`
+            </markdown>
+            <markdown *ngIf="osOption.name === 'Win'" class='code-block'>
+              `C:\>"C:\Users\alice\AppData\Local\Programs\Aspera\Aspera Connect\bin\ascp.exe"
+              -P33001 -i "C:\Users\alice\AppData\Local\Programs\Aspera\Aspera Connect\etc\asperaweb_id_dsa.openssh"
+              -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:&lt;secret directory&gt;`
+
+            </markdown>
+            <markdown ngPreserveWhitespaces>
+              where
+              - `-P33001` and `bsaspera_w@hx-fasp-1.ebi.ac.uk` defines port, user and server for **Aspera** connection.
+              - `&lt;directory to upload&gt;` is the path of the directory to be uploaded.
+              - `&lt;secret directory&gt;` looks like `xx/xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx-xxxx` and is shown above.
+            </markdown>
           </div>
-        </div>
-        <hr />
-        <p>
-          The <strong>Aspera</strong>&nbsp;<em>ascp</em> command line client is distributed as part of
-          <a target="_blank" [href]="osOption.link"><strong>IBM Aspera Connect (3.11.2)</strong></a>. You might
-          need to create a new IBMid for <a target="_blank" [href]="osOption.link">downloading</a>. After installation,
-          you can use the <em>ascp</em> tool, e.g.,
-        </p>
+          <div *ngIf="isNewFtpUser">
+              <p>
+                  The <strong>Aspera</strong>&nbsp;<em>ascp</em> command line client is distributed as part of
+                  <a target="_blank" [href]="osOption.link"><strong>IBM Aspera Connect (4.2.12)</strong></a>. You might
+                  need to create a new IBMid for <a target="_blank" [href]="osOption.link">downloading</a>. After installation,
+                  you can use the <em>ascp</em> tool, e.g.,
+              </p>
+              <markdown class="code-block">
+                  `ascp -k 1 -QT -l 400M -P33001 &lt;directory to upload> bs-upload@fasp.ebi.ac.uk:&lt;secret directory>`
+              </markdown>
+              <markdown ngPreserveWhitespaces>
+                  where
+                  - `&lt;directory to upload&gt;` is the path of the local directory to be uploaded.
+                  - `&lt;secret directory&gt;` looks like `xx/xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx-xxxx` and is shown above.
+                  - Password: `{{bs_uploadPass}}`
+              </markdown>
 
-        <markdown *ngIf="osOption.name === 'Mac'" class="code-block">```
-          $ ~/Applications/Aspera\ Connect.app/Contents/Resources/ascp -P33001
-          -i ~/Applications/Aspera\ Connect.app/Contents/Resources/asperaweb_id_dsa.openssh
-          -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:&lt;secret directory>
-       ```</markdown>
-        <markdown *ngIf="osOption.name === 'Linux'" class='code-block'>
-          `$ tar -zxvf ibm-aspera-connect-3.11.2.63-linux-g2.12-64.tar.gz`
-          `$ ./ibm-aspera-connect-3.11.2.63-linux-g2.12-64.sh`
-          `$ ~/.aspera/connect/bin/ascp -P33001 -i ~/.aspera/connect/etc/asperaweb_id_dsa.openssh -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:&lt;secret directory>`
-        </markdown>
-        <markdown *ngIf="osOption.name === 'Win'" class='code-block'>
-          `C:\>"C:\Users\alice\AppData\Local\Programs\Aspera\Aspera Connect\bin\ascp.exe"
-          -P33001 -i "C:\Users\alice\AppData\Local\Programs\Aspera\Aspera Connect\etc\asperaweb_id_dsa.openssh"
-          -d &lt;directory to upload&gt; bsaspera_w@hx-fasp-1.ebi.ac.uk:&lt;secret directory&gt;`
-
-        </markdown>
-        <markdown ngPreserveWhitespaces>
-          where
-          - `-P33001` and `bsaspera_w@hx-fasp-1.ebi.ac.uk` defines port, user and server for **Aspera** connection.
-          - `&lt;directory to upload&gt;` is the path of the directory to be uploaded.
-          - `&lt;secret directory&gt;` looks like `xx/xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx-xxxx` and is shown above.
-        </markdown>
+          </div>
       </accordion-group>
     </accordion>
   </div>

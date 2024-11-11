@@ -23,26 +23,28 @@ export class FTPUploadButtonComponent {
       displayName: 'Windows',
       link:
         'https://www.ibm.com/support/fixcentral/swg/selectFixes' +
-        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=3.11.2&platform=Windows&function=all'
+        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=4.2.12&platform=Windows&function=all'
     },
     {
       name: 'Mac',
       displayName: 'Mac OS',
       link:
         'https://www.ibm.com/support/fixcentral/swg/selectFixes' +
-        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=3.11.2&platform=Mac+OSX&function=all'
+        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=4.2.12&platform=Mac+OSX&function=all'
     },
     {
       name: 'Linux',
       displayName: 'Linux',
       link:
         'https://www.ibm.com/support/fixcentral/swg/selectFixes' +
-        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=3.11.2&platform=Linux&function=all'
+        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=4.2.12&platform=Linux&function=all'
     }
   ];
   secretId: string = '1234';
   ftpUser: string = 'bsftp';
   ftpPassword: string = 'bsftp1';
+  isNewFtpUser = false;
+  bs_uploadPass = 'vsr5nW7Y';
 
   constructor(private userData: UserData, private modalService: BsModalService, private appConfig: AppConfig) {
     this.osOption = this.getCurrentOS();
@@ -67,6 +69,7 @@ export class FTPUploadButtonComponent {
       this.ftpUser = extendedUserInfo.uploadType === 'ftp' ? 'bs-upload' : 'bsftp';
       this.ftpPassword = extendedUserInfo.uploadType === 'ftp' ? 'vsr5nW7Y' : 'bsftp1';
       this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
+      this.isNewFtpUser = extendedUserInfo.uploadType === 'ftp';
     });
   }
 }
