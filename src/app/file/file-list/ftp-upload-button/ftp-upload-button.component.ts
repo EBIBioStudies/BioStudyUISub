@@ -44,7 +44,7 @@ export class FTPUploadButtonComponent {
   ftpUser: string = 'bsftp';
   ftpPassword: string = 'bsftp1';
   isNewFtpUser = false;
-  bs_uploadPass = 'vsr5nW7Y';
+  bsUploadPass = 'vsr5nW7Y';
 
   constructor(private userData: UserData, private modalService: BsModalService, private appConfig: AppConfig) {
     this.osOption = this.getCurrentOS();
