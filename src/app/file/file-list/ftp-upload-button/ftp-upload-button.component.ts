@@ -81,6 +81,7 @@ export class FTPUploadButtonComponent {
           link: `https://www.ibm.com/support/fixcentral/swg/selectFixes?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=${version}&platform=Linux&function=all`
         }
       ];
+      this.osOption = this.getCurrentOS();
       this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
     });
   }
