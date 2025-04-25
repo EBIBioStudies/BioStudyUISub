@@ -21,23 +21,17 @@ export class FTPUploadButtonComponent {
     {
       name: 'Win',
       displayName: 'Windows',
-      link:
-        'https://www.ibm.com/support/fixcentral/swg/selectFixes' +
-        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=4.2.12&platform=Windows&function=all'
+      link: ''
     },
     {
       name: 'Mac',
       displayName: 'Mac OS',
-      link:
-        'https://www.ibm.com/support/fixcentral/swg/selectFixes' +
-        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=4.2.12&platform=Mac+OSX&function=all'
+      link: ''
     },
     {
       name: 'Linux',
       displayName: 'Linux',
-      link:
-        'https://www.ibm.com/support/fixcentral/swg/selectFixes' +
-        '?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=4.2.12&platform=Linux&function=all'
+      link: ''
     }
   ];
   secretId: string = '1234';
@@ -68,8 +62,29 @@ export class FTPUploadButtonComponent {
         (this.appConfig.frontendURL.startsWith('https://www.ebi.ac.uk') ? '' : '.beta/') + extendedUserInfo.secret;
       this.ftpUser = extendedUserInfo.uploadType === 'ftp' ? 'bs-upload' : 'bsftp';
       this.ftpPassword = extendedUserInfo.uploadType === 'ftp' ? 'vsr5nW7Y' : 'bsftp1';
-      this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
       this.isNewFtpUser = extendedUserInfo.uploadType === 'ftp';
+
+
+      const version = extendedUserInfo.uploadType === 'ftp' ? '4.2.12' : '3.11.2';
+
+      this.osOptions = [
+        {
+          name: 'Win',
+          displayName: 'Windows',
+          link: `https://www.ibm.com/support/fixcentral/swg/selectFixes?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=${version}&platform=Windows&function=all`
+        },
+        {
+          name: 'Mac',
+          displayName: 'Mac OS',
+          link: `https://www.ibm.com/support/fixcentral/swg/selectFixes?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=${version}&platform=Mac+OSX&function=all`
+        },
+        {
+          name: 'Linux',
+          displayName: 'Linux',
+          link: `https://www.ibm.com/support/fixcentral/swg/selectFixes?parent=ibm%7EOther%20software&product=ibm/Other+software/IBM+Aspera+Connect&release=${version}&platform=Linux&function=all`
+        }
+      ];
+      this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
     });
   }
 }
