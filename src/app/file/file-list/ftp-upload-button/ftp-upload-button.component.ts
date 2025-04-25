@@ -63,10 +63,7 @@ export class FTPUploadButtonComponent {
       this.ftpUser = extendedUserInfo.uploadType === 'ftp' ? 'bs-upload' : 'bsftp';
       this.ftpPassword = extendedUserInfo.uploadType === 'ftp' ? 'vsr5nW7Y' : 'bsftp1';
       this.isNewFtpUser = extendedUserInfo.uploadType === 'ftp';
-
-
       const version = extendedUserInfo.uploadType === 'ftp' ? '4.2.12' : '3.11.2';
-
       this.osOptions = [
         {
           name: 'Win',
