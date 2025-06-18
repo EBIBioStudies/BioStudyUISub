@@ -19,7 +19,7 @@ tar xzf $artifact
 npm install
 
 # Stop current executions
-pkill -f node
+pkill -f node || true
 
 # Start fresh execution
 NODE_ENV=production npx forever start -l $homeDir/node/logs/forever.log --append server/app.js
